@@ -9,8 +9,8 @@ Projekt se bavi problemom nedostatka jednostavnih i personaliziranih alata koji 
 Tijekom izrade ovog projekta očekujemo naučiti ključne aspekte razvoja složenih softverskih sustava, uključujući detaljnu analizu i preciznu specifikaciju funkcionalnih i nefunkcionalnih zahtjeva, oblikovanje sustavne arhitekture, implementaciju sigurnosnih protokola te uspostavu mehanizama za praćenje i evaluaciju korisničkog napretka. Također želimo unaprijediti vještine timskog rada, upravljanja verzijama i primjene principa programskog inženjerstva u praksi, pripremajući se tako za buduće profesionalne izazove.
 # Funkcijski zahtjevi
 # Tehnologije
-Frontend: React - Typescript, HTML, CSS, Figma
-Backend: C#, .net
+Frontend: React - Typescript, HTML, CSS, Figma  
+Backend: C#, .net  
 Baza podataka:
 # Članovi tima
 | Prezime i ime | GitHub profil | Glavni doprinos |
