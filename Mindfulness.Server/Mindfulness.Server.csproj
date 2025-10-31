@@ -10,10 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>9.*-*</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.10" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
   </ItemGroup>
 
@@ -21,6 +25,23 @@
     <ProjectReference Include="..\mindfulness.client\mindfulness.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configurations\" />
+    <Folder Include="Dtos\AudioLanguage\" />
+    <Folder Include="Dtos\Challenge\" />
+    <Folder Include="Dtos\ContentCategory\" />
+    <Folder Include="Dtos\Content\" />
+    <Folder Include="Dtos\DailyCheckIn\" />
+    <Folder Include="Dtos\Event\" />
+    <Folder Include="Dtos\Motivation\" />
+    <Folder Include="Dtos\Review\" />
+    <Folder Include="Dtos\Setting\" />
+    <Folder Include="Dtos\StartQuestionnaire\" />
+    <Folder Include="Dtos\UserSetting\" />
+    <Folder Include="Dtos\User\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
