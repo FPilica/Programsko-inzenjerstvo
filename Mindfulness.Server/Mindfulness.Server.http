@@ -1,4 +1,4 @@
-@Mindfulness.Server_HostAddress = http://localhost:5003
+@Mindfulness.Server_HostAddress = http://localhost:5223
 
 GET {{Mindfulness.Server_HostAddress}}/weatherforecast/
 Accept: application/json
