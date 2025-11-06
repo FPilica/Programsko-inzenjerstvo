@@ -12,23 +12,17 @@ function App() {
 
   return (
     <>
-      <h1>Mindfulness stranica</h1>
+      <h1>Mindfulness</h1>
       
-      <p className="read-the-docs">
-        Dobrodošli na Mindfulness stranicu.
-      </p>
-      <div>
-        <p>
-          kratki opis stranice, slika
-        </p>
-      </div>
-      <div>
+      
+      <div className='gumbi_za_auth'>
         <button> 
             {/* ovako se ide na druge stranice */}
-          <Link to = "auth" >Prijavi me</Link>
+          <Link to = "auth/login" className='prijava'>Prijavi me</Link>
         </button>
+        <p></p>
         <button>
-          <Link to = "auth" >Registriraj me</Link>
+          <Link to = "auth/reg" className='registracija'>Registriraj me</Link>
         </button>
       </div>
       

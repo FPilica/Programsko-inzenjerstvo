@@ -8,12 +8,8 @@ import {
     Route,
     Navigate,
 } from "react-router-dom"
-<<<<<<< Updated upstream
+import Auth from "./Auth"
 import Home from "./home"
-import Auth from "./Auth"
-=======
-import Home from "./Home"
-import Auth from "./Auth"
 import Reg from "./Reg"
 import ForgotPass from "./ForgotPass"
 import Content from "./Content"
@@ -22,7 +18,6 @@ import Profile from "./Profile"
 import Admin from "./Admin"
 import Coach from "./Coach"
 // nezz kako dash i stats ?
->>>>>>> Stashed changes
 
 
 function App() {
@@ -37,12 +32,10 @@ function App() {
             element={<Home />}
           />
           <Route
-<<<<<<< Updated upstream
             path="/auth"
             element={<Auth />}
           />
           <Route
-=======
             path="/auth/login"
             element={<Auth />}
           />
@@ -75,7 +68,6 @@ function App() {
             element={<Coach />}
           />
           <Route
->>>>>>> Stashed changes
             path="*"
             element={<Navigate to="/" />}
           />

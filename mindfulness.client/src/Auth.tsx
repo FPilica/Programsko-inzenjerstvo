@@ -10,27 +10,22 @@ import { Link } from 'react-router-dom'
 function App() {
   return (
     <>
-      <h1>Mindfulness stranica</h1>
-      <h1>
-        AUTH
-      </h1>
-      <div>
-        <p>
-          kratki opis stranice, slika
-        </p>
+      
+      <div className='container_auth'>
+        <h1>mindfulness</h1>
+        <p>Prijava</p>
+        <form>
+          <label>E-mail*</label><br/>
+          <input type="text" id="email" name="email" ></input><br/>
+          <label>Lozinka*</label><br/>
+          <input type="text" id="pass" name="pass"></input><br/>
+          <input className='submit' type="submit" value="Prijavi me"></input>
+        </form>
+        <div>
+          <Link to = "/auth/forgotpass">Zaboravljena lozinka?</Link>
+        </div>
       </div>
-      <form>
-        <label>e-Mail:</label><br/>
-        <input type="text" id="email" name="email"></input><br/>
-        <label>Username:</label><br/>
-        <input type="text" id="uname" name="uname"></input><br/>
-        <label>Password:</label><br/>
-        <input type="text" id="pass" name="pass"></input><br/>
-        <input type="submit" value="Submit"></input>
-      </form>
-      <div>
-        <Link to = "home">home</Link>
-      </div>
+      
     </>
   )
 }

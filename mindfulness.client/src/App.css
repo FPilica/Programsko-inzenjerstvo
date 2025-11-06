@@ -1,9 +1,8 @@
-#root {
+﻿#root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-<<<<<<< Updated upstream
 }
 
 .logo {
@@ -38,8 +37,6 @@
   padding: 2em;
 }
 
-=======
-}
 
 .logo {
   height: 6em;
@@ -103,4 +100,3 @@ button{
   background-color: white;
   color: black;
 }
->>>>>>> Stashed changes
