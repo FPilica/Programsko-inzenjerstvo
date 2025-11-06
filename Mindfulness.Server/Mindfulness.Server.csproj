@@ -29,18 +29,6 @@
 
   <ItemGroup>
     <Folder Include="Configurations\" />
-    <Folder Include="Dtos\AudioLanguage\" />
-    <Folder Include="Dtos\Challenge\" />
-    <Folder Include="Dtos\ContentCategory\" />
-    <Folder Include="Dtos\Content\" />
-    <Folder Include="Dtos\DailyCheckIn\" />
-    <Folder Include="Dtos\Event\" />
-    <Folder Include="Dtos\Motivation\" />
-    <Folder Include="Dtos\Review\" />
-    <Folder Include="Dtos\Setting\" />
-    <Folder Include="Dtos\StartQuestionnaire\" />
-    <Folder Include="Dtos\UserSetting\" />
-    <Folder Include="Dtos\User\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
