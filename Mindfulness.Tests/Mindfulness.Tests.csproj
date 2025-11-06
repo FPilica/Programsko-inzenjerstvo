@@ -21,9 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Mindfulness.Application\Mindfulness.Application.csproj" />
-      <ProjectReference Include="..\Mindfulness.Domain\Mindfulness.Domain.csproj" />
-      <ProjectReference Include="..\Mindfulness.Infrastructure\Mindfulness.Infrastructure.csproj" />
+      <ProjectReference Include="..\Mindfulness.Server\Mindfulness.Server.csproj" />
     </ItemGroup>
 
 </Project>
