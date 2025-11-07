@@ -169,3 +169,81 @@
     color: white;
     border-radius: 15px;
 }
+
+ /* onboarding */
+.onboardingContainer {
+    padding: 30px;
+    background-color: white;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: black;
+    border-radius: 20px;
+}
+
+.onboardingContainer > img {
+    align-self: flex-start;
+}
+
+.onboardingContainer > form > p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 0px;
+    padding:15px;
+    width:20%;
+    border-bottom: 2px solid #7636BB;
+}
+
+.onboardingForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 10px;
+    position: relative;
+}
+
+.radioOptions {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    margin: 30px 0 30px 0;
+}
+
+.radioOption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.radioOption > input[type="radio"] {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    background:transparent;
+    transition: transform 0.3s;
+}
+
+.radioOption > input[type="radio"]:hover {
+    transform: scale(1.2);
+}
+
+.radioOption > input[type="radio"]:checked {
+    accent-color: #7636BB;
+}
+
+.radioOption > label {
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+}
+
+.onboardingButton {
+    background-color: #7636BB;
+    color: white
+}
+

@@ -19,6 +19,7 @@ import Admin from "./Admin"
 import Coach from "./Coach"
 import Dashboard from './Dashboard'
 import Stats from './Stats'
+import Onboarding from "./Onboarding.tsx";
 // nezz kako dash i stats ?
 
 
@@ -43,7 +44,11 @@ function App() {
           />
           <Route
             path="/auth/reg"
-            element={<Reg/>}
+            element={<Reg />}
+          />
+          <Route
+            path={"/auth/onboarding"}
+            element={<Onboarding />}
           />
           <Route
             path="/auth/forgotpass"

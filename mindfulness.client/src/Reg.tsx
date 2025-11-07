@@ -23,7 +23,7 @@ function Reg() {
     let ok = true;
     if (ok) {
       // idemo na dashboard
-      navigate('/dashboard');
+      navigate('/auth/onboarding');
     }
   }
 
