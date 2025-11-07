@@ -1,0 +1,26 @@
+body {
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+    background-image: url("./assets/pozadina_home.png");
+    background-size: 100%;
+}
+
+.container_home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.gumbi_za_auth {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.reg-button {
+    color: #7636BB;
+}

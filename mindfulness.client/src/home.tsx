@@ -1,33 +1,31 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import './App.css'
+import './Home.css'
+import logoWhite from './assets/logo_bijeli.png'
 // glavni 
 // npx vite u cmd u folder
 
 import { Link } from 'react-router-dom'
 
-function App() {
+function Home() {
 //   const [count, setCount] = useState(0)
 
   return (
     <>
-      <h1>Mindfulness</h1>
-      
-      
-      <div className='gumbi_za_auth'>
-        <button> 
-            {/* ovako se ide na druge stranice */}
-          <Link to = "auth/login" className='prijava'>Prijavi me</Link>
-        </button>
-        <p></p>
-        <button>
-          <Link to = "auth/reg" className='registracija'>Registriraj me</Link>
-        </button>
+      <div className='container_home'>
+        <img src={logoWhite} alt="logo_bijeli" width="688" height="auto" />
+
+        <div className='gumbi_za_auth'>
+          <Link to="auth/login">
+            <button className='login-button'>Prijava</button>
+          </Link>
+
+          <Link to="auth/reg">
+            <button className='reg-button'>Registracija</button>
+          </Link>
+        </div>
       </div>
-      
     </>
   )
 }
 
-export default App
+export default Home

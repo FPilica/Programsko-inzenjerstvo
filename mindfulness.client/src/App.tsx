@@ -17,6 +17,8 @@ import Calendar from "./Calendar"
 import Profile from "./Profile"
 import Admin from "./Admin"
 import Coach from "./Coach"
+import Dashboard from './Dashboard'
+import Stats from './Stats'
 // nezz kako dash i stats ?
 
 
@@ -41,7 +43,7 @@ function App() {
           />
           <Route
             path="/auth/reg"
-            element={<Reg />}
+            element={<Reg/>}
           />
           <Route
             path="/auth/forgotpass"
@@ -68,6 +70,14 @@ function App() {
             element={<Coach />}
           />
           <Route
+            path="/dashboard"
+            element={<Dashboard />}
+          />
+          <Route
+            path="/stats"
+            element={<Stats />}
+          />
+          <Route
             path="*"
             element={<Navigate to="/" />}
           />
@@ -77,4 +87,4 @@ function App() {
   )
 }
 
-export default App;
+export default App

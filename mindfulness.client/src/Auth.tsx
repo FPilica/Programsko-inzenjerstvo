@@ -1,33 +1,70 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import './App.css'
-// auth 
-// npx vite u cmd u folder
-
+import './Auth.css'
+import logoPurple from './assets/logo_boja 2.png'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 
-function App() {
+function Login() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [pass, setPass] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Prijava s e-mailom:', email, 'i lozinkom:', pass);
+    // logika
+    // za primjer
+    let ok = true;
+    if (ok) {
+      // idemo na dashboard
+      navigate('/dashboard');
+    }
+  }
+
   return (
     <>
       
-      <div className='container_auth'>
-        <h1>mindfulness</h1>
-        <p>Prijava</p>
-        <form>
-          <label>E-mail*</label><br/>
-          <input type="text" id="email" name="email" ></input><br/>
-          <label>Lozinka*</label><br/>
-          <input type="text" id="pass" name="pass"></input><br/>
-          <input className='submit' type="submit" value="Prijavi me"></input>
-        </form>
-        <div>
-          <Link to = "/auth/forgotpass">Zaboravljena lozinka?</Link>
+      <div className='containerAuth'>
+        <Link className="logoLink" to="/">
+          <img src={logoPurple} alt="logo_purple" width="177" height="41" />
+        </Link>
+        <div className="optionLogReg">
+          <NavLink className="loginLink" to="/auth/login">Prijava</NavLink>
+          <NavLink className="regLink" to="/auth/reg">Registracija</NavLink>
         </div>
+        <form className="authForm" onSubmit={handleSubmit}>
+          <label htmlFor="email">E-mail*</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Unesi e-mail adresu"
+            autoComplete='email'
+            required
+          />
+          <label htmlFor="pass">Lozinka*</label>
+          <input
+            type="password"
+            id="pass"
+            name="pass"
+            value={pass}
+            onChange={(e) => setPass(e.target.value)}
+            placeholder="Unesi lozinku"
+            autoComplete='current-password'
+            required
+          />
+          <Link to="/auth/forgotpass">Zaboravljena lozinka?</Link>
+          <button className="submit" type="submit">Prijavi se</button>
+        </form>
+    
       </div>
       
     </>
   )
 }
 
-export default App
+export default Login
