@@ -4,7 +4,7 @@ using Mindfulness.Server.Enums;
 
 namespace Mindfulness.Server.Dtos.User;
 
-public class UserCreateDto
+public class UserRegisterDto
 {
     //stvari koje koristimo prilikom registracije
     public required string FirstName { get; set; }
