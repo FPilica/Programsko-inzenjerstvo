@@ -15,19 +15,19 @@ function Header() {
                 <HouseIcon className="homeIcon" size={35} color="black"/>
             </NavLink>
             <NavLink to="/content">
-                <PlayIcon size={35} color="black"/>   
+                <PlayIcon className="contentIcon" size={35} color="black"/>   
             </NavLink>
             <NavLink to="/stats">
-                <ChartBarIcon size={35} color="black"/>
+                <ChartBarIcon className="statsIcon" size={35} color="black"/>
             </NavLink>
             <NavLink to="/calendar">
-                <CalendarBlankIcon size={35} color="black"/>
+                <CalendarBlankIcon className="calendarIcon" size={35} color="black"/>
             </NavLink>
         </div>
         <div className="rightIcons">
             <BellIcon size={35} color="black"/>
             <NavLink to="/profile">
-                <UserIcon size={35} color="black"/>
+                <UserIcon className="profileIcon" size={35} color="black"/>
             </NavLink>
         </div>
         </header>

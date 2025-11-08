@@ -20,36 +20,28 @@
     justify-self: center;
 }
 
-.homeIcon.active {
+.active > .homeIcon {
     fill: #7636BB;
     border-bottom: 2px solid #7636BB;
 }
 
-.active > .homeIcon {
-    fill: #7636BB;
+.active > .contentIcon {
+    fill: #e5b4e9;
+    border-bottom: 2px solid #e5b4e9;
 }
 
-.homeIcon.active header {
-    color: #7636BB;
-}
-
-.contentIcon.active {
-    color: #E5B4E9;
-    border-bottom: 2px solid #E5B4E9;
-}
-
-.statsIcon.active {
-    color: #BD00D4;
+.active > .statsIcon {
+    fill: #BD00D4;
     border-bottom: 2px solid #BD00D4;
 }
 
-.calendarIcon.active {
-    color: #957CFE;
+.active > .calendarIcon {
+    fill: #957CFE;
     border-bottom: 2px solid #957CFE;
 }
 
-.profileIcon.active {
-    color: #7636BB;
+.active > .profileIcon {
+    fill: #7636BB;
     border-bottom: 2px solid #7636BB;
 }
 
