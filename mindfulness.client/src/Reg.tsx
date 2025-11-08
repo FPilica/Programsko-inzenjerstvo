@@ -43,28 +43,32 @@ function Reg() {
             </NavLink>
           </div>
           <form className="authForm" onSubmit={handleSubmit}>
-            <label htmlFor="email">E-mail*</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Unesi e-mail adresu"
-              autoComplete="email"
-              required
-            />
-            <label htmlFor="pass">Lozinka*</label>
-            <input
-              type="password"
-              id="pass"
-              name="pass"
-              value={pass}
-              onChange={(e) => setPass(e.target.value)}
-              placeholder="Unesi lozinku"
-              autoComplete="new-password"
-              required
-            />
+            <div className="emailContainer">
+              <label htmlFor="email">E-mail*</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Unesi e-mail adresu"
+                autoComplete="email"
+                required
+              />
+            </div>
+            <div className="passContainer">
+              <label htmlFor="pass">Lozinka*</label>
+              <input
+                type="password"
+                id="pass"
+                name="pass"
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
+                placeholder="Unesi lozinku"
+                autoComplete="new-password"
+                required
+              />
+            </div>
             <button className="myButton submit" type="submit">
               Registriraj se
             </button>
