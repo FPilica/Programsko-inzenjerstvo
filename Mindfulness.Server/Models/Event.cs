@@ -7,7 +7,7 @@ public class Event
     public Guid Id { get; set; }
     
     [MaxLength(30)]
-    public string Title { get; set; }
+    public required string Title { get; set; }
     
     [MaxLength(300)]
     public string? Description { get; set; }
@@ -17,5 +17,5 @@ public class Event
     public DateTimeOffset EndTime { get; set; }
     
     public Guid UserId { get; set; }
-    public User User { get; set; }
+    public required User User { get; set; }
 }

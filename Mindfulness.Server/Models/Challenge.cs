@@ -8,7 +8,7 @@ public class Challenge
     public Guid Id { get; set; }
     
     [MaxLength(30)]
-    public string Title { get; set; }
+    public required string Title { get; set; }
     
     [MaxLength(300)]
     public string? Description { get; set; }

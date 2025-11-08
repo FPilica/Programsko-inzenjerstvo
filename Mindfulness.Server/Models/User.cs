@@ -7,10 +7,10 @@ namespace Mindfulness.Server.Models;
 public class User : IdentityUser<Guid>
 {
     [MaxLength(30)]
-    public string FirstName { get; set; }
+    public required string FirstName { get; set; }
     
     [MaxLength(30)]
-    public string LastName { get; set; }
+    public required string LastName { get; set; }
     
     public Gender Gender { get; set; }
     
@@ -24,7 +24,7 @@ public class User : IdentityUser<Guid>
     
     public string? ProviderKey { get; set; }
     
-    public StartQuestionnaire StartQuestionnaire { get; set; }
+    public StartQuestionnaire? StartQuestionnaire { get; set; }
 
     public List<DailyCheckIn> DailyCheckIns { get; set; } = [];
     

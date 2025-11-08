@@ -8,13 +8,13 @@ namespace Mindfulness.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public sealed class AuthenticationController : ControllerBase
+public sealed class AuthController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     
     private readonly SignInManager<User> _signInManager;
 
-    public AuthenticationController(UserManager<User> userManager, SignInManager<User> signInManager)
+    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -36,7 +36,11 @@ public sealed class AuthenticationController : ControllerBase
         }
         
         // TODO Map UserCreateDto to User
-        var user = new User();
+        var user = new User()
+        {
+            FirstName = "",
+            LastName = ""
+        };
 
         var result = await _userManager.CreateAsync(user, userCreateDto.Password);
 
@@ -65,27 +69,34 @@ public sealed class AuthenticationController : ControllerBase
         }
 
         var existingUser = await _userManager.FindByEmailAsync(email);
-        if (existingUser is not null && !existingUser.IsExternalAccount)
+        if (existingUser is not null)
         {
-            return BadRequest("This email is already in use via normal registration.");
-        }
+            if (!existingUser.IsExternalAccount)
+            {
+                return BadRequest("This email is already in use via normal registration.");
+            }
 
-        if (existingUser.Provider != info.LoginProvider)
-        {
-            return BadRequest($"This email is already in use via {existingUser.Provider}.");
+            if (existingUser.Provider != info.LoginProvider)
+            {
+                return BadRequest($"This email is already in use via {existingUser.Provider}.");
+            }
         }
         
         // TODO Map UserCreateDto to User
-        var user = existingUser ?? new User();
+        var user = existingUser ?? new User()
+        {
+            FirstName = info.LoginProvider,
+            LastName = info.LoginProvider
+        };
 
         if (existingUser is null)
         {
             _ = await _userManager.CreateAsync(user);
         }
 
-        await _userManager.AddLoginAsync(user, info);
+        _ = await _userManager.AddLoginAsync(user, info);
         await _signInManager.SignInAsync(user, isPersistent: false);
-
+ 
         return Ok($"{info.LoginProvider} login successful.");
     }
 }

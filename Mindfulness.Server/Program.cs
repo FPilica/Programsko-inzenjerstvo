@@ -28,14 +28,8 @@ builder.Services.AddDbContext<MindfulnessDbContext>(options =>
 });
 
 builder.Services
-    .AddIdentity<User, IdentityRole>(options =>
+    .AddIdentity<User, IdentityRole<Guid>>(options =>
     {
-        options.Password.RequireDigit = true;
-        options.Password.RequireLowercase = true;
-        options.Password.RequireNonAlphanumeric = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequiredLength = 6;
-        
         options.SignIn.RequireConfirmedAccount = true;
         
         options.User.RequireUniqueEmail = true;
@@ -47,13 +41,17 @@ builder.Services
     .AddAuthentication()
     .AddGoogle(options =>
     {
-        options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ??
+                           throw new ArgumentNullException("Authentication:Google:ClientId");
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ??
+                               throw new ArgumentNullException("Authentication:Google:ClientSecret");
     })
     .AddMicrosoftAccount(options =>
     {
-        options.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"];
-        options.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"];
+        options.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"] ??
+                           throw new ArgumentNullException("Authentication:Microsoft:ClientId");
+        options.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"] ??
+                               throw new ArgumentNullException("Authentication:Microsoft:ClientSecret");
     });
 
 builder.Services.AddAuthorization();
