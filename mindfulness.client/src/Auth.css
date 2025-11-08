@@ -1,3 +1,9 @@
+.containerHomeAndAuth {
+    display: flex;
+    place-items: center;
+    justify-content: center;
+}
+
 .containerAuth {
     padding: 30px;
     background-color: white;
@@ -43,10 +49,11 @@
     text-align: center;
 }
 
-.active {
-    color: black;
-    border-bottom: 3px solid #7636BB;
+.loginLink.active, .regLink.active{
+    color:black;
+    border-bottom:3px solid #7636BB;
 }
+
 
 .authForm {
     display: flex;
@@ -165,7 +172,7 @@
 }
 
 .submit {
-    background-color: #7636BB;
+    background-color: #7636BB !important;
     color: white;
     border-radius: 15px;
 }
@@ -189,11 +196,14 @@
 
 .onboardingContainer > form > p {
     font-size: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     font-weight: bold;
     text-align: center;
     margin: 0px;
     padding:15px;
-    width:20%;
+    width:100%;
     border-bottom: 2px solid #7636BB;
 }
 

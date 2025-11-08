@@ -25,42 +25,42 @@ function Login() {
 
   return (
     <>
-      
-      <div className='containerAuth'>
-        <Link className="logoLink" to="/">
-          <img src={logoPurple} alt="logo_purple" width="177" height="41" />
-        </Link>
-        <div className="optionLogReg">
-          <NavLink className="loginLink" to="/auth/login">Prijava</NavLink>
-          <NavLink className="regLink" to="/auth/reg">Registracija</NavLink>
+      <div className="containerHomeAndAuth">
+        <div className='containerAuth'>
+          <Link className="logoLink" to="/">
+            <img src={logoPurple} alt="logo_purple" width="177" height="41" />
+          </Link>
+          <div className="optionLogReg">
+            <NavLink className="loginLink" to="/auth/login">Prijava</NavLink>
+            <NavLink className="regLink" to="/auth/reg">Registracija</NavLink>
+          </div>
+          <form className="authForm" onSubmit={handleSubmit}>
+            <label htmlFor="email">E-mail*</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Unesi e-mail adresu"
+              autoComplete='email'
+              required
+            />
+            <label htmlFor="pass">Lozinka*</label>
+            <input
+              type="password"
+              id="pass"
+              name="pass"
+              value={pass}
+              onChange={(e) => setPass(e.target.value)}
+              placeholder="Unesi lozinku"
+              autoComplete='current-password'
+              required
+            />
+            <Link to="/auth/forgotpass">Zaboravljena lozinka?</Link>
+            <button className="myButton submit" type="submit">Prijavi se</button>
+          </form>
         </div>
-        <form className="authForm" onSubmit={handleSubmit}>
-          <label htmlFor="email">E-mail*</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Unesi e-mail adresu"
-            autoComplete='email'
-            required
-          />
-          <label htmlFor="pass">Lozinka*</label>
-          <input
-            type="password"
-            id="pass"
-            name="pass"
-            value={pass}
-            onChange={(e) => setPass(e.target.value)}
-            placeholder="Unesi lozinku"
-            autoComplete='current-password'
-            required
-          />
-          <Link to="/auth/forgotpass">Zaboravljena lozinka?</Link>
-          <button className="submit" type="submit">Prijavi se</button>
-        </form>
-    
       </div>
       
     </>
