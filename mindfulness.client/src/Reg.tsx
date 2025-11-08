@@ -10,6 +10,48 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+function validatePass(password: string) {
+  let returns = { success: true, msg: '' };
+  
+  if (password.length < 8) {
+    returns.success = false;
+    returns.msg = 'Lozinka mora imati barem 8 znakova!';
+    return returns;
+  }
+
+  let hasUpperCase = false;
+  let hasLowerCase = false;
+  let hasNumber = false;
+  let hasSpecialChar = false;
+
+  for (let i = 0; i < password.length; i++) {
+    const char = password[i];
+
+    if (char >= 'A' && char <= 'Z') {
+      hasUpperCase = true;
+    } else if (char >= 'a' && char <= 'z') {
+      hasLowerCase = true;
+    } else if (char >= '0' && char <= '9') {
+      hasNumber = true;
+    } else if (
+      (char >= '!' && char <= '/') ||
+      (char >= ':' && char <= '@') ||
+      (char >= '[' && char <= '`') ||
+      (char >= '{' && char <= '~') 
+    ) {
+      hasSpecialChar = true;
+    }
+
+  }
+
+  returns.success = hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
+  if (!returns.success) {
+    returns.msg = 'Lozinka mora sadržavati barem jedan broj, velika i mala slova te jedan poseban znak!';
+  }
+
+  return returns;
+}
+
 function Reg() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -17,13 +59,18 @@ function Reg() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Registracija s e-mailom:", email, "i lozinkom:", pass);
-    // logika
-    // za primjer
-    let ok = true;
-    if (ok) {
-      // idemo na dashboard
-      navigate("/auth/onboarding");
+    const validation = validatePass(pass)
+    if (!validation?.success) {
+      alert(validation.msg);
+    } else {
+      console.log("Registracija s e-mailom:", email, "i lozinkom:", pass);
+      // logika
+      // za primjer
+      let ok = true;
+      if (ok) {
+        // idemo na dashboard
+        navigate("/auth/onboarding");
+      }
     }
   };
 
