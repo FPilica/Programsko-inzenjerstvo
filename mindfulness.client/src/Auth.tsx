@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
+import OAuthContainer from "./components/OAuthContainer";
 
 function Login() {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ function Login() {
               Registracija
             </NavLink>
           </div>
+          <OAuthContainer />
           <form className="authForm" onSubmit={handleSubmit}>
             <div className="emailContainer">
               <label htmlFor="email">E-mail*</label>

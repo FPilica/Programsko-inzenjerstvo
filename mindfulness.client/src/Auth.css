@@ -1,8 +1,3 @@
-.containerHomeAndAuth {
-    display: flex;
-    place-items: center;
-    justify-content: center;
-}
 
 .containerAuth {
     padding: 30px;
@@ -55,6 +50,7 @@
 }
 
 .authForm {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -63,11 +59,18 @@
     position: relative;
 }
 
-.emailContainer, .passContainer {
+/* .emailContainer, .passContainer {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 7px;
+} */
+
+.authForm > div {
+    width:100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .authForm > div > label {
@@ -95,6 +98,35 @@
     color: rgba(0, 0, 0, 0.4);
     position: absolute;
     bottom: 22px;
+}
+
+/* samo reg */
+.genderOptions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 30px;
+}
+
+.genderOptions > div {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.genderOptions > div > input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+    
+.genderOptions > div >input[type="radio"]:hover {
+    transform: scale(1.2);
+}
+    
+.genderOptions > div > input[type="radio"]:checked {
+    accent-color: #7636BB;
 }
 
 /* forgot password */
@@ -240,7 +272,6 @@
     width: 25px;
     height: 25px;
     cursor: pointer;
-    background:transparent;
     transition: transform 0.3s;
 }
 

@@ -7,7 +7,7 @@ import './Header.css'
 function Header() {
     return (
         <header className="header">
-        <NavLink to="/">
+        <NavLink to="/dashboard">
             <img src={logoPurple} alt="logo_purple" width="177" height="41" />
         </NavLink>
         <div className="middleIcons">

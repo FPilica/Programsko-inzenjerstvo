@@ -1,7 +1,13 @@
 
 .containerHomeAndAuth {
+    position: relative;
+    display: flex;
+    place-items: center;
+    justify-content: center;
     background-image: url("./assets/pozadina_home.png");
-    background-size: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding:100px;
 }
 
 .containerHome {

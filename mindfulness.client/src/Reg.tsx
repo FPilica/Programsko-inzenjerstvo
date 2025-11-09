@@ -9,13 +9,14 @@ import logoPurple from "./assets/logo_boja 2.png";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import OAuthContainer from "./components/OAuthContainer";
 
 function validatePass(password: string) {
-  let returns = { success: true, msg: '' };
-  
+  let returns = { success: true, msg: "" };
+
   if (password.length < 8) {
     returns.success = false;
-    returns.msg = 'Lozinka mora imati barem 8 znakova!';
+    returns.msg = "Lozinka mora imati barem 8 znakova!";
     return returns;
   }
 
@@ -27,26 +28,26 @@ function validatePass(password: string) {
   for (let i = 0; i < password.length; i++) {
     const char = password[i];
 
-    if (char >= 'A' && char <= 'Z') {
+    if (char >= "A" && char <= "Z") {
       hasUpperCase = true;
-    } else if (char >= 'a' && char <= 'z') {
+    } else if (char >= "a" && char <= "z") {
       hasLowerCase = true;
-    } else if (char >= '0' && char <= '9') {
+    } else if (char >= "0" && char <= "9") {
       hasNumber = true;
     } else if (
-      (char >= '!' && char <= '/') ||
-      (char >= ':' && char <= '@') ||
-      (char >= '[' && char <= '`') ||
-      (char >= '{' && char <= '~') 
+      (char >= "!" && char <= "/") ||
+      (char >= ":" && char <= "@") ||
+      (char >= "[" && char <= "`") ||
+      (char >= "{" && char <= "~")
     ) {
       hasSpecialChar = true;
     }
-
   }
 
   returns.success = hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
   if (!returns.success) {
-    returns.msg = 'Lozinka mora sadržavati barem jedan broj, velika i mala slova te jedan poseban znak!';
+    returns.msg =
+      "Lozinka mora sadržavati barem jedan broj, velika i mala slova te jedan poseban znak!";
   }
 
   return returns;
@@ -56,14 +57,19 @@ function Reg() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [gender, setGender] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const validation = validatePass(pass)
+
+    const validation = validatePass(pass);
     if (!validation?.success) {
       alert(validation.msg);
     } else {
-      console.log("Registracija s e-mailom:", email, "i lozinkom:", pass);
+      console.log("Registracija s e-mailom:", email, "i lozinkom:", pass, "ime:", name, "prezime:", surname, "datum rođenja:", birthDate, "rod:", gender);
       // logika
       // za primjer
       let ok = true;
@@ -89,7 +95,80 @@ function Reg() {
               Registracija
             </NavLink>
           </div>
+          <OAuthContainer />
           <form className="authForm" onSubmit={handleSubmit}>
+            <div className="nameContainer">
+              <label htmlFor="name">Ime*</label>
+              <input
+                type="text"
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Unesi ime"
+                autoComplete="given-name"
+                required
+              />
+            </div>
+            <div className="surnameContainer">
+              <label htmlFor="surname">Prezime*</label>
+              <input
+                type="text"
+                id="surname"
+                value={surname}
+                onChange={(e) => setSurname(e.target.value)}
+                placeholder="Unesi prezime"
+                autoComplete="family-name"
+                required
+              />
+            </div>
+            <div className="birthDateContainer">
+              <label htmlFor="bd">Datum rođenja*</label>
+              <input
+                type="date"
+                id="bd"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+                required
+              />
+            </div>
+            <div className="genderContainer">
+              <label>Rod*</label>
+              <div className="genderOptions">
+                <div>
+                  <input
+                    type="radio"
+                    id="M"
+                    name="choice"
+                    value="M"
+                    onChange={(e) => setGender(e.target.value)}
+                    checked={gender === "M"}
+                  />
+                  <label htmlFor="M">M</label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="F"
+                    name="choice"
+                    value="F"
+                    onChange={(e) => setGender(e.target.value)}
+                    checked={gender === "F"}
+                  />
+                  <label htmlFor="F">Ž</label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="O"
+                    name="choice"
+                    value="O"
+                    onChange={(e) => setGender(e.target.value)}
+                    checked={gender === "O"}
+                  />
+                  <label htmlFor="O">Ostalo</label>
+                </div>
+              </div>
+            </div>
             <div className="emailContainer">
               <label htmlFor="email">E-mail*</label>
               <input
