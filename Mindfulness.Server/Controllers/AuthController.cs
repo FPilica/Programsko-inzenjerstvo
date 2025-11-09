@@ -1,10 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Mindfulness.Server.Dtos.User;
+using Mindfulness.Server.Enums;
 using Mindfulness.Server.Models;
 
 namespace Mindfulness.Server.Controllers;
@@ -13,17 +15,20 @@ namespace Mindfulness.Server.Controllers;
 [Route("[controller]")]
 public sealed class AuthController : ControllerBase
 {
-    private readonly UserManager<User> _userManager;
+    private readonly IConfiguration _configuration;
+    
+    private readonly IMapper _mapper;
     
     private readonly SignInManager<User> _signInManager;
     
-    private readonly IConfiguration _configuration;
+    private readonly UserManager<User> _userManager;
 
-    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
+    public AuthController(IConfiguration configuration, IMapper mapper, SignInManager<User> signInManager, UserManager<User> userManager)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
         _configuration = configuration;
+        _mapper = mapper;
+        _signInManager = signInManager;
+        _userManager = userManager;
     }
 
     [HttpPost("register")]
@@ -41,12 +46,7 @@ public sealed class AuthController : ControllerBase
             return BadRequest("This email is already in use.");
         }
         
-        // TODO Map UserRegisterDto to User
-        var user = new User()
-        {
-            FirstName = "",
-            LastName = ""
-        };
+        var user = _mapper.Map<User>(userRegisterDto);
 
         var result = await _userManager.CreateAsync(user, userRegisterDto.Password);
 
@@ -126,11 +126,14 @@ public sealed class AuthController : ControllerBase
             return Ok(new { jwtToken });
         }
         
-        // TODO Map UserRegisterDto to User
-        var user = existingUser ?? new User()
+        var user = existingUser ?? new User
         {
-            FirstName = info.LoginProvider,
-            LastName = info.LoginProvider
+            FirstName = info.Principal.FindFirstValue(ClaimTypes.Name) ?? "John",
+            LastName = info.Principal.FindFirstValue(ClaimTypes.Surname) ?? "Doe",
+            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+            DateOfBirth = DateTimeOffset.Parse(info.Principal.FindFirstValue(ClaimTypes.DateOfBirth)
+                                               ?? DateTimeOffset.MinValue.ToString()),
+            Gender = Enum.Parse<Gender>(info.Principal.FindFirstValue(ClaimTypes.Gender) ?? "Undefined", true)
         };
         
         var result = await _userManager.CreateAsync(user);
