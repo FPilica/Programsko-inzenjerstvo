@@ -1,58 +1,90 @@
-import { useEffect, useState } from 'react';
-import './App.css';
 
-interface Forecast {
-    date: string;
-    temperatureC: number;
-    temperatureF: number;
-    summary: string;
-}
+import './App.css'
+// npx vite u cmd u folder
+
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+} from "react-router-dom"
+import Auth from "./Auth"
+import Home from "./home"
+import Reg from "./Reg"
+import ForgotPass from "./ForgotPass"
+import Content from "./Content"
+import Calendar from "./Calendar"
+import Profile from "./Profile"
+import Admin from "./Admin"
+import Coach from "./Coach"
+import Dashboard from './Dashboard'
+import Stats from './Stats'
+// nezz kako dash i stats ?
+
 
 function App() {
-    const [forecasts, setForecasts] = useState<Forecast[]>();
-
-    useEffect(() => {
-        populateWeatherData();
-    }, []);
-
-    const contents = forecasts === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : <table className="table table-striped" aria-labelledby="tableLabel">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Temp. (C)</th>
-                    <th>Temp. (F)</th>
-                    <th>Summary</th>
-                </tr>
-            </thead>
-            <tbody>
-                {forecasts.map(forecast =>
-                    <tr key={forecast.date}>
-                        <td>{forecast.date}</td>
-                        <td>{forecast.temperatureC}</td>
-                        <td>{forecast.temperatureF}</td>
-                        <td>{forecast.summary}</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>;
-
-    return (
-        <div>
-            <h1 id="tableLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
-            {contents}
-        </div>
-    );
-
-    async function populateWeatherData() {
-        const response = await fetch('https://localhost:8081/weatherforecast');
-        if (response.ok) {
-            const data = await response.json();
-            setForecasts(data);
-        }
-    }
+  // app sada radi kao server.js odnosno sadrži rute na druge stranice
+  return (
+    <>
+      <Router>
+        <Routes>
+          <Route
+            // exact
+            path="/"
+            element={<Home />}
+          />
+          <Route
+            path="/auth"
+            element={<Auth />}
+          />
+          <Route
+            path="/auth/login"
+            element={<Auth />}
+          />
+          <Route
+            path="/auth/reg"
+            element={<Reg/>}
+          />
+          <Route
+            path="/auth/forgotpass"
+            element={<ForgotPass />}
+          />
+          <Route
+            path="/content"
+            element={<Content />}
+          />
+          <Route
+            path="/calendar"
+            element={<Calendar />}
+          />
+          <Route
+            path="/profile"
+            element={<Profile />}
+          />
+          <Route
+            path="/admin"
+            element={<Admin />}
+          />
+          <Route
+            path="/coach"
+            element={<Coach />}
+          />
+          <Route
+            path="/dashboard"
+            element={<Dashboard />}
+          />
+          <Route
+            path="/stats"
+            element={<Stats />}
+          />
+          <Route
+            path="*"
+            element={<Navigate to="/" />}
+          />
+        </Routes>
+      </Router>
+    </>
+  )
 }
 
-export default App;
+export default App
