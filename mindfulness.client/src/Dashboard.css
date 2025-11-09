@@ -1,5 +1,19 @@
-.dashboardContainer {
-    background-color: white;
+.background {
+    position: relative;
+    background-color:white;
+    background-image: url('./assets/pozadina_dash.png');
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-position: center center;
+    z-index: 0;
     color: black;
-    padding: 100px 30px 30px 30px;
+    
 }
+
+.background > :first-child {
+    position:relative;
+    z-index: 1;
+    padding: 110px 30px 30px 30px;
+}
+
+/* ne diraj ovo gori */

@@ -6,7 +6,7 @@ function OAuthContainer() {
   return (
     <>
       <div className="oAuthContainer">
-        <p>Nastavi sa jednim od svojih računa:</p>
+        <p>Nastavi jednim od svojih računa:</p>
         <div className="authButtons">
           <button className="myButton googleButton">
             <img src={googleLogo} alt="google-logo" width="30" height="30" />
@@ -17,7 +17,7 @@ function OAuthContainer() {
             <p>Microsoft</p>
           </button>
         </div>
-        <p>Ili e-mailom i lozinkom:</p>
+        <p>Ili putem e-maila i lozinke:</p>
       </div>
     </>
   );

@@ -1,0 +1,35 @@
+
+.profileContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height:100vh;
+}
+
+.containerProfile {
+    padding: 30px;
+    background-color: white;
+    width: 532px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: black;
+    border-radius: 20px;
+}
+
+.containerList {
+    display: grid;
+    grid-template-columns: 125px auto;
+}
+
+.userInput {
+    font-weight: bold;
+}
+
+.fp {
+    align-self: flex-end;
+    text-decoration: none;
+    color: rgba(0, 0, 0);
+    bottom: 22px;
+}
