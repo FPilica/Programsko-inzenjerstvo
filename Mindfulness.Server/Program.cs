@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Mindfulness.Server;
+using Mindfulness.Server.Mapping;
 
 const string corsPolicyName = "FrontendCorsPolicy";
 
@@ -19,6 +20,8 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:5173");
     });
 });
+
+builder.Services.AddAutoMapper(_ => { }, AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<MindfulnessDbContext>(options =>
 {
