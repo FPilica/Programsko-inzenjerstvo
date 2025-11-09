@@ -1,6 +1,7 @@
-﻿using Mindfulness.Server.Dtos.AudioLanguage;
+﻿using AutoMapper;
+using Mindfulness.Server.Dtos.AudioLanguage;
 using Mindfulness.Server.Models;
-using AutoMapper;
+
 namespace Mindfulness.Server.Mapping;
 
 public class AudioLanguageMapper : Profile

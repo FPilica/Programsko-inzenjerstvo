@@ -2,14 +2,13 @@
 using Mindfulness.Server.Dtos.Content;
 using Mindfulness.Server.Models;
 
-namespace Mindfulness.Server.Mapping
+namespace Mindfulness.Server.Mapping;
+
+public class ContentMapper : Profile
 {
-    public class ContentMapper : Profile
-    {
-        public ContentMapper() {
-            CreateMap<ContentCreateDto, Content>();
-            CreateMap<ContentUpdateDto, Content>();
-            CreateMap<Content, ContentDetailsDto>();
-        }    
-    }
+    public ContentMapper() {
+        CreateMap<ContentCreateDto, Content>();
+        CreateMap<ContentUpdateDto, Content>();
+        CreateMap<Content, ContentDetailsDto>();
+    }    
 }

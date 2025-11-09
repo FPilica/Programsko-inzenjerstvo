@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Mindfulness.Server;
 using Mindfulness.Server.Mapping;
@@ -13,26 +12,6 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddAutoMapper(typeof(Program));
-
-var config = new MapperConfiguration(cfg =>
-{
-    cfg.AddProfile<AudioLanguageMapper>();
-    cfg.AddProfile<ChallengeMapper>();
-    cfg.AddProfile<ContentMapper>();
-    cfg.AddProfile<ContentCategoryMapper>();
-    cfg.AddProfile<DailyCheckInMapper>();
-    cfg.AddProfile<EventMapper>();
-    cfg.AddProfile<MotivationMapper>();
-    cfg.AddProfile<ReviewMapper>();
-    cfg.AddProfile<SettingMapper>();
-    cfg.AddProfile<StartQuestionnaireMapper>();
-    cfg.AddProfile<UserMapper>();
-    cfg.AddProfile<UserSettingMapper>();
-});
-
-var mapper = config.CreateMapper();
-
 
 builder.Services.AddCors(options =>
 {
@@ -41,6 +20,8 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:5173");
     });
 });
+
+builder.Services.AddAutoMapper(_ => { }, AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<MindfulnessDbContext>(options =>
 {

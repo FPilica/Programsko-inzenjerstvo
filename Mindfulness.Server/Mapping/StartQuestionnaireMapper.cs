@@ -2,14 +2,13 @@
 using Mindfulness.Server.Dtos.StartQuestionnaire;
 using Mindfulness.Server.Models;
 
-namespace Mindfulness.Server.Mapping
+namespace Mindfulness.Server.Mapping;
+
+public class StartQuestionnaireMapper : Profile
 {
-    public class StartQuestionnaireMapper : Profile
-    {
-        public StartQuestionnaireMapper() {
-            CreateMap<StartQuestionnaireCreateDto, StartQuestionnaire>();
-            CreateMap<StartQuestionnaireUpdateDto, StartQuestionnaire>();
-            CreateMap<StartQuestionnaire, StartQuestionnaireDetailsDto>();
-        }
+    public StartQuestionnaireMapper() {
+        CreateMap<StartQuestionnaireCreateDto, StartQuestionnaire>();
+        CreateMap<StartQuestionnaireUpdateDto, StartQuestionnaire>();
+        CreateMap<StartQuestionnaire, StartQuestionnaireDetailsDto>();
     }
 }
