@@ -15,6 +15,7 @@ import ForgotPass from "./ForgotPass";
 import Content from "./Content";
 import Calendar from "./Calendar";
 import Profile from "./Profile";
+import SetProfile from "./SetProfile";
 import Admin from "./Admin";
 import Coach from "./Coach";
 import Dashboard from "./Dashboard";
@@ -28,11 +29,7 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route
-            // exact
-            path="/"
-            element={<Home />}
-          />
+          <Route path="/" element={<Home />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/auth/login" element={<Auth />} />
           <Route path="/auth/reg" element={<Reg />} />
@@ -41,6 +38,7 @@ function App() {
           <Route path="/content" element={<Content />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/setprofile" element={<SetProfile />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/coach" element={<Coach />} />
           <Route path="/dashboard" element={<Dashboard />} />
