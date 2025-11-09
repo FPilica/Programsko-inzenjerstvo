@@ -22,7 +22,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
     {
-        policy.WithOrigins("http://localhost:5173");
+        policy.WithOrigins("http://localhost:5173", "https://localhost:7070", "https://localhost:60665/");
     });
 });
 
@@ -36,7 +36,8 @@ builder.Services.AddDbContext<MindfulnessDbContext>(options =>
 builder.Services
     .AddIdentity<User, IdentityRole<Guid>>(options =>
     {
-        options.SignIn.RequireConfirmedAccount = true;
+        // TODO Maknut komentar kad implementiramo 2FA
+        // options.SignIn.RequireConfirmedAccount = true;
         
         options.User.RequireUniqueEmail = true;
     })
@@ -65,14 +66,14 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(key),
         };
     })
-    .AddGoogle(options =>
+    .AddGoogle("Google",options =>
     {
         options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ??
                            throw new ArgumentNullException("Authentication:Google:ClientId");
         options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ??
                                throw new ArgumentNullException("Authentication:Google:ClientSecret");
     })
-    .AddMicrosoftAccount(options =>
+    .AddMicrosoftAccount("Microsoft", options =>
     {
         options.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"] ??
                            throw new ArgumentNullException("Authentication:Microsoft:ClientId");
