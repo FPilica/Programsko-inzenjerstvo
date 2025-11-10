@@ -25,6 +25,7 @@ function App() {
               <Link className="fp" to="/profile/setprofile">
                 Postavke profila
               </Link>
+              <Link className="fp" to="/profile/onboardingrez">Anketa</Link>
             </div>
           </div>
         </div>
