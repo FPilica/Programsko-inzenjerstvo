@@ -125,8 +125,10 @@ public sealed class AuthController : ControllerBase
             }
 
             var jwtToken = GenerateJwtToken(existingUser);
-            
-            return Ok(new { jwtToken });
+
+            return Redirect(returnUrl is not null
+                ? $"{returnUrl}?token={jwtToken}"
+                : $"https://localhost:60665/content?token={jwtToken}");
         }
         
         var user = existingUser ?? new User
@@ -154,7 +156,9 @@ public sealed class AuthController : ControllerBase
 
         var token = GenerateJwtToken(user);
  
-        return Redirect($"{returnUrl}?token={token}" ?? $"https://localhost:60665/content?token={token}");
+        return Redirect(returnUrl is not null
+            ? $"{returnUrl}?token={token}"
+            : $"https://localhost:60665/content?token={token}");
     }
 
     private string GenerateJwtToken(User user)
