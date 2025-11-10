@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode} from "jwt-decode";
 
 function OAuthCallback() {
     const navigate = useNavigate();
@@ -13,9 +14,9 @@ function OAuthCallback() {
 
         if (token) {
             localStorage.setItem("auth_token", token);
-            // const tokenObj = JSON.parse(token);
-            // const userId = tokenObj.userId;
-            // console.log(token);
+
+            const tokenDecoded = jwtDecode(token);
+            const userId = tokenDecoded.sub;
             
             navigate("/dashboard");
         } else if (error) {
