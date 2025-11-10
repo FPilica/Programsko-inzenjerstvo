@@ -16,6 +16,7 @@ public class DailyCheckIn
     
     public int? Alcohol { get; set; }
     
+    public string? DailyNotes { get; set; }
     public Guid UserId { get; set; }
     public required User User { get; set; }
 }
