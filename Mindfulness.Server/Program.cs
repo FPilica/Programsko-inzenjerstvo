@@ -1,11 +1,12 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Mindfulness.Server;
 using Mindfulness.Server.Models;
-using Mindfulness.Server.Mapping;
+using Mindfulness.Server.Services;
 
 const string corsPolicyName = "FrontendCorsPolicy";
 
@@ -25,6 +26,9 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:5173", "https://localhost:7070", "https://localhost:60665/");
     });
 });
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("SendGrid"));
 
 builder.Services.AddAutoMapper(_ => { }, AppDomain.CurrentDomain.GetAssemblies());
 

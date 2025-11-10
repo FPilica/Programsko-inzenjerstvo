@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Runtime.InteropServices.ComTypes;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Mindfulness.Server.Models;
@@ -83,7 +84,87 @@ public class MindfulnessDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
             .HasForeignKey<StartQuestionnaire>(sq => sq.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
-    
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+
+        optionsBuilder.UseSeeding((context, b) =>
+        {
+            var userRole = context.Set<IdentityRole<Guid>>().FirstOrDefault(r => r.Name == "User");
+            if (userRole is null)
+            {
+                _ = context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>("User") { Id = Guid.NewGuid() });
+            }
+
+            var coachRole = context.Set<IdentityRole<Guid>>().FirstOrDefault(r => r.Name == "Coach");
+            if (coachRole is null)
+            {
+                _ = context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>("Coach") { Id = Guid.NewGuid() });
+            }
+
+            var adminRole = context.Set<IdentityRole<Guid>>().FirstOrDefault(r => r.Name == "Admin");
+            if (adminRole is null)
+            {
+                _ = context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>("Admin") { Id = Guid.NewGuid() });
+            }
+
+            var croatianLanguage = context.Set<AudioLanguage>().FirstOrDefault(l => l.Name == "Croatian");
+            if (croatianLanguage is null)
+            {
+                _ = context.Set<AudioLanguage>().Add(new AudioLanguage { Id = Guid.NewGuid(), Name = "Croatian" });
+            }
+            
+            var englishLanguage = context.Set<AudioLanguage>().FirstOrDefault(l => l.Name == "English");
+            if (englishLanguage is null)
+            {
+                _ = context.Set<AudioLanguage>().Add(new AudioLanguage { Id = Guid.NewGuid(), Name = "English" });
+            }
+
+            _ = context.SaveChanges();
+        });
+        
+        optionsBuilder.UseAsyncSeeding(async (context, b, cancellationToken) =>
+        {
+            var userRole = await context.Set<IdentityRole<Guid>>()
+                .FirstOrDefaultAsync(r => r.Name == "User", cancellationToken);
+            if (userRole is null)
+            {
+                _ = context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>("User") { Id = Guid.NewGuid() });
+            }
+
+            var coachRole = context.Set<IdentityRole<Guid>>()
+                .FirstOrDefaultAsync(r => r.Name == "Coach", cancellationToken);
+            if (coachRole is null)
+            {
+                _ = context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>("Coach") { Id = Guid.NewGuid() });
+            }
+
+            var adminRole = context.Set<IdentityRole<Guid>>()
+                .FirstOrDefaultAsync(r => r.Name == "Admin", cancellationToken);
+            if (adminRole is null)
+            {
+                _ = context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>("Admin") { Id = Guid.NewGuid() });
+            }
+
+            var croatianLanguage = await context.Set<AudioLanguage>()
+                .FirstOrDefaultAsync(l => l.Name == "Croatian", cancellationToken);
+            if (croatianLanguage is null)
+            {
+                _ = context.Set<AudioLanguage>().Add(new AudioLanguage { Id = Guid.NewGuid(), Name = "Croatian" });
+            }
+            
+            var englishLanguage = await context.Set<AudioLanguage>()
+                .FirstOrDefaultAsync(l => l.Name == "English", cancellationToken);
+            if (englishLanguage is null)
+            {
+                _ = context.Set<AudioLanguage>().Add(new AudioLanguage { Id = Guid.NewGuid(), Name = "English" });
+            }
+
+            _ = await context.SaveChangesAsync(cancellationToken);
+        });
+    }
+
     public DbSet<AudioLanguage> AudioLanguages { get; set; }
     
     public DbSet<Challenge> Challenges { get; set; }

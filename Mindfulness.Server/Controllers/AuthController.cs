@@ -2,8 +2,10 @@
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
 using Mindfulness.Server.Dtos.User;
 using Mindfulness.Server.Enums;
@@ -11,6 +13,7 @@ using Mindfulness.Server.Models;
 
 namespace Mindfulness.Server.Controllers;
 
+[AllowAnonymous]
 [ApiController]
 [Route("api/[controller]")]
 public sealed class AuthController : ControllerBase
@@ -38,18 +41,12 @@ public sealed class AuthController : ControllerBase
 
         if (existingUser is not null)
         {
-            if (existingUser.IsExternalAccount)
-            {
-                return BadRequest($"This email is already in use via {existingUser.Provider}.");
-            }
-
             return BadRequest("This email is already in use.");
         }
         
         var user = _mapper.Map<User>(userRegisterDto);
         user.Id = Guid.NewGuid();
         user.UserName = user.Email;
-        user.IsExternalAccount = false;
 
         var result = await _userManager.CreateAsync(user, userRegisterDto.Password);
 
@@ -57,6 +54,11 @@ public sealed class AuthController : ControllerBase
         {
             return BadRequest(result.Errors);
         }
+        
+        _ = await _userManager.AddToRoleAsync(user, "User");
+        
+        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         
         return Ok("User registration successful.");
     }
@@ -83,7 +85,7 @@ public sealed class AuthController : ControllerBase
         return Ok(new { token });
     }
 
-    [HttpGet("external-login")]
+    [HttpGet("external-login")] 
     public IActionResult ExternalLogin([FromQuery] string provider, [FromQuery] string returnUrl)
     {
         var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Auth", new { returnUrl });
@@ -128,7 +130,7 @@ public sealed class AuthController : ControllerBase
 
             return Redirect(returnUrl is not null
                 ? $"{returnUrl}?token={jwtToken}"
-                : $"https://localhost:60665/content?token={jwtToken}");
+                : $"https://localhost:60665/dashboard?token={jwtToken}");
         }
         
         var user = existingUser ?? new User
@@ -139,10 +141,7 @@ public sealed class AuthController : ControllerBase
             UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
             DateOfBirth = DateTimeOffset.Parse(info.Principal.FindFirstValue(ClaimTypes.DateOfBirth)
                                                ?? DateTimeOffset.MinValue.ToString()),
-            Gender = Enum.Parse<Gender>(info.Principal.FindFirstValue(ClaimTypes.Gender) ?? "Undefined", true),
-            IsExternalAccount = true,
-            Provider = info.LoginProvider,
-            ProviderKey = info.ProviderKey
+            Gender = Enum.Parse<Gender>(info.Principal.FindFirstValue(ClaimTypes.Gender) ?? "Undefined", true)
         };
         
         var result = await _userManager.CreateAsync(user);
@@ -153,12 +152,13 @@ public sealed class AuthController : ControllerBase
         }
 
         _ = await _userManager.AddLoginAsync(user, info);
+        _ = await _userManager.AddToRoleAsync(user, "User");
 
         var token = GenerateJwtToken(user);
  
         return Redirect(returnUrl is not null
             ? $"{returnUrl}?token={token}"
-            : $"https://localhost:60665/content?token={token}");
+            : $"https://localhost:60665/dashboard?token={token}");
     }
 
     private string GenerateJwtToken(User user)
@@ -174,9 +174,9 @@ public sealed class AuthController : ControllerBase
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
             new Claim(JwtRegisteredClaimNames.Name, user.UserName ?? ""),
-            new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName ?? ""),
-            new Claim(JwtRegisteredClaimNames.Gender, user.Gender.ToString() ?? ""),
-            new Claim(JwtRegisteredClaimNames.Birthdate, user.DateOfBirth.ToString("yyyy-MM-dd") ?? ""),
+            new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
+            new Claim(JwtRegisteredClaimNames.Gender, user.Gender.ToString()),
+            new Claim(JwtRegisteredClaimNames.Birthdate, user.DateOfBirth.ToString("yyyy-MM-dd")),
         };
 
         var token = new JwtSecurityToken(jwtConfiguration["Issuer"], jwtConfiguration["Audience"], claims,
