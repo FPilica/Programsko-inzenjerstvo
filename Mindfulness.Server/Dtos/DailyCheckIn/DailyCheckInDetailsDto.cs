@@ -15,6 +15,8 @@ public class DailyCheckInDetailsDto
     public int? SleepScore { get; set; }
     
     public int? Alcohol { get; set; }
+    
+    public string? DailyNotes { get; set; }
 
     public required Models.User User { get; set; }
 }
