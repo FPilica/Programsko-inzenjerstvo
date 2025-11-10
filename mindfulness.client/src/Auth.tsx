@@ -12,15 +12,34 @@ function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Prijava s e-mailom:", email, "i lozinkom:", pass);
-    // logika
-    // za primjer
-    let ok = true;
-    if (ok) {
-      // idemo na dashboard
+    
+    try {
+      const response = await fetch('https://localhost:7070/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password: pass })
+      });
+
+      console.log('Response status:', response.status);
+      const responseData = await response.text();
+      console.log('Response body:', responseData);
+
+      if (!response.ok) {
+        throw new Error(`Login failed: ${response.status} ${responseData}`);
+      }
+
+      const data = JSON.parse(responseData);
+      console.log('Prijava uspjesna, token primljen');
+      localStorage.setItem('access_token', data.token);
       navigate("/dashboard");
+    } catch (error) {
+      console.error('Neuspjesna prijava:', error);
+      alert('Neuspješna prijava: ' + (error as Error).message);
     }
   };
 
