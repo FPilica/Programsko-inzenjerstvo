@@ -1,0 +1,31 @@
+.oAuthContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.oAuthContainer > p {
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 0.9rem;
+}
+
+.authButtons {
+    display: flex;
+    flex-direction: row;
+    gap:10px;
+}
+
+.googleButton, .microsoftButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 50px;
+    gap:10px;
+    color: black;
+    font-size: 1rem;
+    background-color: white;
+    border: 1px solid #7636BB;
+}

@@ -1,32 +1,13 @@
-﻿/* #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-  width:100vw;
-  height:100vh;
-} */
 
 * {
   box-sizing: border-box;
-}
-
-#root {
-  width: 100vw;
-  height: 100%;
-  margin: 0;
-  display: flex;
-  place-items: center;
-  justify-content: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
+  
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   font-synthesis: none;
@@ -36,11 +17,30 @@
 }
 
 body {
-  margin: 0;
+  margin: 0px;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color:black;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root > :first-child {
+  min-width:320px;
+  min-height: 100vh;
+  width:100%;
+  height: 100%;
 }
 
 h1 {
@@ -48,7 +48,7 @@ h1 {
   line-height: 1.1;
 }
 
-button {
+.myButton {
   background-color: white;
   font-size: 1rem;
   font-weight: bold;
@@ -62,7 +62,11 @@ button {
   transition: box-shadow 150ms ease, transform 150ms ease;
 }
 
-button:hover {
+.myButton:hover {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
   transform: translateY(-2px);
 }
+
+a {
+  cursor: pointer; 
+} 

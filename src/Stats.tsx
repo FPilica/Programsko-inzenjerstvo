@@ -1,16 +1,17 @@
-import './App.css'
+import "./App.css";
+import Header from "./components/Header";
 
-import Header from './components/Header.tsx'
 function Stats() {
-    return (
-        <>
-        <Header />
-        <div className='container_stats'>
-            <h1>Statistics</h1>
-            <p>Here are your statistics!</p>
+  return (
+    <>
+      <div className="background">
+        <div className="statsContainer">
+          <Header />
+          <h1>Statistics</h1>
         </div>
-        </>
-    )
+      </div>
+    </>
+  );
 }
 
-export default Stats
+export default Stats;

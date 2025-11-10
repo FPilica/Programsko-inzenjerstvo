@@ -1,3 +1,4 @@
+
 .containerAuth {
     padding: 30px;
     background-color: white;
@@ -43,27 +44,42 @@
     text-align: center;
 }
 
-.active {
-    color: black;
-    border-bottom: 3px solid #7636BB;
+.loginLink.active, .regLink.active{
+    color:black;
+    border-bottom:3px solid #7636BB;
 }
 
 .authForm {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 22px;
     padding: 10px;
     position: relative;
 }
 
-.authForm>label {
+/* .emailContainer, .passContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+} */
+
+.authForm > div {
+    width:100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.authForm > div > label {
     font-size: 1rem;
     font-weight: bold;
     align-self: flex-start;
 }
 
-.authForm>input {
+.authForm > div > input {
     width: 100%;
     height: 45px;
     border-radius: 15px;
@@ -75,13 +91,42 @@
     ;
 }
 
-.authForm>a {
+.authForm > a {
     align-self: flex-end;
     text-decoration: none;
     font-size: 0.7rem;
     color: rgba(0, 0, 0, 0.4);
     position: absolute;
     bottom: 22px;
+}
+
+/* samo reg */
+.genderOptions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 30px;
+}
+
+.genderOptions > div {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.genderOptions > div > input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+    
+.genderOptions > div >input[type="radio"]:hover {
+    transform: scale(1.2);
+}
+    
+.genderOptions > div > input[type="radio"]:checked {
+    accent-color: #7636BB;
 }
 
 /* forgot password */
@@ -165,7 +210,87 @@
 }
 
 .submit {
-    background-color: #7636BB;
+    background-color: #7636BB !important;
     color: white;
     border-radius: 15px;
 }
+
+ /* onboarding */
+.onboardingContainer {
+    padding: 30px;
+    background-color: white;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: black;
+    border-radius: 20px;
+}
+
+.onboardingContainer > img {
+    align-self: flex-start;
+}
+
+.onboardingContainer > form > p {
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-weight: bold;
+    text-align: center;
+    margin: 0px;
+    padding:15px;
+    width:100%;
+    border-bottom: 2px solid #7636BB;
+}
+
+.onboardingForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 10px;
+    position: relative;
+}
+
+.radioOptions {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    margin: 30px 0 30px 0;
+}
+
+.radioOption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.radioOption > input[type="radio"] {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.radioOption > input[type="radio"]:hover {
+    transform: scale(1.2);
+}
+
+.radioOption > input[type="radio"]:checked {
+    accent-color: #7636BB;
+}
+
+.radioOption > label {
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+}
+
+.onboardingButton {
+    background-color: #7636BB;
+    color: white
+}
+

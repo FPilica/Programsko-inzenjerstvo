@@ -1,33 +1,18 @@
-import './App.css'
-import './Dashboard.css'
-import Header from './components/Header.tsx'
+import "./App.css";
+import "./Dashboard.css";
+import Header from "./components/Header.tsx";
 
 function Dashboard() {
-    return (
-        <>
-            <div className="dashboardContainer">
-            <Header />
-            <h1>Dashboard</h1>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                <p>Welcome to your dashboard!</p>
-                
-            </div>
-        </>
-    )
+  return (
+    <>
+      <div className="background">
+        <div className="dashboardContainer">
+          <Header />
+          <h1>Dashboard</h1>
+        </div>
+      </div>
+    </>
+  );
 }
 
-export default Dashboard
+export default Dashboard;
