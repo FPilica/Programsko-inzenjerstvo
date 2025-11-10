@@ -11,4 +11,6 @@ public class DailyCheckInUpdateDto
     public int? SleepScore { get; set; }
     
     public int? Alcohol { get; set; }
+    
+    public string? DailyNotes { get; set; }
 }

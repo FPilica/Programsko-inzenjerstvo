@@ -62,21 +62,53 @@ function Reg() {
   const [birthDate, setBirthDate] = useState("");
   const [gender, setGender] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const validation = validatePass(pass);
     if (!validation?.success) {
       alert(validation.msg);
-    } else {
-      console.log("Registracija s e-mailom:", email, "i lozinkom:", pass, "ime:", name, "prezime:", surname, "datum rođenja:", birthDate, "rod:", gender);
-      // logika
-      // za primjer
-      let ok = true;
-      if (ok) {
-        // idemo na dashboard
-        navigate("/auth/onboarding");
+      return;
+    }
+
+    // Mapiranje spola na odg. broj iz enumeracije
+    let genderValue = 0;
+    if (gender === "F") genderValue = 1;
+    else if (gender === "O") genderValue = 2;
+
+    try {
+      console.log("Prijava s e-mailom:", email, ", lozinkom:", pass, ", imenom", name, ", prezimenom", surname, 
+        ", datumom rođenja", birthDate, "i spolom", gender);
+      
+      const response = await fetch('https://localhost:7070/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password: pass,
+          firstName: name,
+          lastName: surname,
+          dateOfBirth: birthDate,
+          gender: genderValue
+        })
+      });
+
+      console.log('Response status:', response.status);
+      const responseData = await response.text();
+      console.log('Response body:', responseData);
+
+      if (!response.ok) {
+        throw new Error(`Neupsjela registracija: ${response.status} ${responseData}`);
       }
+
+      // Na upitnik nakon registracije
+      console.log('Registracija uspjesna');
+      navigate("/auth/onboarding");
+    } catch (error) {
+      console.error('Neupsjela registracija:', error);
+      alert('Neupsjela registracija: ' + (error as Error).message);
     }
   };
 
