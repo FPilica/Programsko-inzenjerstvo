@@ -7,7 +7,7 @@ namespace Mindfulness.Server.Mapping;
 public class UserMapper : Profile
 {
     public UserMapper() {
-        CreateMap<UserCreateDto, User>();
+        CreateMap<UserRegisterDto, User>();
         CreateMap<UserUpdateDto, User>();
         CreateMap<User, UserDetailsDto>();
     }

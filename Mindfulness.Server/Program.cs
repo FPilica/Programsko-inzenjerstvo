@@ -1,5 +1,10 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Mindfulness.Server;
+using Mindfulness.Server.Models;
 using Mindfulness.Server.Mapping;
 
 const string corsPolicyName = "FrontendCorsPolicy";
@@ -17,7 +22,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
     {
-        policy.WithOrigins("http://localhost:5173");
+        policy.WithOrigins("http://localhost:5173", "https://localhost:7070", "https://localhost:60665/");
     });
 });
 
@@ -27,6 +32,56 @@ builder.Services.AddDbContext<MindfulnessDbContext>(options =>
 {
     options.UseInMemoryDatabase("MindfulnessDb");
 });
+
+builder.Services
+    .AddIdentity<User, IdentityRole<Guid>>(options =>
+    {
+        // TODO Maknut komentar kad implementiramo 2FA
+        // options.SignIn.RequireConfirmedAccount = true;
+        
+        options.User.RequireUniqueEmail = true;
+    })
+    .AddEntityFrameworkStores<MindfulnessDbContext>()
+    .AddDefaultTokenProviders();
+
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new ArgumentNullException("Jwt:Key"));
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+        };
+    })
+    .AddGoogle("Google",options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ??
+                           throw new ArgumentNullException("Authentication:Google:ClientId");
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ??
+                               throw new ArgumentNullException("Authentication:Google:ClientSecret");
+    })
+    .AddMicrosoftAccount("Microsoft", options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"] ??
+                           throw new ArgumentNullException("Authentication:Microsoft:ClientId");
+        options.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"] ??
+                               throw new ArgumentNullException("Authentication:Microsoft:ClientSecret");
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -44,6 +99,7 @@ app.UseHttpsRedirection();
 
 app.UseCors(corsPolicyName);
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

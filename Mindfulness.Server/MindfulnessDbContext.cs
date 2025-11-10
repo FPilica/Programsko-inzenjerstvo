@@ -14,6 +14,8 @@ public class MindfulnessDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
         modelBuilder.Entity<UserSetting>()
             .HasKey(us => new { us.UserId, us.SettingId });
         

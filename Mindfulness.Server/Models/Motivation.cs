@@ -7,5 +7,5 @@ public class Motivation
     public Guid Id { get; set; }
     
     [MaxLength(300)]
-    public string Message { get; set; }
+    public required string Message { get; set; }
 }
