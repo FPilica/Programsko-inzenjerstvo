@@ -8,11 +8,15 @@ function OAuthCallback() {
     
     useEffect(() => {
         const token = searchParams.get("token");
+        
         const error = searchParams.get("error");
 
         if (token) {
             localStorage.setItem("auth_token", token);
-
+            // const tokenObj = JSON.parse(token);
+            // const userId = tokenObj.userId;
+            // console.log(token);
+            
             navigate("/dashboard");
         } else if (error) {
             navigate("/auth/login", {
@@ -20,6 +24,9 @@ function OAuthCallback() {
                     error: "Neuspješna prijava. Molimo pokušajte ponovo."
                 }
             });
+        } else {
+            console.error("Ništa");
+            navigate("/auth/login")
         }
     }, [searchParams, navigate]);
 
