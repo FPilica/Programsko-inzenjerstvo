@@ -39,7 +39,7 @@ public class StartQuestionnaireController : ControllerBase
         return Ok(details);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{userId:guid}")]
     public async Task<ActionResult<StartQuestionnaireDetailsDto>> GetByUserId([FromRoute] Guid userId)
     {
         var questionnaire = await _context.StartQuestionnaires.FirstOrDefaultAsync(sq => sq.UserId == userId);
