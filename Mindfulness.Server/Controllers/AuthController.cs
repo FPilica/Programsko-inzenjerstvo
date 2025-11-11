@@ -4,6 +4,7 @@ using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
@@ -20,15 +21,19 @@ public sealed class AuthController : ControllerBase
 {
     private readonly IConfiguration _configuration;
     
+    private readonly IEmailSender _emailSender;
+
     private readonly IMapper _mapper;
     
     private readonly SignInManager<User> _signInManager;
     
     private readonly UserManager<User> _userManager;
 
-    public AuthController(IConfiguration configuration, IMapper mapper, SignInManager<User> signInManager, UserManager<User> userManager)
+    public AuthController(IConfiguration configuration, IEmailSender emailSender, IMapper mapper,
+        SignInManager<User> signInManager, UserManager<User> userManager)
     {
         _configuration = configuration;
+        _emailSender = emailSender;
         _mapper = mapper;
         _signInManager = signInManager;
         _userManager = userManager;
@@ -59,8 +64,28 @@ public sealed class AuthController : ControllerBase
         
         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+        var confirmationUrl = Url.Action(
+            nameof(ConfirmEmail),
+            "Auth",
+            new { userId = user.Id, code },
+            Request.Scheme);
+
+        const string subject = "Confirm your Mindfulness account";
+        var message = $"""
+                                   <p>Hello {user.FirstName},</p>
+                                   <p>Thank you for registering at Mindfulness. Please confirm your email by clicking the link below:</p>
+                                   <p><a href='{confirmationUrl}'>Confirm Email</a></p>
+                                   <p>If you didn’t request this, please ignore this email.</p>
+                       """;
         
-        return Ok("User registration successful.");
+        // ALWAYS TRUE
+        if (user.Email is not null)
+        {
+            await _emailSender.SendEmailAsync(user.Email, subject, message);
+        } 
+        
+        return Ok("User registration successful. Please check your email to confirm your account.");
     }
 
     [HttpPost("login")]
@@ -80,12 +105,17 @@ public sealed class AuthController : ControllerBase
             return Unauthorized("Invalid password.");
         }
 
+        if (!await _userManager.IsEmailConfirmedAsync(user))
+        {
+            return Unauthorized("Email not confirmed. Please check your inbox.");
+        }
+
         var token = GenerateJwtToken(user);
         
-        return Ok(new { token });
+        return Ok(new { UserId = user.Id, Token = token });
     }
 
-    [HttpGet("external-login")] 
+    [HttpGet("external-login")]
     public IActionResult ExternalLogin([FromQuery] string provider, [FromQuery] string returnUrl)
     {
         var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Auth", new { returnUrl });
@@ -129,12 +159,13 @@ public sealed class AuthController : ControllerBase
             var jwtToken = GenerateJwtToken(existingUser);
 
             return Redirect(returnUrl is not null
-                ? $"{returnUrl}?token={jwtToken}"
-                : $"https://localhost:60665/dashboard?token={jwtToken}");
+                ? $"{returnUrl}?token={jwtToken}&userId={existingUser.Id}"
+                : $"https://localhost:60665/auth/callback?token={jwtToken}&userId={existingUser.Id}");
         }
         
         var user = existingUser ?? new User
         {
+            Id = Guid.NewGuid(),
             FirstName = info.Principal.FindFirstValue(ClaimTypes.Name) ?? "John",
             LastName = info.Principal.FindFirstValue(ClaimTypes.Surname) ?? "Doe",
             Email = info.Principal.FindFirstValue(ClaimTypes.Email),
@@ -157,8 +188,30 @@ public sealed class AuthController : ControllerBase
         var token = GenerateJwtToken(user);
  
         return Redirect(returnUrl is not null
-            ? $"{returnUrl}?token={token}"
-            : $"https://localhost:60665/dashboard?token={token}");
+            ? $"{returnUrl}?token={token}&userId={user.Id}"
+            : $"https://localhost:60665/auth/callback?token={token}&userId={user.Id}");
+    }
+
+    [HttpGet("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail(Guid userId, string code)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+
+        if (user is null)
+        {
+            return BadRequest("User not found.");
+        }
+        
+        var decodedCode = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+        
+        var result = await _userManager.ConfirmEmailAsync(user, decodedCode);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+        
+        return Ok("Email confirmed successfully. You can now log in.");
     }
 
     private string GenerateJwtToken(User user)

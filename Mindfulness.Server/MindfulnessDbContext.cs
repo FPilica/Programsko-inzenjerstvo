@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.ComTypes;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Mindfulness.Server.Models;
@@ -88,81 +87,45 @@ public class MindfulnessDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-
-        optionsBuilder.UseSeeding((context, b) =>
-        {
-            var userRole = context.Set<IdentityRole<Guid>>().FirstOrDefault(r => r.Name == "User");
-            if (userRole is null)
-            {
-                _ = context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>("User") { Id = Guid.NewGuid() });
-            }
-
-            var coachRole = context.Set<IdentityRole<Guid>>().FirstOrDefault(r => r.Name == "Coach");
-            if (coachRole is null)
-            {
-                _ = context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>("Coach") { Id = Guid.NewGuid() });
-            }
-
-            var adminRole = context.Set<IdentityRole<Guid>>().FirstOrDefault(r => r.Name == "Admin");
-            if (adminRole is null)
-            {
-                _ = context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>("Admin") { Id = Guid.NewGuid() });
-            }
-
-            var croatianLanguage = context.Set<AudioLanguage>().FirstOrDefault(l => l.Name == "Croatian");
-            if (croatianLanguage is null)
-            {
-                _ = context.Set<AudioLanguage>().Add(new AudioLanguage { Id = Guid.NewGuid(), Name = "Croatian" });
-            }
-            
-            var englishLanguage = context.Set<AudioLanguage>().FirstOrDefault(l => l.Name == "English");
-            if (englishLanguage is null)
-            {
-                _ = context.Set<AudioLanguage>().Add(new AudioLanguage { Id = Guid.NewGuid(), Name = "English" });
-            }
-
-            _ = context.SaveChanges();
-        });
         
-        optionsBuilder.UseAsyncSeeding(async (context, b, cancellationToken) =>
-        {
-            var userRole = await context.Set<IdentityRole<Guid>>()
-                .FirstOrDefaultAsync(r => r.Name == "User", cancellationToken);
-            if (userRole is null)
+        optionsBuilder.UseSeeding((context, _) =>
             {
-                _ = context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>("User") { Id = Guid.NewGuid() });
-            }
+                var roleNames = new[] { "User", "Coach", "Admin" };
+                
+                foreach (var roleName in roleNames)
+                {
+                    if (!context.Set<IdentityRole<Guid>>().Any(r => r.Name == roleName))
+                    {
+                        context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = roleName,
+                            NormalizedName = roleName.ToUpperInvariant()
+                        });
+                    }
+                }
 
-            var coachRole = context.Set<IdentityRole<Guid>>()
-                .FirstOrDefaultAsync(r => r.Name == "Coach", cancellationToken);
-            if (coachRole is null)
+                context.SaveChanges();
+            })
+            .UseAsyncSeeding(async (context, _, cancellationToken) =>
             {
-                _ = context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>("Coach") { Id = Guid.NewGuid() });
-            }
+                var roleNames = new[] { "User", "Coach", "Admin" };
+                
+                foreach (var roleName in roleNames)
+                {
+                    if (!await context.Set<IdentityRole<Guid>>().AnyAsync(r => r.Name == roleName, cancellationToken))
+                    {
+                        context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = roleName,
+                            NormalizedName = roleName.ToUpperInvariant()
+                        });
+                    }
+                }
 
-            var adminRole = context.Set<IdentityRole<Guid>>()
-                .FirstOrDefaultAsync(r => r.Name == "Admin", cancellationToken);
-            if (adminRole is null)
-            {
-                _ = context.Set<IdentityRole<Guid>>().Add(new IdentityRole<Guid>("Admin") { Id = Guid.NewGuid() });
-            }
-
-            var croatianLanguage = await context.Set<AudioLanguage>()
-                .FirstOrDefaultAsync(l => l.Name == "Croatian", cancellationToken);
-            if (croatianLanguage is null)
-            {
-                _ = context.Set<AudioLanguage>().Add(new AudioLanguage { Id = Guid.NewGuid(), Name = "Croatian" });
-            }
-            
-            var englishLanguage = await context.Set<AudioLanguage>()
-                .FirstOrDefaultAsync(l => l.Name == "English", cancellationToken);
-            if (englishLanguage is null)
-            {
-                _ = context.Set<AudioLanguage>().Add(new AudioLanguage { Id = Guid.NewGuid(), Name = "English" });
-            }
-
-            _ = await context.SaveChangesAsync(cancellationToken);
-        });
+                await context.SaveChangesAsync(cancellationToken);
+            });
     }
 
     public DbSet<AudioLanguage> AudioLanguages { get; set; }
