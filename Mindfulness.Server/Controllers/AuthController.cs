@@ -136,7 +136,7 @@ public sealed class AuthController : ControllerBase
             UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
             DateOfBirth = DateTimeOffset.Parse(info.Principal.FindFirstValue(ClaimTypes.DateOfBirth)
                                                ?? DateTimeOffset.MinValue.ToString()),
-            Gender = Enum.Parse<Gender>(info.Principal.FindFirstValue(ClaimTypes.Gender) ?? "Unknown")
+            Gender = Enum.Parse<Gender>(info.Principal.FindFirstValue(ClaimTypes.Gender) ?? "Undefined")
         };
         
         var result = await _userManager.CreateAsync(user);
