@@ -15,6 +15,4 @@ public class StartQuestionnaireDetailsDto
     public int PAnxiety { get; set; }
     
     public int PGratefulness { get; set; }
-    
-    public required Models.User User { get; set; }
 }
