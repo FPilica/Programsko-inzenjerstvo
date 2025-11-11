@@ -16,6 +16,7 @@ import ForgotPass from "./ForgotPass";
 import Content from "./Content";
 import Calendar from "./Calendar";
 import Profile from "./Profile";
+import OnboardingRez from "./OnboardingRez";
 import SetProfile from "./SetProfile";
 import Admin from "./Admin";
 import Coach from "./Coach";
@@ -41,6 +42,7 @@ function App() {
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/setprofile" element={<SetProfile />} />
+          <Route path="/profile/onboardingrez" element={<OnboardingRez />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/coach" element={<Coach />} />
           <Route path="/dashboard" element={<Dashboard />} />
