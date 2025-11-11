@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +12,7 @@ using Mindfulness.Server.Models;
 
 namespace Mindfulness.Server.Controllers;
 
+[AllowAnonymous]
 [ApiController]
 [Route("api/[controller]")]
 public sealed class AuthController : ControllerBase
@@ -172,11 +174,7 @@ public sealed class AuthController : ControllerBase
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
-            new Claim(JwtRegisteredClaimNames.Name, user.UserName ?? ""),
-            new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName ?? ""),
-            new Claim(JwtRegisteredClaimNames.Gender, user.Gender.ToString() ?? ""),
-            new Claim(JwtRegisteredClaimNames.Birthdate, user.DateOfBirth.ToString("yyyy-MM-dd") ?? ""),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? "")
         };
 
         var token = new JwtSecurityToken(jwtConfiguration["Issuer"], jwtConfiguration["Audience"], claims,

@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mindfulness.Server.Dtos.StartQuestionnaire;
@@ -6,6 +8,7 @@ using Mindfulness.Server.Models;
 
 namespace Mindfulness.Server.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class StartQuestionnaireController : ControllerBase
@@ -20,29 +23,47 @@ public class StartQuestionnaireController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<ActionResult<StartQuestionnaireDetailsDto>> CreateStartQuestionnaire([FromBody] StartQuestionnaireCreateDto dto)
+    public async Task<IActionResult> CreateStartQuestionnaire([FromBody] StartQuestionnaireCreateDto dto)
     {
-        var startQuestionnaire = _mapper.Map<StartQuestionnaire>(dto);
-        startQuestionnaire.Id = Guid.NewGuid();
-        
-        _context.StartQuestionnaires.Add(startQuestionnaire);
-        await _context.SaveChangesAsync();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        var newSq = await _context.StartQuestionnaires.FirstOrDefaultAsync(sq => sq.Id == startQuestionnaire.Id);
-
-        if (newSq is null)
+        if (userId is null)
         {
-            return Problem(statusCode: StatusCodes.Status500InternalServerError);
+            return BadRequest("User not found");
         }
         
-        var details = _mapper.Map<StartQuestionnaireDetailsDto>(newSq);
-        return Ok(details);
-    }
+        var userGuid = Guid.Parse(userId);
 
-    [HttpGet("{userId:guid}")]
-    public async Task<ActionResult<StartQuestionnaireDetailsDto>> GetByUserId([FromRoute] Guid userId)
+        if (await _context.StartQuestionnaires.AnyAsync(sq => sq.UserId == userGuid))
+        {
+            return BadRequest("User already completed Start Questionnaire");
+        }
+        
+        var startQuestionnaire = _mapper.Map<StartQuestionnaire>(dto);
+        startQuestionnaire.Id = Guid.NewGuid();
+        startQuestionnaire.UserId = userGuid;
+        
+        _context.StartQuestionnaires.Add(startQuestionnaire);
+        
+        await _context.SaveChangesAsync();
+        
+        return Ok();
+    }
+    
+    [HttpGet]
+    public async Task<ActionResult<StartQuestionnaireDetailsDto>> GetByUserId()
     {
-        var questionnaire = await _context.StartQuestionnaires.FirstOrDefaultAsync(sq => sq.UserId == userId);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return BadRequest("User not found");
+        }
+        
+        var userGuid = Guid.Parse(userId);
+        
+        var questionnaire = await _context.StartQuestionnaires
+            .FirstOrDefaultAsync(sq => sq.UserId == userGuid);
 
         if (questionnaire is null)
         {
