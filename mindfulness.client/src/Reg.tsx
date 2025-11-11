@@ -103,9 +103,9 @@ function Reg() {
         throw new Error(`Neupsjela registracija: ${response.status} ${responseData}`);
       }
 
-      // Na upitnik nakon registracije
-      console.log('Registracija uspjesna');
-      navigate("/auth/onboarding");
+      // Na login nakon registracije
+      console.log("Registracija uspjesna");
+      navigate("/auth/login");
     } catch (error) {
       console.error('Neupsjela registracija:', error);
       alert('Neupsjela registracija: ' + (error as Error).message);
