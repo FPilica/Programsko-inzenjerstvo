@@ -33,9 +33,9 @@ function Onboarding() {
       const response = await fetch("https://localhost:7070/api/StartQuestionnaire", {
         method: "POST",
         headers: {
-            'accept': 'text/plain',
-            'Content-Type': 'application/json', 
-            'Authorization': `Bearer ${localStorage.getItem("auth_token")}`
+          'accept': 'text/plain',
+          'Content-Type': 'application/json', 
+          'Authorization': `Bearer ${localStorage.getItem("auth_token")}`
         },
         body : `{
            "pFocus": ${answers[0]},
@@ -43,8 +43,7 @@ function Onboarding() {
            "pBreathing": ${answers[2]},
            "pStress": ${answers[3]},
            "pAnxiety": ${answers[4]},
-           "pGratefulness": ${answers[5]},
-           "userId": "${localStorage.getItem("userId")}"
+           "pGratefulness": ${answers[5]}
         }`
       });
 
