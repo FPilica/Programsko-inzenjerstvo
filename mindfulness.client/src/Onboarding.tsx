@@ -52,14 +52,15 @@ function Onboarding() {
       }
 
       console.log(response);
+      console.log("Odgovori korisnika:", answers);
+      alert("Hvala vam na ispunjavanju upitnika!");
+      navigate("/dashboard");
 
     } catch (error) {
-        console.error(error.message);
+      console.error(error.message);
     }
 
-    console.log("Odgovori korisnika:", answers);
-    alert("Hvala vam na ispunjavanju upitnika!");
-    navigate("/dashboard");
+
   };
 
   return (
