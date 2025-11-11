@@ -40,18 +40,12 @@ public sealed class AuthController : ControllerBase
 
         if (existingUser is not null)
         {
-            if (existingUser.IsExternalAccount)
-            {
-                return BadRequest($"This email is already in use via {existingUser.Provider}.");
-            }
-
             return BadRequest("This email is already in use.");
         }
         
         var user = _mapper.Map<User>(userRegisterDto);
         user.Id = Guid.NewGuid();
         user.UserName = user.Email;
-        user.IsExternalAccount = false;
 
         var result = await _userManager.CreateAsync(user, userRegisterDto.Password);
 
@@ -135,16 +129,14 @@ public sealed class AuthController : ControllerBase
         
         var user = existingUser ?? new User
         {
+            Id = Guid.NewGuid(),
             FirstName = info.Principal.FindFirstValue(ClaimTypes.Name) ?? "John",
             LastName = info.Principal.FindFirstValue(ClaimTypes.Surname) ?? "Doe",
             Email = info.Principal.FindFirstValue(ClaimTypes.Email),
             UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
             DateOfBirth = DateTimeOffset.Parse(info.Principal.FindFirstValue(ClaimTypes.DateOfBirth)
                                                ?? DateTimeOffset.MinValue.ToString()),
-            Gender = Enum.Parse<Gender>(info.Principal.FindFirstValue(ClaimTypes.Gender) ?? "Undefined", true),
-            IsExternalAccount = true,
-            Provider = info.LoginProvider,
-            ProviderKey = info.ProviderKey
+            Gender = Enum.Parse<Gender>(info.Principal.FindFirstValue(ClaimTypes.Gender) ?? "Unknown")
         };
         
         var result = await _userManager.CreateAsync(user);

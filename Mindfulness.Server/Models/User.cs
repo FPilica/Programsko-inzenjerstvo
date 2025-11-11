@@ -18,12 +18,6 @@ public class User : IdentityUser<Guid>
     
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
     
-    public bool IsExternalAccount { get; set; }
-    
-    public string? Provider { get; set; }
-    
-    public string? ProviderKey { get; set; }
-    
     public StartQuestionnaire? StartQuestionnaire { get; set; }
 
     public List<DailyCheckIn> DailyCheckIns { get; set; } = [];
