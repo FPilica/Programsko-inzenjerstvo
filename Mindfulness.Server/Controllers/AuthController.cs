@@ -79,7 +79,7 @@ public sealed class AuthController : ControllerBase
                                    <p>If you didn’t request this, please ignore this email.</p>
                        """;
         
-        // ALWAYS TRUE
+        // hopefully ALWAYS TRUE
         if (user.Email is not null)
         {
             await _emailSender.SendEmailAsync(user.Email, subject, message);
@@ -134,23 +134,25 @@ public sealed class AuthController : ControllerBase
         }
         
         var info = await _signInManager.GetExternalLoginInfoAsync();
-
+        
         if (info is null)
         {
             return BadRequest("Error loading external login info.");
         }
         
         var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+        
         if (email is null)
         {
             return BadRequest("Google account has no email claim.");
         }
 
         var existingUser = await _userManager.FindByEmailAsync(email);
+        
         if (existingUser is not null)
         {
             var loginExists = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
-
+            
             if (loginExists is null)
             {
                 _ = await _userManager.AddLoginAsync(existingUser, info);
@@ -163,7 +165,7 @@ public sealed class AuthController : ControllerBase
                 : $"https://localhost:60665/auth/callback?token={jwtToken}");
         }
         
-        var user = existingUser ?? new User
+        var user = new User
         {
             Id = Guid.NewGuid(),
             FirstName = info.Principal.FindFirstValue(ClaimTypes.Name) ?? "John",
