@@ -26,7 +26,14 @@ function OAuthCallback() {
             const fetchOnboarding = async () => {
 
                 try {
-                    const response = await fetch(`https://localhost:7070/api/startquestionnare/"${userId}"`);
+                    const response = await fetch(`https://localhost:7070/api/StartQuestionnaire/${userId}`, {
+                        method: "GET",
+                        headers: {
+                            'accept': 'text/plain',
+                            'Content-Type': 'application/json', 
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
 
                     if(!response.ok) {
                         throw new Error(`Greška: ${response.status}`, );

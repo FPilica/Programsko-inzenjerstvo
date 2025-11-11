@@ -33,8 +33,9 @@ function Onboarding() {
       const response = await fetch("https://localhost:7070/api/StartQuestionnaire", {
         method: "POST",
         headers: {
-          'accept': 'text/plain',
-          'Content-Type': 'application/json'
+            'accept': 'text/plain',
+            'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${localStorage.getItem("auth_token")}`
         },
         body : `{
            "pFocus": ${answers[0]},
@@ -57,6 +58,8 @@ function Onboarding() {
       navigate("/dashboard");
 
     } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       console.error(error.message);
     }
 
