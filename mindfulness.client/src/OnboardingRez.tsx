@@ -18,9 +18,9 @@ function OnboardingRez() {
         {
           method: "GET",
           headers: {
-            accept: "text/plain",
+            "accept": "text/plain",
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
           },
         }
       );
