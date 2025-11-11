@@ -20,23 +20,46 @@ function Onboarding() {
   const handleNext = () => {
     if (answers[currQuestionIdx - 1] !== null) {
       setCurrQuestionIdx(currQuestionIdx + 1);
-      console.log(currQuestionIdx);
     } else {
       alert("Molimo odaberite odgovor prije nego što nastavite.");
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (answers[currQuestionIdx - 1] !== null) {
-      setCurrQuestionIdx(currQuestionIdx + 1);
-      console.log(currQuestionIdx);
-      // obrada
+
+    // obrada
+    try {
+      const response = await fetch("https://localhost:7070/api/StartQuestionnaire", {
+        method: "POST",
+        headers: {
+            'accept': 'text/plain',
+            'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${localStorage.getItem("auth_token")}`
+        },
+        body : `{
+           "pFocus": ${answers[0]},
+           "pSleep": ${answers[1]},
+           "pBreathing": ${answers[2]},
+           "pStress": ${answers[3]},
+           "pAnxiety": ${answers[4]},
+           "pGratefulness": ${answers[5]},
+           "userId": "${localStorage.getItem("userId")}"
+        }`
+      });
+
+      if (!response.ok) {
+        throw new Error("Nije uspjelo");
+      }
+
       console.log("Odgovori korisnika:", answers);
       alert("Hvala vam na ispunjavanju upitnika!");
       navigate("/dashboard");
-    } else {
-      alert("Molimo odaberite odgovor prije nego što nastavite.");
+
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      console.error(error.message);
     }
   };
 
