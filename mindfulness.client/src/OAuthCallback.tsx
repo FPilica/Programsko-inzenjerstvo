@@ -17,8 +17,32 @@ function OAuthCallback() {
 
             const tokenDecoded = jwtDecode(token);
             const userId = tokenDecoded.sub;
-            
-            navigate("/dashboard");
+            console.log(userId);
+
+            if (userId) {
+                localStorage.setItem("userId", userId);
+            }
+
+            const fetchOnboarding = async () => {
+
+                try {
+                    const response = await fetch(`https://localhost:7070/api/startquestionnare/"${userId}"`);
+
+                    if(!response.ok) {
+                        throw new Error(`Greška: ${response.status}`, );
+                    }
+
+                    console.log("Korisnik već rješio upitnik, šaljem na dash!");
+                    navigate("/dashboard");
+
+                } catch (error) {
+                    console.error("Korisnik nije rješio upitnik, šaljem na upitnik!" , error);
+                    navigate("/auth/onboarding");
+                }
+            }
+
+            fetchOnboarding();
+
         } else if (error) {
             navigate("/auth/login", {
                 state: {
