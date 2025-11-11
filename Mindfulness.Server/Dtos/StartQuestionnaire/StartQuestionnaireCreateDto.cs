@@ -13,6 +13,4 @@ public class StartQuestionnaireCreateDto
     public int PAnxiety { get; set; }
     
     public int PGratefulness { get; set; }
-    
-    public Guid UserId { get; set; }
 }

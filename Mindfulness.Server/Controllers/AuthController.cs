@@ -112,7 +112,7 @@ public sealed class AuthController : ControllerBase
 
         var token = GenerateJwtToken(user);
         
-        return Ok(new { UserId = user.Id, Token = token });
+        return Ok(new { token });
     }
 
     [HttpGet("external-login")]
@@ -159,8 +159,8 @@ public sealed class AuthController : ControllerBase
             var jwtToken = GenerateJwtToken(existingUser);
 
             return Redirect(returnUrl is not null
-                ? $"{returnUrl}?token={jwtToken}&userId={existingUser.Id}"
-                : $"https://localhost:60665/auth/callback?token={jwtToken}&userId={existingUser.Id}");
+                ? $"{returnUrl}?token={jwtToken}"
+                : $"https://localhost:60665/auth/callback?token={jwtToken}");
         }
         
         var user = existingUser ?? new User
@@ -188,8 +188,8 @@ public sealed class AuthController : ControllerBase
         var token = GenerateJwtToken(user);
  
         return Redirect(returnUrl is not null
-            ? $"{returnUrl}?token={token}&userId={user.Id}"
-            : $"https://localhost:60665/auth/callback?token={token}&userId={user.Id}");
+            ? $"{returnUrl}?token={token}"
+            : $"https://localhost:60665/auth/callback?token={token}");
     }
 
     [HttpGet("confirm-email")]
@@ -225,11 +225,7 @@ public sealed class AuthController : ControllerBase
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
-            new Claim(JwtRegisteredClaimNames.Name, user.UserName ?? ""),
-            new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
-            new Claim(JwtRegisteredClaimNames.Gender, user.Gender.ToString()),
-            new Claim(JwtRegisteredClaimNames.Birthdate, user.DateOfBirth.ToString("yyyy-MM-dd")),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? "")
         };
 
         var token = new JwtSecurityToken(jwtConfiguration["Issuer"], jwtConfiguration["Audience"], claims,
