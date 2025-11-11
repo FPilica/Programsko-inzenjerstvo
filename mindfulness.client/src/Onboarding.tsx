@@ -52,7 +52,6 @@ function Onboarding() {
         throw new Error("Nije uspjelo");
       }
 
-      console.log(response);
       console.log("Odgovori korisnika:", answers);
       alert("Hvala vam na ispunjavanju upitnika!");
       navigate("/dashboard");
@@ -62,8 +61,6 @@ function Onboarding() {
       // @ts-expect-error
       console.error(error.message);
     }
-
-
   };
 
   return (

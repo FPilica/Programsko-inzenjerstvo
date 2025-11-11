@@ -9,7 +9,6 @@ function OAuthCallback() {
     
     useEffect(() => {
         const token = searchParams.get("token");
-        
         const error = searchParams.get("error");
 
         if (token) {
@@ -26,12 +25,12 @@ function OAuthCallback() {
             const fetchOnboarding = async () => {
 
                 try {
-                    const response = await fetch(`https://localhost:7070/api/StartQuestionnaire/${userId}`, {
+                    const response = await fetch(`https://localhost:7070/api/StartQuestionnaire`, {
                         method: "GET",
                         headers: {
                             'accept': 'text/plain',
                             'Content-Type': 'application/json', 
-                            'Authorization': `Bearer ${token}`
+                            'Authorization': `Bearer ${localStorage.getItem("auth_token")}`
                         }
                     });
 
