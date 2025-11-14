@@ -43,7 +43,6 @@ public class UserProfileController : ControllerBase
         user.LastName = dto.LastName ?? user.LastName;
         user.DateOfBirth = dto.DateOfBirth ?? user.DateOfBirth;
         user.Gender = dto.Gender ?? user.Gender;
-        user.Email = dto.Email ?? user.Email;
 
         await _context.SaveChangesAsync();
 

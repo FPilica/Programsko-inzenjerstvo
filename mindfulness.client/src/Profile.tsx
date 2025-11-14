@@ -41,7 +41,7 @@ function App() {
           user.dateOfBirth = "01.01.2000."
       }
       // slučaj kada nije dan gender, ne radi ATM
-      if (user.gender === "Undefined"){ 
+      if (user.gender == "Undefined"){
         user.gender = "O"
       }
     } catch (error) {
