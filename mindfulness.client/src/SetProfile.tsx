@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 function SetProfile() {
+  const baseURL = 'https://localhost:7070/'
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -23,7 +24,7 @@ function SetProfile() {
   const getUser = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/userprofile/getprofile`,
+        `${baseURL}api/userprofile/getprofile`,
         {
           method: "GET",
           headers: {

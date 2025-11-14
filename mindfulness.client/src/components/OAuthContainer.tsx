@@ -3,6 +3,7 @@ import googleLogo from "../assets/google-logo.png";
 // import microsoftLogo from "../assets/microsoft-logo.png";
 
 function OAuthContainer() {
+  const baseURL = 'https://localhost:7070/'
     
     const baseUrl = window.location.origin;
 

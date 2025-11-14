@@ -8,6 +8,7 @@ import Header from "./components/Header";
 
 function App() {
   const [userP, setUser] = useState<{ [key: string]: any }>({});
+  const baseURL = 'https://localhost:7070/'
   
   useEffect(() => {
       getUser();
@@ -16,7 +17,7 @@ function App() {
   const getUser = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/userprofile/getprofile`,
+        `${baseURL}api/userprofile/getprofile`,
         {
           method: "GET",
           headers: {

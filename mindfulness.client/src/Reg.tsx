@@ -51,6 +51,7 @@ function validatePass(password: string) {
 }
 
 function Reg() {
+  const baseURL = 'https://localhost:7070/'
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");

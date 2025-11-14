@@ -5,6 +5,7 @@ import questions from "./questions.tsx";
 import { Link, useNavigate } from "react-router-dom";
 
 function Onboarding() {
+  const baseURL = 'https://localhost:7070/'
   const [currQuestionIdx, setCurrQuestionIdx] = useState(1);
   const [answers, setAnswers] = useState(Array(questions.length).fill(null));
   const currQuestion = questions[currQuestionIdx - 1];

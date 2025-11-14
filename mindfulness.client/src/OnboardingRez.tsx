@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 
 function OnboardingRez() {
   const [answers, setAnswers] = useState<{ [key: string]: any }>({});
+  const baseURL = 'https://localhost:7070/'
 
   useEffect(() => {
     getAnswers();
