@@ -5,7 +5,6 @@ import "./App.css";
 // auth
 // npx vite u cmd u folder
 
-import { Link } from "react-router-dom";
 import Header from "./components/Header";
 
 function App() {

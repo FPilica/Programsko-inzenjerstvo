@@ -45,7 +45,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "https://localhost:7070", "https://localhost:60665").AllowAnyHeader();
+        policy.AllowAnyOrigin();
+        policy.AllowAnyHeader();
     });
 });
 
@@ -53,7 +54,7 @@ builder.Services.AddAutoMapper(_ => { }, AppDomain.CurrentDomain.GetAssemblies()
 
 builder.Services.AddDbContext<MindfulnessDbContext>(options =>
 {
-    options.UseInMemoryDatabase("MindfulnessDb");
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Database"));
 });
 
 builder.Services
