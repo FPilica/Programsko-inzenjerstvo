@@ -13,7 +13,6 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Mindfulness.Server/Mindfulness.Server.csproj", "Mindfulness.Server/"]
-COPY ["mindfulness.client/mindfulness.client.esproj", "mindfulness.client/"]
 RUN dotnet restore "./Mindfulness.Server/Mindfulness.Server.csproj"
 COPY . .
 WORKDIR "/src/Mindfulness.Server"
