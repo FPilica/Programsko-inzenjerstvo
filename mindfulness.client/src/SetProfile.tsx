@@ -44,6 +44,7 @@ function SetProfile() {
       if(user.dateOfBirth){
         user.dateOfBirth = user.dateOfBirth.split('T')[0]; // "2000-01-01"
         setBirthDate(user.dateOfBirth);
+        
       }
       if(user.gender){
         if(user.gender === "Male")
@@ -110,7 +111,7 @@ function SetProfile() {
           <Header />
           <div className="containerProfile">
             <p className="title">Uređivanje profila</p>
-            <form className='authForm' onSubmit={handleSubmit}>
+            <form className='setFrom' onSubmit={handleSubmit}>
               <div className="containerList">
                 <label htmlFor="name">Ime: </label>
                 <input
