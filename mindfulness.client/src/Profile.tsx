@@ -15,7 +15,7 @@ function App() {
         <div className="profileContainer">
           <Header />
           <div className="containerProfile">
-            <p>Moj profil</p>
+            <p className="title">Moj profil</p>
             <div className="containerList">
               <p>Ime: </p> <p className="userInput">Ivan</p>
               <p>Prezime: </p> <p className="userInput">Lukić</p>
