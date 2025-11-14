@@ -41,7 +41,7 @@ function App() {
           user.dateOfBirth = "01.01.2000."
       }
       // slučaj kada nije dan gender, ne radi ATM
-      if (user.gender == "Undefined"){
+      if (user.gender === "Undefined"){
         user.gender = "O"
       }
     } catch (error) {
@@ -65,7 +65,7 @@ function App() {
               <p>Rod: </p> 
               {userP.gender === "Male" &&<p className="userInput">Muškarac</p>}
               {userP.gender === "Female" &&<p className="userInput">Žena</p>}
-              {userP.gender === "Other" &&<p className="userInput">Ostalo</p>}
+              {userP.gender === "O" &&<p className="userInput">Ostalo</p>}
               <Link className="fp" to="/profile/setprofile">
                 Postavke profila
               </Link>
