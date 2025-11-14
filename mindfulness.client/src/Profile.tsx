@@ -16,7 +16,7 @@ function App() {
   const getUser = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/userprofile/getprofile`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/userprofile/getprofile`,
         {
           method: "GET",
           headers: {

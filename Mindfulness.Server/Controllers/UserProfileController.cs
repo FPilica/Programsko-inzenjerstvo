@@ -13,12 +13,15 @@ namespace Mindfulness.Server.Controllers;
 public class UserProfileController : ControllerBase
 {
     private readonly MindfulnessDbContext _context;
+    
     private readonly IMapper _mapper;
+    
     public UserProfileController(MindfulnessDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
     }
+    
     [HttpPost("setprofile")]
     public async Task<IActionResult> UpdateUserProfile([FromBody] UserUpdateDto dto)
     {
@@ -31,24 +34,25 @@ public class UserProfileController : ControllerBase
         var userGuid = Guid.Parse(userId);
 
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGuid);
-
-        if (user == null)
+        if (user is null)
+        {
             return NotFound("User not found");
+        }
 
-        user.FirstName = dto.FirstName;
-        user.LastName = dto.LastName;
-        user.DateOfBirth = dto.DateOfBirth;
-        user.Gender = dto.Gender;
+        user.FirstName = dto.FirstName ?? user.FirstName;
+        user.LastName = dto.LastName ?? user.LastName;
+        user.DateOfBirth = dto.DateOfBirth ?? user.DateOfBirth;
+        user.Gender = dto.Gender ?? user.Gender;
 
         await _context.SaveChangesAsync();
 
         return Ok(new { message = "Profile updated" });
     }
+    
     [HttpGet("getprofile")]
     public async Task<ActionResult<UserDetailsDto>> GetByUserId()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
         if (userId is null)
         {
             return BadRequest("User not found");
@@ -56,9 +60,7 @@ public class UserProfileController : ControllerBase
 
         var userGuid = Guid.Parse(userId);
 
-        var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Id == userGuid);
-
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGuid);
         if (user is null)
         {
             return NotFound();
