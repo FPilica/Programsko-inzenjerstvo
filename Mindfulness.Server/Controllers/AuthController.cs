@@ -83,6 +83,11 @@ public sealed class AuthController : ControllerBase
     public IActionResult ExternalLogin([FromQuery] string provider, [FromQuery] string returnUrl)
     {
         var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Auth", new { returnUrl });
+
+        if (provider == "Microsoft")
+        {
+            redirectUrl = redirectUrl?.Replace("http", "https");
+        }
         
         var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
         
