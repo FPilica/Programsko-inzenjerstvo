@@ -1,6 +1,6 @@
 import "./OAuthContainer.css";
 import googleLogo from "../assets/google-logo.png";
-import microsoftLogo from "../assets/microsoft-logo.png";
+// import microsoftLogo from "../assets/microsoft-logo.png";
 
 function OAuthContainer() {
     
@@ -20,7 +20,7 @@ function OAuthContainer() {
             <img src={googleLogo} alt="google-logo" width="30" height="30" />
             <p>Google</p>
           </button>
-          <button className="myButton microsoftButton" onClick={() => handleOAuth("Microsoft")} >
+          {/* <button className="myButton microsoftButton" onClick={() => handleOAuth("Microsoft")} >
             <img
               src={microsoftLogo}
               alt="microsoft-logo"
@@ -28,7 +28,7 @@ function OAuthContainer() {
               height="30"
             />
             <p>Microsoft</p>
-          </button>
+          </button> */}
         </div>
         <p>Ili putem e-maila i lozinke:</p>
       </div>

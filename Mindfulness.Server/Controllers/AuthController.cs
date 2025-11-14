@@ -135,7 +135,7 @@ public sealed class AuthController : ControllerBase
         var user = existingUser ?? new User
         {
             Id = Guid.NewGuid(),
-            FirstName = info.Principal.FindFirstValue(ClaimTypes.Name) ?? "John",
+            FirstName = info.Principal.FindFirstValue(ClaimTypes.Name.Split(' ')[0]) ?? "John",
             LastName = info.Principal.FindFirstValue(ClaimTypes.Surname) ?? "Doe",
             Email = info.Principal.FindFirstValue(ClaimTypes.Email),
             UserName = info.Principal.FindFirstValue(ClaimTypes.Email),

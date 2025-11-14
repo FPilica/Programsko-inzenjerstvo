@@ -4,7 +4,6 @@ namespace Mindfulness.Server.Dtos.User;
 
 public class UserDetailsDto
 {
-    //prikaz detalja o korisniku
     public Guid Id { get; set; }
     
     public required string FirstName { get; set; }
@@ -16,6 +15,8 @@ public class UserDetailsDto
     public DateTimeOffset DateOfBirth { get; set; }
     
     public DateTimeOffset CreatedAt { get; set; }
+    
+    public required string Email { get; set; }
     
     public List<Models.DailyCheckIn>? DailyCheckIns { get; set; }
     
