@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import "./App.css";
@@ -14,6 +14,52 @@ function SetProfile() {
   const [birthDate, setBirthDate] = useState("");
   const [gender, setGender] = useState("");
 
+  const [userP, setUser] = useState<{ [key: string]: any }>({});
+
+  useEffect(() => {
+      getUser();
+  }, []);
+  
+  const getUser = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/userprofile/getprofile`,
+        {
+          method: "GET",
+          headers: {
+            "accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+  
+      const user = await response.json();
+      setUser(user);
+      console.log(user);
+      if(user.dateOfBirth){
+        user.dateOfBirth = user.dateOfBirth.split('T')[0]; // "2000-01-01"
+        setBirthDate(user.dateOfBirth);
+        
+      }
+      if(user.gender){
+        if(user.gender === "Male")
+          user.gender = "M"
+        else if(user.gender === "Female")
+          user.gender = "F"
+        else user.gender = "O"
+        setGender(user.gender);
+      }
+
+    } catch (error) {
+      console.error("Greška: ", error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -27,10 +73,12 @@ function SetProfile() {
         ", datumom rođenja", birthDate, "i spolom", gender);
       
       // ovdje treba biti funkcija za promjenit ig
-      const response = await fetch('https://localhost:7070/api/auth/register', {
+      const response = await fetch('https://localhost:7070/api/userprofile/setprofile', {
         method: 'POST',
         headers: {
+          'accept': 'text/plain',
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("auth_token")}`
         },
         body: JSON.stringify({
           firstName: name,
@@ -45,15 +93,15 @@ function SetProfile() {
       console.log('Response body:', responseData);
 
       if (!response.ok) {
-        throw new Error(`Neupsjela registracija: ${response.status} ${responseData}`);
+        throw new Error(`Neupsjela promjena: ${response.status} ${responseData}`);
       }
 
       // Na login nakon registracije
       console.log("Promjena uspjesna");
       navigate("/profile");
     } catch (error) {
-      console.error('Neupsjela registracija:', error);
-      alert('Neupsjela registracija: ' + (error as Error).message);
+      console.error('Neupsjela promjena:', error);
+      alert('Neupsjela promjena: ' + (error as Error).message);
     }
   };
   return (
@@ -63,7 +111,7 @@ function SetProfile() {
           <Header />
           <div className="containerProfile">
             <p className="title">Uređivanje profila</p>
-            <form className='authForm' onSubmit={handleSubmit}>
+            <form className='setFrom' onSubmit={handleSubmit}>
               <div className="containerList">
                 <label htmlFor="name">Ime: </label>
                 <input
@@ -71,7 +119,7 @@ function SetProfile() {
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Staro ime"
+                  placeholder={userP.firstName}
                   autoComplete="given-name"
                   required
                 />
@@ -81,7 +129,7 @@ function SetProfile() {
                   id="surname"
                   value={surname}
                   onChange={(e) => setSurname(e.target.value)}
-                  placeholder="Staro prezime"
+                  placeholder={userP.lastName}
                   autoComplete="family-name"
                   required
                 />
