@@ -35,7 +35,7 @@ function App() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/auth/login" element={<Auth />} />
           <Route path="/auth/reg" element={<Reg />} />
-          <Route path="auth/callback" element={<OAuthCallback />} />
+          <Route path="/auth/callback" element={<OAuthCallback />} />
           <Route path="/auth/onboarding" element={<Onboarding />} />
           <Route path="/auth/forgotpass" element={<ForgotPass />} />
           <Route path="/content" element={<Content />} />
