@@ -158,9 +158,10 @@ public sealed class AuthController : ControllerBase
     private string GenerateJwtToken(User user)
     {
         var jwtConfiguration = _configuration.GetSection("Jwt");
-        
+
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtConfiguration["Key"] ?? throw new ArgumentException("Jwt:Key")));
+            Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY") ??
+                                   throw new ArgumentException("Jwt:Key")));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
