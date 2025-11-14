@@ -19,7 +19,7 @@ public class UserProfileController : ControllerBase
         _context = context;
         _mapper = mapper;
     }
-    [HttpPost]
+    [HttpPost("setprofile")]
     public async Task<IActionResult> UpdateUserProfile([FromBody] UserUpdateDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -44,7 +44,7 @@ public class UserProfileController : ControllerBase
 
         return Ok(new { message = "Profile updated" });
     }
-    [HttpGet]
+    [HttpGet("getprofile")]
     public async Task<ActionResult<UserDetailsDto>> GetByUserId()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
