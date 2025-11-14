@@ -3,7 +3,7 @@ import "./App.css";
 // npx vite u cmd u folder
 
 import {
-  BrowserRouter as Router,
+  HashRouter ,
   Routes,
   Route,
   Navigate,
@@ -29,7 +29,7 @@ function App() {
   // app sada radi kao server.js odnosno sadrži rute na druge stranice
   return (
     <>
-      <Router>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<Auth />} />
@@ -49,7 +49,7 @@ function App() {
           <Route path="/stats" element={<Stats />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
-      </Router>
+      </HashRouter>
     </>
   );
 }
