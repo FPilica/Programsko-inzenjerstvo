@@ -59,7 +59,7 @@ function App() {
             <div className="containerList">
               <p>Ime: </p> <p className="userInput">{userP.firstName}</p>
               <p>Prezime: </p> <p className="userInput">{userP.lastName}</p>
-              <p>E-mail: </p> <p className="userInput">mail</p>
+              <p>E-mail: </p> <p className="userInput">{userP.email}</p>
                                         {/* user.email */}
               <p>Datum rođenja: </p> <p className="userInput">{userP.dateOfBirth}</p>
               <p>Rod: </p> 
