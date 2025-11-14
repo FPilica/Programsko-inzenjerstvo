@@ -1,5 +1,5 @@
 import "./App.css";
-import "./Home.css";
+import "./home.css";
 import logoWhite from "./assets/logo_bijeli.png";
 // glavni
 // npx vite u cmd u folder
