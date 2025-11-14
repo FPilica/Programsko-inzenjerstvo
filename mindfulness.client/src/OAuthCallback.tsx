@@ -25,7 +25,7 @@ function OAuthCallback() {
             const fetchOnboarding = async () => {
 
                 try {
-                    const response = await fetch(`https://localhost:7070/api/StartQuestionnaire`, {
+                    const response = await fetch(`https://programsko-inzenjerstvo-x2fd.onrender.com/api/StartQuestionnaire`, {
                         method: "GET",
                         headers: {
                             'accept': 'text/plain',

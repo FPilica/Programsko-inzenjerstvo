@@ -8,7 +8,7 @@ function OAuthContainer() {
 
   const handleOAuth = (provider : string) => {
       const returnUrl = encodeURIComponent(`${baseUrl}/auth/callback`);
-      window.location.href = `https://localhost:7070/api/Auth/external-login?provider=${provider}&returnUrl=${returnUrl}`;
+      window.location.href = `https://programsko-inzenjerstvo-x2fd.onrender.com/api/Auth/external-login?provider=${provider}&returnUrl=${returnUrl}`;
   }
   
   return (

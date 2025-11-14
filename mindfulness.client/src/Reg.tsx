@@ -80,7 +80,7 @@ function Reg() {
       console.log("Prijava s e-mailom:", email, ", lozinkom:", pass, ", imenom", name, ", prezimenom", surname, 
         ", datumom rođenja", birthDate, "i spolom", gender);
       
-      const response = await fetch('https://localhost:7070/api/auth/register', {
+      const response = await fetch('https://programsko-inzenjerstvo-x2fd.onrender.com/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

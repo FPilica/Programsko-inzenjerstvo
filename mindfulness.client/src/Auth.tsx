@@ -18,7 +18,7 @@ function Login() {
     console.log("Prijava s e-mailom:", email, "i lozinkom:", pass);
     
     try {
-      const response = await fetch('https://localhost:7070/api/auth/login', {
+      const response = await fetch('https://programsko-inzenjerstvo-x2fd.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ function Login() {
 
       try {
         const response = await fetch(
-            "https://localhost:7070/api/startquestionnaire",
+            "https://programsko-inzenjerstvo-x2fd.onrender.com/api/startquestionnaire",
             {
               method: "GET",
               headers: {

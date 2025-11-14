@@ -30,7 +30,7 @@ function Onboarding() {
 
     // obrada
     try {
-      const response = await fetch("https://localhost:7070/api/StartQuestionnaire", {
+      const response = await fetch("https://programsko-inzenjerstvo-x2fd.onrender.com/api/StartQuestionnaire", {
         method: "POST",
         headers: {
           'accept': 'text/plain',
