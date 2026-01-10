@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateRoutes = () => {
-    const isAuthenticated = true; // Provjera jel radi, inace ce bit neka prava funkcija
+    const isAuthenticated = true; // Provjera jel radi, inace ce bit neka prava funkcija, sad je true da nas pusta bez prijave
     return isAuthenticated ? <Outlet /> : <Navigate to="/auth/login" />;
 };
 
