@@ -1,5 +1,5 @@
 import "./App.css";
-
+import PrivateRoutes from "./components/PrivateRoutes"
 // npx vite u cmd u folder
 
 import {
@@ -38,15 +38,20 @@ function App() {
           <Route path="auth/callback" element={<OAuthCallback />} />
           <Route path="/auth/onboarding" element={<Onboarding />} />
           <Route path="/auth/forgotpass" element={<ForgotPass />} />
-          <Route path="/content" element={<Content />} />
-          <Route path="/calendar" element={<Calendar />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/setprofile" element={<SetProfile />} />
-          <Route path="/profile/onboardingrez" element={<OnboardingRez />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/coach" element={<Coach />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/stats" element={<Stats />} />
+
+          {/* Protected rute */}
+          <Route element={<PrivateRoutes />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/content" element={<Content />} />
+            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/setprofile" element={<SetProfile />} />
+            <Route path="/profile/onboardingrez" element={<OnboardingRez />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/coach" element={<Coach />} />
+            <Route path="/stats" element={<Stats />} />
+          </Route>
+
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>

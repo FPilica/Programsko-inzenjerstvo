@@ -6,9 +6,8 @@ import "./Profile.css";
 import Header from "./components/Header.tsx";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { CheckAuth } from "./components/CheckAuth.tsx";
 
-function SetProfileComponent() {
+function SetProfile() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -191,5 +190,4 @@ function SetProfileComponent() {
   );
 }
 
-const SetProfile = CheckAuth(SetProfileComponent);
 export default SetProfile;

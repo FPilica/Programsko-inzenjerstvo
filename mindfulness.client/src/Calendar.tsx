@@ -1,9 +1,8 @@
 
 import "./App.css";
 import Header from "./components/Header";
-import { CheckAuth } from "./components/CheckAuth";
 
-function CalendarComponent() {
+function Calendar() {
   return (
     <>
       <div className="background">
@@ -16,5 +15,4 @@ function CalendarComponent() {
   );
 }
 
-const Calendar = CheckAuth(CalendarComponent);
 export default Calendar;

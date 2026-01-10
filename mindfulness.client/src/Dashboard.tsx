@@ -2,9 +2,8 @@ import "./App.css";
 import "./Dashboard.css";
 import Header from "./components/Header.tsx";
 import { CaretRightIcon } from "@phosphor-icons/react";
-import { CheckAuth } from "./components/CheckAuth.tsx";
 
-function DashboardComponent() {
+function Dashboard() {
   return (
     <>
       <div className="background">
@@ -37,5 +36,4 @@ function DashboardComponent() {
   );
 }
 
-const Dashboard = CheckAuth(DashboardComponent);
-export default Dashboard;
+export default Dashboard; 

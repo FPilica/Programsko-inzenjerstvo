@@ -7,7 +7,7 @@ import './App.css'
 
 import { Link } from 'react-router-dom'
 
-function App() {
+function Coach() {
   return (
     <>
       <h1>Mindfulness stranica</h1>
@@ -35,4 +35,4 @@ function App() {
   )
 }
 
-export default App
+export default Coach;

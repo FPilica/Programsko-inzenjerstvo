@@ -1,8 +1,7 @@
 import "./App.css";
 import Header from "./components/Header";
-import { CheckAuth } from "./components/CheckAuth";
 
-function StatsComponent() {
+function Stats() {
   return (
     <>
       <div className="background">
@@ -15,5 +14,4 @@ function StatsComponent() {
   );
 }
 
-const Stats = CheckAuth(StatsComponent);
 export default Stats;

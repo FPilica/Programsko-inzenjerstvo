@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react'
 import "./App.css";
 import { Link } from "react-router-dom";
 import Header from "./components/Header";
-import { CheckAuth } from "./components/CheckAuth";
 
-function ProfileComponent() {
+function Profile() {
   const [userP, setUser] = useState<{ [key: string]: any }>({});
   
   useEffect(() => {
@@ -76,5 +75,4 @@ function ProfileComponent() {
   );
 }
 
-const Profile = CheckAuth(ProfileComponent);
 export default Profile;

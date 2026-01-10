@@ -1,11 +1,8 @@
 
 import "./App.css";
-import { CheckAuth } from "./components/CheckAuth";
-
-import { Link } from "react-router-dom";
 import Header from "./components/Header";
 
-function ContentComponent() {
+function Content() {
   return (
     <>
       <div className="background">
@@ -18,5 +15,4 @@ function ContentComponent() {
   );
 }
 
-const Content = CheckAuth(ContentComponent);
 export default Content;
