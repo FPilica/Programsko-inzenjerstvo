@@ -3,8 +3,9 @@ import "./Profile.css";
 import Header from "./components/Header.tsx";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { CheckAuth } from "./components/CheckAuth.tsx";
 
-function OnboardingRez() {
+function OnboardingRezComponent() {
   const [answers, setAnswers] = useState<{ [key: string]: any }>({});
 
   useEffect(() => {
@@ -70,4 +71,5 @@ function OnboardingRez() {
   );
 }
 
+const OnboardingRez = CheckAuth(OnboardingRezComponent);
 export default OnboardingRez;

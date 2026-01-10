@@ -1,6 +1,5 @@
 import "./App.css";
 import "./Home.css";
-import logoWhite from "./assets/logo_bijeli.png";
 // glavni
 // npx vite u cmd u folder
 
@@ -13,7 +12,7 @@ function Home() {
     <>
       <div className="containerHomeAndAuth">
         <div className="containerHome">
-          <img src={logoWhite} alt="logo_bijeli" width="688" height="auto" />
+          <h1 className="pageName">mindfulness</h1>
 
           <div className="gumbi_za_auth">
             <Link to="auth/login">
