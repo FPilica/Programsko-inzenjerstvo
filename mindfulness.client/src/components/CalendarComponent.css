@@ -1,0 +1,30 @@
+.calendarContent {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.calendarContent> :nth-child(2) {
+    width: 30vw;
+}
+
+.fc {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 65vw;
+}
+
+.fc-daygrid-day-number:hover {
+    text-decoration: underline;
+}
+
+.fc .fc-button-primary {
+    background-color: #957CFE;
+    border: none;
+}
+
+.fc .fc-button-primary:hover {
+    background-color: #7a5dfc;
+}
