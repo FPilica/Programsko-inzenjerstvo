@@ -4,13 +4,16 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import { useState } from "react";
+import ModalEventView from "./ModalEventView";
 import "./CalendarComponent.css";
 
 function CalendarComponent() {
-  const [events, setEvents] = useState<any[]>([]);
+    const [events, setEvents] = useState<any[]>([]);
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
-  const handleSelect = (selectInfo: any) => {
-    let title = prompt("Unesite naziv događaja:");
+    const handleSelect = (selectInfo: any) => {
+      let title = prompt("Unesite naziv događaja:");
 
     selectInfo.view.calendar.unselect(); // clear date selection
 
@@ -24,7 +27,21 @@ function CalendarComponent() {
       };
       setEvents([...events, newEvent]);
     }
-  };
+    };
+    
+    
+    const handleEventClick = (clickInfo: any) => {
+        setSelectedEvent(clickInfo.event);
+        setIsOpen(true);
+    };
+
+    const handleDeleteEvent = () => {
+        if (selectedEvent && window.confirm("Jeste li sigurni da želite izbrisati ovaj događaj?")) {
+            setEvents(events.filter((event) => event.id !== selectedEvent.id));
+            setIsOpen(false);
+            setSelectedEvent(null);
+        }
+    };
 
   return (
     <>
@@ -52,6 +69,7 @@ function CalendarComponent() {
           select={handleSelect}
           eventColor={"#957CFE"}
           events={events}
+          eventClick={handleEventClick}
         />
 
         <FullCalendar
@@ -74,7 +92,11 @@ function CalendarComponent() {
           noEventsText="Nema događaja za prikazati"
           events={events}
           eventColor={"#957CFE"}
+          eventClick={handleEventClick}
         />
+        {selectedEvent && (
+          <ModalEventView isOpen={isOpen} event={selectedEvent} onClose={() => {setIsOpen(false); setSelectedEvent(null);} } deleteEvent={handleDeleteEvent} />
+        )}
       </div>
     </>
   );
