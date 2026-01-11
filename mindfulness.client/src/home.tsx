@@ -1,5 +1,5 @@
 import "./App.css";
-import "./Home.css";
+import "./home.css";
 // glavni
 // npx vite u cmd u folder
 

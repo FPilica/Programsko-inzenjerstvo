@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import "./App.css";
 import { Link } from "react-router-dom";
 import Header from "./components/Header";
 
@@ -56,13 +55,13 @@ function Profile() {
             <div className="containerList">
               <p>Ime: </p> <p className="userInput">{userP.firstName}</p>
               <p>Prezime: </p> <p className="userInput">{userP.lastName}</p>
-              <p>E-mail: </p> <p className="userInput">mail</p>
+              <p>E-mail: </p> <p className="userInput">{userP.email}</p>
                                         {/* user.email */}
               <p>Datum rođenja: </p> <p className="userInput">{userP.dateOfBirth}</p>
               <p>Rod: </p> 
               {userP.gender === "Male" &&<p className="userInput">Muškarac</p>}
               {userP.gender === "Female" &&<p className="userInput">Žena</p>}
-              {userP.gender === "Other" &&<p className="userInput">Ostalo</p>}
+              {userP.gender === "O" &&<p className="userInput">Ostalo</p>}
               <Link className="fp" to="/profile/setprofile">
                 Postavke profila
               </Link>
