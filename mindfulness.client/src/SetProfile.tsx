@@ -1,7 +1,4 @@
 import { useState, useEffect } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import "./App.css";
 import "./Profile.css";
 import Header from "./components/Header.tsx";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +11,7 @@ function SetProfile() {
   const [birthDate, setBirthDate] = useState("");
   const [gender, setGender] = useState("");
 
-  const [userP, setUser] = useState<{ [key: string]: any }>({});
+  const [_, setUser] = useState<{ [key: string]: any }>({});
 
   useEffect(() => {
       getUser();
@@ -54,6 +51,9 @@ function SetProfile() {
         else user.gender = "O"
         setGender(user.gender);
       }
+
+      setName(user.firstName);
+      setSurname(user.lastName);
 
     } catch (error) {
       console.error("Greška: ", error);
@@ -119,7 +119,6 @@ function SetProfile() {
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder={userP.firstName}
                   autoComplete="given-name"
                   required
                 />
@@ -129,7 +128,6 @@ function SetProfile() {
                   id="surname"
                   value={surname}
                   onChange={(e) => setSurname(e.target.value)}
-                  placeholder={userP.lastName}
                   autoComplete="family-name"
                   required
                 />
@@ -177,7 +175,7 @@ function SetProfile() {
                     <label htmlFor="O">Ostalo</label>
                   </div>
                 </div>
-                <button className="myButton submit" type="submit">
+                <button className="myButton submitChange" type="submit">
                   Spremi promjene
                 </button> 
               </div>

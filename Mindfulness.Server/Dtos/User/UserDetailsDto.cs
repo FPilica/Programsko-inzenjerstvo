@@ -16,6 +16,8 @@ public class UserDetailsDto
     public DateTimeOffset DateOfBirth { get; set; }
     
     public DateTimeOffset CreatedAt { get; set; }
+
+    public required string Email { get; set; }
     
     public List<Models.DailyCheckIn>? DailyCheckIns { get; set; }
     

@@ -1,14 +1,8 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import "./App.css";
-// auth
-// npx vite u cmd u folder
 
-import { Link } from "react-router-dom";
+import "./App.css";
 import Header from "./components/Header";
 
-function App() {
+function Content() {
   return (
     <>
       <div className="background">
@@ -21,4 +15,4 @@ function App() {
   );
 }
 
-export default App;
+export default Content;
