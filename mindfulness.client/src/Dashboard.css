@@ -13,7 +13,7 @@
 .background> :first-child {
     position: relative;
     z-index: 1;
-    padding: 110px 30px 30px 30px;
+    padding: 130px 30px 30px 30px;
 }
 
 /* ne diraj ovo gori */
@@ -28,7 +28,8 @@
 
 .dashGreeting {
     font-size: 25px;
-    /* color: rgb(82, 80, 80); */
+    font-weight: bold;
+    margin-top: 0;
     margin-bottom: 0;
     color: white;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
@@ -50,6 +51,7 @@
     padding: 10px;
     width: 150px;
     height: 150px;
+    font-weight: 600;
     background-color: white;
     border-radius: 15px;
     margin: 0;
@@ -81,7 +83,7 @@
 
 .streakCard> :nth-child(2) {
     font-size: 18px;
-    /* font-weight: bold; */
+    font-weight: 800;
 }
 
 .streakCard> :nth-child(3) {
