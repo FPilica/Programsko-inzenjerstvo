@@ -1,0 +1,33 @@
+.media-poster {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
+.media-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.media-poster[data-visible] {
+    opacity: 1;
+}
+
+/* Smanjeni video player */
+.video-player-custom {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 auto;
+    
+    /* Promjena glavne boje playera */
+    --plyr-color-main: #7c3aed; /* Ljubičasta */
+    --plyr-video-control-color: #ffffff;
+    --plyr-video-control-background-hover: #7c3aed;
+}
