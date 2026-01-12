@@ -4,8 +4,16 @@
     gap: 20px;
 }
 
-.calendarContent> :nth-child(2) {
-    width: 30vw;
+.rightSideCalendar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 78vh;
+}
+
+.addEventButton {
+    width: 100%;
+    color: #957CFE;
 }
 
 .fc {
@@ -14,6 +22,11 @@
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 65vw;
+}
+
+.rightSideCalendar > :nth-child(2) {
+    width: 30vw;
+
 }
 
 .fc-daygrid-day-number:hover {
