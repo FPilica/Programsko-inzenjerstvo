@@ -5,40 +5,42 @@ import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import { useState } from "react";
 import ModalEventView from "./ModalEventView";
+import ModalEventAdd from "./ModalEventAdd";
 import "./CalendarComponent.css";
 
 function CalendarComponent() {
     const [events, setEvents] = useState<any[]>([]);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpenView, setIsOpenView] = useState(false);
+    const [isOpenAdd, setIsOpenAdd] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
+    const [selectInfo, setSelectInfo] = useState<any>(null);
 
     const handleSelect = (selectInfo: any) => {
-      let title = prompt("Unesite naziv događaja:");
-
-    selectInfo.view.calendar.unselect(); // clear date selection
-
-    if (title) {
-      const newEvent = {
-        id: String(Date.now()),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay,
-      };
-      setEvents([...events, newEvent]);
-    }
+        setSelectInfo(selectInfo);
+        setIsOpenAdd(true);
     };
-    
-    
+
+    const handleAddEvent = () => {
+
+        const newEvent = JSON.parse(localStorage.getItem("newEvent") || "{}");
+        if (newEvent && newEvent.title) {
+            setEvents([...events, newEvent]);
+            localStorage.removeItem("newEvent");
+        }
+
+        setSelectInfo(null);
+        setIsOpenAdd(false);
+    };
+
     const handleEventClick = (clickInfo: any) => {
         setSelectedEvent(clickInfo.event);
-        setIsOpen(true);
+        setIsOpenView(true);
     };
 
     const handleDeleteEvent = () => {
         if (selectedEvent && window.confirm("Jeste li sigurni da želite izbrisati ovaj događaj?")) {
             setEvents(events.filter((event) => event.id !== selectedEvent.id));
-            setIsOpen(false);
+            setIsOpenView(false);
             setSelectedEvent(null);
         }
     };
@@ -95,7 +97,10 @@ function CalendarComponent() {
           eventClick={handleEventClick}
         />
         {selectedEvent && (
-          <ModalEventView isOpen={isOpen} event={selectedEvent} onClose={() => {setIsOpen(false); setSelectedEvent(null);} } deleteEvent={handleDeleteEvent} />
+          <ModalEventView isOpen={isOpenView} event={selectedEvent} onClose={() => {setIsOpenView(false); setSelectedEvent(null);} } deleteEvent={handleDeleteEvent} />
+        )}
+        {selectInfo && (
+            <ModalEventAdd isOpen={isOpenAdd} onClose={() => {setIsOpenAdd(false); setSelectInfo(null);} } selectInfo={selectInfo} addEvent={handleAddEvent}/>
         )}
       </div>
     </>

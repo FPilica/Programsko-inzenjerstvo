@@ -28,7 +28,7 @@
 
 .dashGreeting {
     font-size: 25px;
-    /* color: rgb(82, 80, 80); */
+    font-weight: bold;
     margin-top: 0;
     margin-bottom: 0;
     color: white;
@@ -51,6 +51,7 @@
     padding: 10px;
     width: 150px;
     height: 150px;
+    font-weight: 600;
     background-color: white;
     border-radius: 15px;
     margin: 0;
@@ -82,7 +83,7 @@
 
 .streakCard> :nth-child(2) {
     font-size: 18px;
-    /* font-weight: bold; */
+    font-weight: 800;
 }
 
 .streakCard> :nth-child(3) {

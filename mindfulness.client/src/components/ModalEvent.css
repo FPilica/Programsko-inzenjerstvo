@@ -1,0 +1,113 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+}
+
+.modalContent h2, .modalContent p {
+    margin: 0;
+}
+
+.modalCloseButton {
+    align-self: flex-end;
+    height: 30px;
+    width: 30px;
+    background-color: gray;
+    border-radius: 10px;
+    color: white;
+}
+
+.modalDeleteButton {
+    align-self: center;
+    width: 40%;
+    height: 40px;
+    background-color: #957CFE;
+    color: white;
+}
+
+.addEventForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-left: 20px;
+}
+
+.addEventForm > div {
+    align-self: start;
+    display: flex;
+    gap: 10px;
+}
+
+.addEventForm > div > label {
+    font-weight: 600;
+}
+
+.addEventForm > :nth-child(2), .addEventForm > :nth-child(3) {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+}
+
+
+.addEventForm > :nth-last-child(3) {
+    align-items: center;
+}
+
+.addEventForm > :nth-last-child(3) > input {
+    margin: 0;
+    height: 24px;
+}
+
+.addEventForm > div > input {
+    background-color: white;
+    color: black;
+    height: 30px;
+    border-radius: 7px;
+    border: black solid 1.5px;
+    padding: 5px;
+}
+
+.addEventForm > :nth-child(2) > input,  .addEventForm> :nth-child(3) > input {
+    border: gray solid 1px;
+    color: gray;
+    color-scheme: gray;
+}
+
+.addEventForm > div > textarea {
+    background-color: white;
+    color: black;
+    height: 50px;
+    border-radius: 7px;
+    padding: 5px;
+    border: black solid 1.5px;
+}
+
+.modalAddButton {
+    align-self: center;
+    width: 40%;
+    height: 40px;
+    background-color: #957CFE;
+    color: white;
+}
