@@ -33,7 +33,7 @@ function VideoPlayer({
       hideControlsOnMouseLeave
     >
       <MediaProvider>
-        {posterLink.length != 0 && (
+        {posterLink.length !== 0 && (
           <Poster className="media-poster" src={posterLink} alt="Thumbnail" />
         )}
 
@@ -47,7 +47,7 @@ function VideoPlayer({
         )}
       </MediaProvider>
       <PlyrLayout
-        thumbnails={thumbnailsLink.length != 0 ? thumbnailsLink : undefined}
+        thumbnails={thumbnailsLink.length !== 0 ? thumbnailsLink : undefined}
         icons={plyrLayoutIcons}
       />
     </MediaPlayer>

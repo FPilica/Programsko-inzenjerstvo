@@ -19,15 +19,14 @@
     opacity: 1;
 }
 
-/* Smanjeni video player */
+
 .video-player-custom {
     max-width: 100% !important;
     width: 100% !important;
     height: auto !important;
     margin: 0 auto;
     
-    /* Promjena glavne boje playera */
-    --plyr-color-main: #7c3aed; /* Ljubičasta */
+    --plyr-color-main: #7c3aed; 
     --plyr-video-control-color: #ffffff;
     --plyr-video-control-background-hover: #7c3aed;
 }
