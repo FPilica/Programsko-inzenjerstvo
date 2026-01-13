@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import VideoPlayer from "./components/VideoPlayer";
+import VideoPlayer from "./VideoPlayer";
 import { createPortal } from "react-dom";
 import "./ContentViewModal.css";
 
@@ -31,7 +31,7 @@ interface ContentViewProps {
   onClose: () => void;
 }
 
-function ContentView({ content, isOpen, onClose }: ContentViewProps) {
+function ContentViewModal({ content, isOpen, onClose }: ContentViewProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
 
   useEffect(() => {
@@ -186,4 +186,4 @@ function ContentView({ content, isOpen, onClose }: ContentViewProps) {
   );
 }
 
-export default ContentView;
+export default ContentViewModal;

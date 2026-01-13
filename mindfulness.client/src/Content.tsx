@@ -2,7 +2,7 @@
 import { useState, useRef } from "react";
 import "./App.css";
 import Header from "./components/Header";
-import ContentView from "./ContentViewModal";
+import ContentViewModal from "./components/ContentViewModal";
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import "./Content.css"
 
@@ -177,7 +177,7 @@ function Content() {
               </div>
 
             </div>
-         {isOpen && <ContentView isOpen={isOpen} onClose={handleClose} content={content} />}
+         {isOpen && <ContentViewModal isOpen={isOpen} onClose={handleClose} content={content} />}
         </div>
         </div>
       </div>
