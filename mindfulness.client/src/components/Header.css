@@ -45,6 +45,11 @@
     border-bottom: 2px solid #7636BB;
 }
 
+.active > .addIcon {
+    fill: #e5b4e9;
+    border-bottom: 2px solid #e5b4e9;
+}
+
 .rightIcons {
     display: flex;
     flex-direction: row;

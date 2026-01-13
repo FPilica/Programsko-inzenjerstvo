@@ -4,6 +4,7 @@ import Header from "./components/Header";
 
 function Profile() {
   const [userP, setUser] = useState<{ [key: string]: any }>({});
+  const userRole = localStorage.getItem("userRole");
   
   useEffect(() => {
       getUser();
@@ -49,7 +50,7 @@ function Profile() {
     <>
       <div className="background">
         <div className="profileContainer">
-          <Header />
+          <Header userRole={userRole || ""}/>
           <div className="containerProfile">
             <p className="title">Moj profil</p>
             <div className="containerList">

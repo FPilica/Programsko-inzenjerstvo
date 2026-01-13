@@ -12,6 +12,8 @@ function Content() {
   const videosRef = useRef<HTMLDivElement | null>(null);
   const articlesRef = useRef<HTMLDivElement | null>(null);
 
+  const userRole = localStorage.getItem("userRole");
+
   const handleClose = () => {
     setIsOpen(false);
   };
@@ -92,7 +94,7 @@ function Content() {
     <>
       <div className="background">
         <div className="contentContainer">
-          <Header />
+          <Header userRole={userRole || ""} />
           <div className="contentBody">
             <div className="section">
             <div className="sectionHeader">

@@ -3,11 +3,13 @@ import Header from "./components/Header";
 import CalendarComponent from "./components/CalendarComponent";
 
 function Calendar() {
+  const userRole = localStorage.getItem("userRole");
+
   return (
     <>
       <div className="background">
         <div className="calendarContainer">
-          <Header />
+          <Header userRole={userRole || ""}/>
           {/* <h1>Kalendar</h1> */}
           <div className="calendarContent">
             <CalendarComponent />
