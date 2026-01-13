@@ -1,6 +1,7 @@
 import Header from "./components/Header";
 import { useState, useEffect } from "react";
 import ContentViewModal from "./components/ContentViewModal";
+import ContentCard from "./components/ContentCard";
 import "./AddContent.css";
 
 
@@ -86,6 +87,7 @@ function AddContent() {
 
     setShowForm(false);
     setTitle("");
+    setContentType("video");
     setDescription("");
     setCategory("");
     setDuration("0");
@@ -124,12 +126,14 @@ function AddContent() {
               ) : (
                 <div className="addContentList">
                   {myContent.map((content: ContentItem) => (
-                    <div key={content.contentId} className="contentItem" onClick={() => { setContent(content); setIsOpen(true)}}>
-                      <h3>{content.title}</h3>
-                      <p>{content.description}</p>
-                      <span className="contentType">{content.type}</span>
-                      <span className="contentCategory">{content.category}</span>
-                    </div>
+                    <ContentCard
+                      key={content.contentId}
+                      content={content}
+                      onClick={() => {
+                        setContent(content);
+                        setIsOpen(true);
+                      }}
+                    />
                   ))}
                 </div>
               )}

@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import ContentViewModal from "./components/ContentViewModal";
+import ContentCard from "./components/ContentCard";
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import "./Content.css"
 
@@ -132,26 +133,14 @@ function Content() {
             </div>
             <div className="contentList" ref={videosRef}>
               {videos.map((item : any) => (
-                <div 
+                <ContentCard
                   key={item.contentId} 
-                  className="contentCard" 
+                  content={item}
                   onClick={() => {
                     setContent(item);
                     setIsOpen(true);
                   }}
-                >
-                  <div className="cardThumbnail">
-                    <img src={item.posterLink} alt={item.title}/>
-                  </div>
-                  <div className="cardContent">
-                    <h3 className="cardTitle">{item.title}</h3>
-                    <p>{item.description}</p>
-                    <div className="cardFooter">
-                      <span className="contentType">{item.type}</span>
-                      <span className="contentCategory">{item.category}</span>
-                    </div>
-                  </div>
-                </div>
+                />
               ))}
             </div>
             </div>
@@ -166,25 +155,14 @@ function Content() {
             </div>
             <div className="contentList" ref={articlesRef}>
               {articles.map((item : any) => (
-                <div 
+                <ContentCard
                   key={item.contentId} 
-                  className="contentCard" 
+                  content={item}
                   onClick={() => {
                     setContent(item);
                     setIsOpen(true);
                   }}
-                >
-                  <div className="cardThumbnail">
-                  </div>
-                  <div className="cardContent">
-                    <h3 className="cardTitle">{item.title}</h3>
-                    <p>{item.description}</p>
-                    <div className="cardFooter">
-                      <span className="contentType">{item.type}</span>
-                      <span className="contentCategory">{item.category}</span>
-                    </div>
-                  </div>
-                </div>
+                />
               ))}
             </div>
             </div>
@@ -195,28 +173,14 @@ function Content() {
               </div>
               <div className="contentGrid">
                 {sampleContent.map((item: any) => (
-                  <div 
+                  <ContentCard
                     key={item.contentId} 
-                    className="contentCard" 
+                    content={item}
                     onClick={() => {
                       setContent(item);
                       setIsOpen(true);
                     }}
-                  >
-                    <div className="cardThumbnail">
-                      {item.type === "video" &&
-                        <img src={item.posterLink} alt={item.title} />
-                      }
-                    </div>
-                    <div className="cardContent">
-                      <h3 className="cardTitle">{item.title}</h3>
-                      <p>{item.description}</p>
-                      <div className="cardFooter">
-                        <span className="contentType">{item.type}</span>
-                        <span className="contentCategory">{item.category}</span>
-                      </div>
-                    </div>
-                  </div>
+                  />
                 ))}
               </div>
 

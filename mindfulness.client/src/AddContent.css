@@ -60,52 +60,6 @@
   margin-top: 20px;
 }
 
-.contentItem {
-  background: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 20px;
-  transition: box-shadow 0.3s;
-  cursor: pointer;
-}
-
-.contentItem:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.contentItem h3 {
-  font-size: 20px;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.contentItem p {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 15px;
-  line-height: 1.5;
-}
-
-.contentType,
-.contentCategory {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  margin-right: 8px;
-}
-
-.contentType {
-  background-color: #e0e7ff;
-  color: #5b21b6;
-}
-
-.contentCategory {
-  background-color: #f3e8ff;
-  color: #7c3aed;
-}
-
 /* Form */
 .contentForm {
   background: white;
