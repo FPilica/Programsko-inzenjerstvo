@@ -17,12 +17,11 @@ interface Content {
   title: string;
   description?: string;
   videoLink?: string;
-  imageLink?: string;
   articleLink?: string;
   text?: string;
   posterLink?: string;
   subtitlesLink?: string;
-  type: "video" | "image" | "article";
+  type: "video" | "article";
 }
 
 interface ContentViewProps {
@@ -80,14 +79,6 @@ function ContentViewModal({ content, isOpen, onClose }: ContentViewProps) {
             videoLink={content.videoLink || ""}
             videoName={content.title}
             posterLink={content.posterLink}
-          />
-        );
-      case "image":
-        return (
-          <img
-            src={content.imageLink}
-            alt={content.title}
-            className="content-image"
           />
         );
       case "article":
