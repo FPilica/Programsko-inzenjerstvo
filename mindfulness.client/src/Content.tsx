@@ -204,7 +204,9 @@ function Content() {
                     }}
                   >
                     <div className="cardThumbnail">
-                      <img src={item.posterLink} alt={item.title}/>
+                      {item.type === "video" &&
+                        <img src={item.posterLink} alt={item.title} />
+                      }
                     </div>
                     <div className="cardContent">
                       <h3 className="cardTitle">{item.title}</h3>
