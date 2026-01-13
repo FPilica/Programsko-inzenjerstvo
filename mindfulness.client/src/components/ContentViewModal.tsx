@@ -12,7 +12,7 @@ interface Review {
   contentId?: number;
 }
 
-interface Content {
+interface ContentItem {
   contentId?: number;
   title: string;
   description?: string;
@@ -22,10 +22,13 @@ interface Content {
   posterLink?: string;
   subtitlesLink?: string;
   type: "video" | "article";
+  authorId: string;
+  category?: string;
+  duration?: number;
 }
 
 interface ContentViewProps {
-  content: Content;
+  content: ContentItem;
   isOpen: boolean;
   onClose: () => void;
 }

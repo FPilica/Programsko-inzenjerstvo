@@ -110,6 +110,14 @@
   overflow: hidden;
 }
 
+.cardContent p {
+  font-size: 14px;
+  color: #4b5563;
+  flex-grow: 1;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
 .contentGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
