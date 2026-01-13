@@ -202,7 +202,7 @@
 
 /* Reviews List */
 .reviews-list {
-  max-height: 600px;
+  max-height: 25vh;
   overflow-x: scroll;
 }
 

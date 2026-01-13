@@ -80,7 +80,6 @@ function ContentView({ content, isOpen, onClose }: ContentViewProps) {
             videoLink={content.videoLink || ""}
             videoName={content.title}
             posterLink={content.posterLink}
-            subtitlesLink={content.subtitlesLink}
           />
         );
       case "image":
