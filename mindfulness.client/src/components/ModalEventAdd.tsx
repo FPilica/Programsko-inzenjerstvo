@@ -55,10 +55,10 @@ function ModalEventAdd({
           x
         </button>
 
-        <h2>Dodaj novi događaj</h2>
+        <h2>Dodaj događaj</h2>
         <form className="addEventForm" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="title">Naziv događaja: </label>
+            <label htmlFor="title">Naziv: </label>
             <input
               type="text"
               id="title"

@@ -30,11 +30,13 @@
 }
 
 .modalCloseButton {
-    align-self: flex-end;
+    position: absolute;
+    top: 25px;
+    right: 20px;
     height: 30px;
     width: 30px;
     background-color: gray;
-    border-radius: 10px;
+    border-radius: 12px;
     color: white;
 }
 
@@ -57,6 +59,8 @@
     align-self: start;
     display: flex;
     gap: 10px;
+    justify-content:space-between;
+    width: 100%;
 }
 
 .addEventForm > div > label {
@@ -84,15 +88,21 @@
     background-color: white;
     color: black;
     height: 30px;
+    width: 90%;
     border-radius: 7px;
-    border: black solid 1.5px;
+    border: gray solid 1px;
     padding: 5px;
 }
 
 .addEventForm > :nth-child(2) > input,  .addEventForm> :nth-child(3) > input {
-    border: gray solid 1px;
-    color: gray;
     color-scheme: gray;
+    color: gray;
+    width: 100%;
+}
+
+.addEventForm > :nth-child(4) > input {
+    width: 20px;
+    height: 20px;
 }
 
 .addEventForm > div > textarea {
@@ -101,7 +111,8 @@
     height: 50px;
     border-radius: 7px;
     padding: 5px;
-    border: black solid 1.5px;
+    border: gray solid 1px;
+    width: 85%;
 }
 
 .modalAddButton {
