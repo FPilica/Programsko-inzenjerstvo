@@ -3,8 +3,11 @@ import "./Profile.css";
 import Header from "./components/Header.tsx";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function OnboardingRez() {
+  const navigate = useNavigate();
+
   const [answers, setAnswers] = useState<{ [key: string]: any }>({});
   const userRole = localStorage.getItem("userRole");
 
@@ -61,9 +64,9 @@ function OnboardingRez() {
                 <p>Nema dostupnih odgovora</p>
               )}
             </div>
-            <Link className="fp" to="/profile">
+            <button className="myButton setProfileButton" onClick={() => navigate(-1)}>
               Natrag na profil
-            </Link>
+            </button>
           </div>
         </div>
       </div>
