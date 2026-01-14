@@ -1,0 +1,121 @@
+.editContentButton {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #7c3aed;
+    border: none;
+    border-radius: 12px;
+    padding: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    z-index: 10;
+}
+
+/* Content Card */
+.contentCard {
+    flex: 0 0 280px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.contentCard .editContentButton {
+    display: none;
+}
+
+.contentCard:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.contentCard:hover .editContentButton {
+    display: block;
+}
+
+/* Thumbnail */
+.cardThumbnail {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    overflow: hidden;
+}
+
+.cardThumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Card Content */
+.cardContent {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.cardTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 12px 0;
+    line-height: 1.4;
+    overflow: hidden;
+}
+
+.cardContent p {
+    font-size: 14px;
+    color: #4b5563;
+    flex-grow: 1;
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+}
+
+.contentType,
+.contentCategory {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.contentType {
+    background-color: #e0e7ff;
+    color: #5b21b6;
+}
+
+.contentCategory {
+    background-color: #f3e8ff;
+    color: #7c3aed;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .contentCard {
+        flex: 0 0 240px;
+    }
+
+}
+
+@media (max-width: 640px) {
+    .contentCard {
+        flex: 0 0 200px;
+    }
+
+    .cardContent {
+        padding: 12px;
+    }
+
+    .cardTitle {
+        font-size: 14px;
+    }
+}

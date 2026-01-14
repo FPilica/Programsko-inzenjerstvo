@@ -18,11 +18,13 @@ import Calendar from "./Calendar";
 import Profile from "./Profile";
 import OnboardingRez from "./OnboardingRez";
 import SetProfile from "./SetProfile";
-import Admin from "./Admin";
+import Admin from "./AdminDash.tsx";
 import Coach from "./Coach";
 import Dashboard from "./Dashboard";
 import Stats from "./Stats";
 import Onboarding from "./Onboarding.tsx";
+import AddContent from "./AddContent.tsx";
+import EditContent from "./EditContent.tsx";
 // nezz kako dash i stats ?
 
 function App() {
@@ -50,6 +52,8 @@ function App() {
             <Route path="/admin" element={<Admin />} />
             <Route path="/coach" element={<Coach />} />
             <Route path="/stats" element={<Stats />} />
+            <Route path="/addcontent" element={<AddContent />} />
+            <Route path="/editcontent/:id" element={<EditContent />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" />} />

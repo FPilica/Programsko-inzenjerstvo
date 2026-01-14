@@ -45,9 +45,26 @@
   transition: all 0.3s ease;
 }
 
-.modal-close:hover {
-  transform: scale(1.1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+.editContentButtonModal {
+    position: absolute;
+    top: 15px;
+    left: 70px;
+    width: 100px;
+    height: 40px;
+    background: #7c3aed;
+    color: white;
+    z-index: 1001;
+}
+
+.deleteContentButtonModal {
+    position: absolute;
+    top: 15px;
+    left: 180px;
+    width: 100px;
+    height: 40px;
+    background: #ef4444;
+    color: white;
+    z-index: 1001;
 }
 
 .content-view {
@@ -197,7 +214,6 @@
     width: 100%;
     background-color: #7c3aed;
     color: white;
-    border-radius: 12px;
 }
 
 .review-item {
@@ -238,6 +254,19 @@
   color: #666;
   margin: 0;
   line-height: 1.4;
+}
+
+.deleteReviewButton {
+    display: block;
+    margin: 8px auto 0;
+    padding: 6px 12px;
+    height: 30%;
+    width: 30%;
+    background-color: #ef4444;
+    border-radius: 8px;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
 }
 
 /* Scrollbar styling */

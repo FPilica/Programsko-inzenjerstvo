@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import VideoPlayer from "./VideoPlayer";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import "./ContentViewModal.css";
 
 interface Review {
@@ -9,28 +10,32 @@ interface Review {
   comment?: string;
   date: string;
   userId: string;
-  contentId?: number;
+  contentId: number;
 }
 
-interface Content {
-  contentId?: number;
+interface ContentItem {
+  contentId: number;
   title: string;
-  description?: string;
+  description: string;
   videoLink?: string;
   articleLink?: string;
   text?: string;
   posterLink?: string;
-  subtitlesLink?: string;
   type: "video" | "article";
+  authorId: string;
+  category: string;
+  duration: string;
 }
 
 interface ContentViewProps {
-  content: Content;
+  content: ContentItem;
   isOpen: boolean;
   onClose: () => void;
+  allowEdit?: boolean;
 }
 
-function ContentViewModal({ content, isOpen, onClose }: ContentViewProps) {
+function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: ContentViewProps) {
+  const navigate = useNavigate();
   const [reviews, setReviews] = useState<Review[]>([]);
 
   useEffect(() => {
@@ -69,17 +74,35 @@ function ContentViewModal({ content, isOpen, onClose }: ContentViewProps) {
     loadReviews();
         
     setNewReview({ userId: "user123", comment: "", rating: 5 });
-  };
+    };
+  
+  const handleDeleteContent = () => {
+    const existingContent = JSON.parse(localStorage.getItem("contentItems") || "[]");
+    const updatedContent = existingContent.filter(
+      (item: ContentItem) => item.contentId !== content.contentId
+    );
+    localStorage.setItem("contentItems", JSON.stringify(updatedContent));
+    onClose();
+  }
+
+  const handleDeleteReview = (reviewId: number) => {
+    const existingReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+    const updatedReviews = existingReviews.filter(
+      (review: Review) => review.id !== reviewId
+    );
+    localStorage.setItem("reviews", JSON.stringify(updatedReviews));
+    loadReviews();
+  }
 
   const renderContent = () => {
     switch (content.type) {
       case "video":
         return (
-          <VideoPlayer
-            videoLink={content.videoLink || ""}
-            videoName={content.title}
-            posterLink={content.posterLink}
-          />
+            <VideoPlayer
+              videoLink={content.videoLink || ""}
+              videoName={content.title}
+              posterLink={content.posterLink}
+            />
         );
       case "article":
         return <div className="content-article">{content.text}</div>;
@@ -102,9 +125,18 @@ function ContentViewModal({ content, isOpen, onClose }: ContentViewProps) {
   return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>
-          ✕
-        </button>
+        <button className="myButton modal-close" onClick={onClose}>✕</button>
+        {allowEdit && (
+          <>
+            <button 
+              className="myButton editContentButtonModal"
+              onClick={() => navigate(`/editcontent/${content.contentId}`)}
+            >
+              Uredi
+            </button>
+            <button className="myButton deleteContentButtonModal" onClick={handleDeleteContent}>Izbriši</button>
+          </>
+        )}
         <div className="content-view">
           <div className="content-main">
             <h1>{content.title}</h1>
@@ -120,40 +152,42 @@ function ContentViewModal({ content, isOpen, onClose }: ContentViewProps) {
               </div>
             </div>
 
-            <div className="review-form">
-              <h3>Ostavi recenziju</h3>
-              <div className="rating-input">
-                <label>Ocjena:</label>
-                <select
-                  className="rating-select"
-                  value={newReview.rating}
+            {!allowEdit && (
+              <div className="review-form">
+                <h3>Ostavi recenziju</h3>
+                <div className="rating-input">
+                  <label>Ocjena:</label>
+                  <select
+                    className="rating-select"
+                    value={newReview.rating}
+                    onChange={(e) =>
+                      setNewReview({
+                        ...newReview,
+                        rating: parseInt(e.target.value),
+                      })
+                    }
+                  >
+                    <option value="5">5 ⭐</option>
+                    <option value="4">4 ⭐</option>
+                    <option value="3">3 ⭐</option>
+                    <option value="2">2 ⭐</option>
+                    <option value="1">1 ⭐</option>
+                  </select>
+                </div>
+                <textarea
+                  className="review-textarea"
+                  placeholder="Tvoja recenzija..."
+                  value={newReview.comment}
                   onChange={(e) =>
-                    setNewReview({
-                      ...newReview,
-                      rating: parseInt(e.target.value),
-                    })
+                    setNewReview({ ...newReview, comment: e.target.value })
                   }
-                >
-                  <option value="5">5 ⭐</option>
-                  <option value="4">4 ⭐</option>
-                  <option value="3">3 ⭐</option>
-                  <option value="2">2 ⭐</option>
-                  <option value="1">1 ⭐</option>
-                </select>
+                  rows={4}
+                />
+                <button onClick={handleAddReview} className="myButton review-submit">
+                  Objavi
+                </button>
               </div>
-              <textarea
-                className="review-textarea"
-                placeholder="Tvoja recenzija..."
-                value={newReview.comment}
-                onChange={(e) =>
-                  setNewReview({ ...newReview, comment: e.target.value })
-                }
-                rows={4}
-              />
-              <button onClick={handleAddReview} className="myButton review-submit">
-                Objavi
-              </button>
-            </div>
+            )}
 
             <div className="reviews-list">
               {reviews.map((review) => (
@@ -166,6 +200,9 @@ function ContentViewModal({ content, isOpen, onClose }: ContentViewProps) {
                     {"⭐".repeat(review.rating)}
                   </div>
                   <p className="review-text">{review.comment}</p>
+                  {allowEdit && (
+                    <button className="myButton deleteReviewButton" onClick={() => handleDeleteReview(review.id)}>Izbriši</button>
+                  )}
                 </div>
               ))}
             </div>

@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 
 function OnboardingRez() {
   const [answers, setAnswers] = useState<{ [key: string]: any }>({});
+  const userRole = localStorage.getItem("userRole");
 
   useEffect(() => {
     getAnswers();
@@ -41,7 +42,7 @@ function OnboardingRez() {
     <>
       <div className="background">
         <div className="profileContainer">
-          <Header />
+          <Header userRole={userRole || ""}/>
           <div className="containerAnketa">
             <p className="res">Rezultati ankete</p>
             <div className="containerListQ">

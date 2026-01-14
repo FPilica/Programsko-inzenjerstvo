@@ -13,6 +13,8 @@ function SetProfile() {
 
   const [_, setUser] = useState<{ [key: string]: any }>({});
 
+  const userRole = localStorage.getItem("userRole");
+
   useEffect(() => {
       getUser();
   }, []);
@@ -108,7 +110,7 @@ function SetProfile() {
     <>
       <div className="background">
         <div className="profileContainer">
-          <Header />
+          <Header userRole={userRole || ""}/>
           <div className="containerProfile">
             <p className="title">Uređivanje profila</p>
             <form className='setFrom' onSubmit={handleSubmit}>

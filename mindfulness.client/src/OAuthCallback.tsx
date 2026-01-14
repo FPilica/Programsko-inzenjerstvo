@@ -18,9 +18,9 @@ function OAuthCallback() {
             const userId = tokenDecoded.sub;
             console.log(userId);
 
-            if (userId) {
-                localStorage.setItem("userId", userId);
-            }
+            // if (userId) {
+            //     localStorage.setItem("userId", userId);
+            // }
 
             const fetchOnboarding = async () => {
 
