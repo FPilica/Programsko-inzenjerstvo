@@ -9,4 +9,6 @@ public class EventUpdateDto
     public DateTimeOffset StartTime { get; set; }
     
     public DateTimeOffset EndTime { get; set; }
+    
+    public Guid ContentId { get; set; }
 }

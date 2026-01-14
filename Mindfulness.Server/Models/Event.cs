@@ -16,6 +16,8 @@ public class Event
     
     public DateTimeOffset EndTime { get; set; }
     
+    public Guid ContentId { get; set; }
+    
     public Guid UserId { get; set; }
     public required User User { get; set; }
 }

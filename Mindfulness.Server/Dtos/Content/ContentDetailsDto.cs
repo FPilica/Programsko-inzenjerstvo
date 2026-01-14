@@ -20,6 +20,8 @@ public class ContentDetailsDto
     
     public required Models.ContentCategory Category { get; set; }
     
+    public string? ContentType { get; set; }
+    
     public Models.AudioLanguage? AudioLanguage { get; set; }
 
     public List<Models.Review> Reviews { get; set; } = [];

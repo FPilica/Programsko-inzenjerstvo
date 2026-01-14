@@ -13,6 +13,8 @@ public class ContentUpdateDto
     public TimeSpan? Duration { get; set; }
     
     public Guid CategoryId { get; set; }
+    
+    public string? ContentType { get; set; }
 
     public Guid? AudioLanguageId { get; set; }
 }
