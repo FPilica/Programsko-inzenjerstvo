@@ -64,7 +64,7 @@ function OnboardingRez() {
                 <p>Nema dostupnih odgovora</p>
               )}
             </div>
-            <button className="myButton setProfileButton" onClick={() => navigate(-1)}>
+            <button className="myButton onboardingRezBackButton" onClick={() => navigate(-1)}>
               Natrag na profil
             </button>
           </div>

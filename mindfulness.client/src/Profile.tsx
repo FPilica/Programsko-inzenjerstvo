@@ -69,7 +69,7 @@ function Profile() {
             
             <div className="profileActions">
               <button className="myButton setProfileButton" onClick={() => navigate("/profile/setprofile")}>
-                Postavke profila
+                Uredi profil
               </button>
               <button className="myButton onboardingRezButton" onClick={() => navigate("/profile/onboardingrez")}>
                 Rezultati ankete
