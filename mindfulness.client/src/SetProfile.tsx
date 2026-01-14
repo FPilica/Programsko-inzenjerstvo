@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import "./Profile.css";
 import Header from "./components/Header.tsx";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 function SetProfile() {
   const navigate = useNavigate();
