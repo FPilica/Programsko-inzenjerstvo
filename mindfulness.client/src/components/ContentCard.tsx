@@ -17,15 +17,21 @@ function ContentCard({content, onClick, allowEdit} : ContentCardProps) {
                 <button className="editContentButton" onClick={(e) => { e.stopPropagation(); navigate(`/editcontent/${content.contentId}`); }}><PencilIcon size={20} /></button>
             }
             <div className="cardThumbnail">
-                {content.type === "video" &&
+                {(content.type === "video" || (content.type === "article" && content.posterLink)) &&
                     <img src={content.posterLink} alt={content.title} />
                 }
             </div>
             <div className="cardContent">
                 <h3 className="cardTitle">{content.title}</h3>
-                <p>{content.description}</p>
+                {content.type === "video" && (
+                    <p>{content.description}</p>
+                )}
                 <div className="cardFooter">
-                    <span className="contentType">{content.type}</span>
+                    <span className="contentType">{content.type === "article" ? "članak" : content.type}</span>
+                    {content.type === "video" && (
+                        <span className="contentDuration">{content.duration} min</span>
+                    )
+                    }
                     <span className="contentCategory">{content.category}</span>
                 </div>
             </div>

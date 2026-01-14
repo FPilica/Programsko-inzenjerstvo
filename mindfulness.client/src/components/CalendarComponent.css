@@ -4,6 +4,10 @@
     gap: 20px;
 }
 
+.nonDesktop {
+    display: none;
+}
+
 .rightSideCalendar {
     display: flex;
     flex-direction: column;
@@ -27,7 +31,6 @@
 
 .rightSideCalendar > :nth-child(2) {
     width: 30vw;
-
 }
 
 .fc-daygrid-day-number:hover {
@@ -45,4 +48,74 @@
 
 .fc-toolbar-title {
     font-size: 20px !important;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .calendarContent {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nonDesktop {
+        display: block;
+    }
+
+    .rightSideCalendar {
+        width: 90vw;
+        height: auto;
+        gap: 20px;
+    }
+
+    .fc {
+        width: 90vw;
+    }
+
+    .rightSideCalendar > :nth-child(2) {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .nonDesktop {
+        display: block;
+    }
+
+    .fc {
+        width: 95vw;
+        padding: 15px;
+    }
+
+    .rightSideCalendar {
+        width: 95vw;
+    }
+
+    .fc-toolbar-title {
+        font-size: 16px !important;
+    }
+
+    .fc .fc-button {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    .fc-toolbar {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .fc {
+        padding: 10px;
+    }
+
+    .fc-toolbar-title {
+        font-size: 14px !important;
+    }
+
+    .fc .fc-button {
+        padding: 5px 8px;
+        font-size: 12px;
+    }
 }

@@ -34,7 +34,7 @@ interface ContentViewProps {
   allowEdit?: boolean;
 }
 
-function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: ContentViewProps) {
+function ContentViewModal({ content, isOpen, onClose, allowEdit = false}: ContentViewProps) {
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<Review[]>([]);
 
@@ -105,7 +105,7 @@ function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: Conte
             />
         );
       case "article":
-        return <div className="content-article">{content.text}</div>;
+        return <div className="content-article">{content.description}</div>;
       default:
         return <div>Nepoznat tip sadržaja</div>;
     }
@@ -125,6 +125,7 @@ function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: Conte
   return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
         <button className="myButton modal-close" onClick={onClose}>✕</button>
         {allowEdit && (
           <>
@@ -136,7 +137,8 @@ function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: Conte
             </button>
             <button className="myButton deleteContentButtonModal" onClick={handleDeleteContent}>Izbriši</button>
           </>
-        )}
+          )}
+        </div>
         <div className="content-view">
           <div className="content-main">
             <h1>{content.title}</h1>
