@@ -145,7 +145,7 @@
     background-color: white;
     color: #333;
     transition: border-color 0.3s;
-    color-scheme: gray;;
+    color-scheme: gray;
 }
 
 .setFrom > div > input:focus {
