@@ -39,7 +39,7 @@ function Dashboard() {
   useEffect(() => {
     // fetchUserData();
     if (!userRole) {
-      localStorage.setItem("userRole", "user"); // (user, coach, admin) postavi ulogu za koju zelis da bude dok ne spojimo sa backendom
+      localStorage.setItem("userRole", "admin"); // (user, coach, admin) postavi ulogu za koju zelis da bude dok ne spojimo sa backendom
     }
     setUserRole(localStorage.getItem("userRole") || "");
   }, []);
@@ -67,7 +67,7 @@ function Dashboard() {
                 <p>fokus</p>
               </div>
               <div className="dashCard streakCard">
-                <CaretRightIcon className="cardArrow" size={16} color="gray" />
+                {/* <CaretRightIcon className="cardArrow" size={16} color="gray" /> */}
                 <p>Dan</p>
                 <p>8</p>
                 <p>Čestitamo</p>

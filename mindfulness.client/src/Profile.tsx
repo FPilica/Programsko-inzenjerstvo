@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "./components/Header";
 
 function Profile() {
+  const navigate = useNavigate();
+
   const [userP, setUser] = useState<{ [key: string]: any }>({});
   const userRole = localStorage.getItem("userRole");
   
@@ -57,16 +59,20 @@ function Profile() {
               <p>Ime: </p> <p className="userInput">{userP.firstName}</p>
               <p>Prezime: </p> <p className="userInput">{userP.lastName}</p>
               <p>E-mail: </p> <p className="userInput">{userP.email}</p>
-                                        {/* user.email */}
               <p>Datum rođenja: </p> <p className="userInput">{userP.dateOfBirth}</p>
               <p>Rod: </p> 
               {userP.gender === "Male" &&<p className="userInput">Muškarac</p>}
               {userP.gender === "Female" &&<p className="userInput">Žena</p>}
               {userP.gender === "O" &&<p className="userInput">Ostalo</p>}
-              <Link className="fp" to="/profile/setprofile">
-                Postavke profila
-              </Link>
-              <Link className="fp" to="/profile/onboardingrez">Anketa</Link>
+            </div>
+            
+            <div className="profileActions">
+              <button className="myButton setProfileButton" onClick={() => navigate("/profile/setprofile")}>
+                Uredi profil
+              </button>
+              <button className="myButton onboardingRezButton" onClick={() => navigate("/profile/onboardingrez")}>
+                Rezultati ankete
+              </button>
             </div>
           </div>
         </div>

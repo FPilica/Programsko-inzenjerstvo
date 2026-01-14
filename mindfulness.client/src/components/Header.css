@@ -6,6 +6,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 6px;
     position: fixed;
     top: 0;
@@ -13,11 +14,17 @@
     z-index: 1000;
 }
 
+.header > a {
+    display: flex;
+    align-items: center;
+}
+
 .middleIcons {
     display: flex;
     flex-direction: row;
     gap: 60px;
     justify-self: center;
+    align-items: center;
 }
 
 .active > .homeIcon {
@@ -54,4 +61,76 @@
     display: flex;
     flex-direction: row;
     gap: 40px;
+    align-items: center;
+}
+
+.listIcon {
+    display: none;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.listIcon:hover {
+    opacity: 0.7;
+}
+
+/* Dropdown menu */
+.dropdownMenu {
+    position: absolute;
+    top: 100px;
+    right: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 10px 0;
+    min-width: 200px;
+    z-index: 999;
+}
+
+.dropdownMenu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.dropdownMenu a:hover {
+    background-color: #f3f4f6;
+}
+
+.dropdownMenu a.active {
+    background-color: #ede9fe;
+    color: #7c3aed;
+}
+
+.dropdownMenu a.active svg {
+    fill: #7c3aed;
+}
+
+.dropdownDivider {
+    height: 1px;
+    background-color: #e5e7eb;
+    margin: 8px 0;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .middleIcons {
+        display: none;
+    }
+
+    .listIcon {
+        display: block;
+    }
+
+    .desktopOnly {
+        display: none !important;
+    }
+
+    .header {
+        padding: 20px;
+    }
 }

@@ -15,7 +15,7 @@
 .contentCard {
     flex: 0 0 280px;
     background: #fff;
-    border-radius: 16px;
+    border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
@@ -78,19 +78,31 @@
     line-height: 1.5;
 }
 
+.cardFooter {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 .contentType,
-.contentCategory {
+.contentCategory,
+.contentDuration {
     display: inline-block;
     padding: 6px 12px;
     border-radius: 6px;
     font-size: 12px;
     font-weight: 600;
-    margin-right: 8px;
 }
 
 .contentType {
     background-color: #e0e7ff;
     color: #5b21b6;
+}
+
+.contentDuration {
+    background-color: #d1fae5;
+    color: #047857;
 }
 
 .contentCategory {

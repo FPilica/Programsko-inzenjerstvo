@@ -17,6 +17,7 @@
 }
 
 /* ne diraj ovo gori */
+/* dashboard styles */
 
 .dashboardContainer {
     display: flex;
@@ -53,7 +54,7 @@
     height: 150px;
     font-weight: 600;
     background-color: white;
-    border-radius: 15px;
+    border-radius: 12px;
     margin: 0;
     position: relative;
     cursor: pointer;
@@ -81,17 +82,21 @@
     color: #7636BB;
 }
 
+.streakCard {
+    cursor: default;
+}
+
 .streakCard> :nth-child(2) {
     font-size: 18px;
     font-weight: 800;
 }
 
-.streakCard> :nth-child(3) {
+.streakCard> :nth-child(2) {
     color: #7636BB;
     font-size: 40px;
 }
 
-.streakCard> :nth-child(4) {
+.streakCard> :nth-child(3) {
     font-size: 18px;
     /* font-weight: bold; */
 }
@@ -106,7 +111,7 @@
     /* za sad da postoji */
     height: 200px;
     background-color: rgba(0, 0, 0, 0.25);
-    border-radius: 15px;
+    border-radius: 12px;
     margin: 0;
     font-size: 50px;
     color: white;
@@ -120,7 +125,7 @@
     /* za sad da postoji */
     height: 400px;
     background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 15px;
+    border-radius: 12px;
     margin: 0;
     font-size: 50px;
     text-align: center;

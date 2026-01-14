@@ -39,11 +39,15 @@ function AddContent() {
 
   useEffect(() => {
     // fetchMyContent();
-    let storedContent = JSON.parse(localStorage.getItem("contentItems") || "[]");
-    storedContent = storedContent.filter((item: ContentItem) => item.authorId === "author1");
-    setMyContent(storedContent);
+    loadContent();
   }, []);
 
+  const loadContent = () => {
+    let storedContent : ContentItem[] = JSON.parse(localStorage.getItem("contentItems") || "[]");
+    storedContent = storedContent.filter((item: ContentItem) => item.authorId === "author1");
+    setMyContent(storedContent);
+  }
+    
   const fetchMyContent = async () => {
     try {
       const response = await fetch(
@@ -71,13 +75,12 @@ function AddContent() {
     const newContentItem: ContentItem = {
       contentId: Date.now(),
       title,
-      description,
+      description: contentType === "article" ? articleText : description,
       type: contentType as "video" | "article",
       authorId: "author1",
       category,
       duration: contentType === "video" ? duration : "",
       videoLink: contentType === "video" ? videoLink : undefined,
-      text: contentType === "article" ? articleText : undefined,
       posterLink: thumbnailLink || undefined,
     };
 
@@ -99,6 +102,7 @@ function AddContent() {
   const handleClose = () => {
     setIsOpen(false);
     setContent(null);
+    loadContent();
   };
 
   return (
@@ -168,17 +172,19 @@ function AddContent() {
                       onChange={(e) => {setTitle(e.target.value)}}
                       required
                     />
-                </div>
-
-                <div className="formGroup">
-                  <label>Opis:</label>
-                    <textarea
-                      rows={3}
-                      value={description}
-                      onChange={(e) => { setDescription(e.target.value) }}
-                      required
-                    />
-                </div>
+                  </div>
+                  
+                  {contentType === "video" && (
+                    <div className="formGroup">
+                      <label>Opis:</label>
+                      <textarea
+                        rows={3}
+                        value={description}
+                        onChange={(e) => { setDescription(e.target.value) }}
+                        required
+                      />
+                    </div>
+                  )}
 
                 <div className="formGroup">
                   <label>Kategorija:</label>

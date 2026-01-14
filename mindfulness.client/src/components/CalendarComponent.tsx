@@ -6,10 +6,11 @@ import listPlugin from "@fullcalendar/list";
 import { useEffect, useState } from "react";
 import ModalEventView from "./ModalEventView";
 import ModalEventAdd from "./ModalEventAdd";
+import type { Event } from "../types/Event";
 import "./CalendarComponent.css";
 
 function CalendarComponent() {
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [isOpenView, setIsOpenView] = useState(false);
   const [isOpenAdd, setIsOpenAdd] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
@@ -70,6 +71,7 @@ function CalendarComponent() {
   return (
     <>
       <div className="calendarContent">
+        <button className="myButton addEventButton nonDesktop" onClick={handleSelect}>+ Dodaj događaj</button>
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView={"dayGridMonth"}
@@ -98,7 +100,7 @@ function CalendarComponent() {
         />
 
         <div className="rightSideCalendar">
-          <button className="myButton addEventButton" onClick={handleSelect}>+ Dodaj događaj</button>
+          <button className="myButton addEventButton desktopOnly" onClick={handleSelect}>+ Dodaj događaj</button>
           <FullCalendar
             plugins={[listPlugin, interactionPlugin]}
             initialView={"listWeek"}

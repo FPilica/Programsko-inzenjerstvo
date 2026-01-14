@@ -2,30 +2,9 @@ import { useEffect, useState } from "react";
 import VideoPlayer from "./VideoPlayer";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import type { Review } from "../types/Review";
+import type {ContentItem } from "../types/ContentItem"
 import "./ContentViewModal.css";
-
-interface Review {
-  id: number;
-  rating: number;
-  comment?: string;
-  date: string;
-  userId: string;
-  contentId: number;
-}
-
-interface ContentItem {
-  contentId: number;
-  title: string;
-  description: string;
-  videoLink?: string;
-  articleLink?: string;
-  text?: string;
-  posterLink?: string;
-  type: "video" | "article";
-  authorId: string;
-  category: string;
-  duration: string;
-}
 
 interface ContentViewProps {
   content: ContentItem;
@@ -34,7 +13,7 @@ interface ContentViewProps {
   allowEdit?: boolean;
 }
 
-function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: ContentViewProps) {
+function ContentViewModal({ content, isOpen, onClose, allowEdit = false}: ContentViewProps) {
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<Review[]>([]);
 
@@ -77,7 +56,14 @@ function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: Conte
     };
   
   const handleDeleteContent = () => {
-    const existingContent = JSON.parse(localStorage.getItem("contentItems") || "[]");
+
+    // potvrdi brisanje
+    if (!window.confirm("Jeste li sigurni da želite izbrisati ovaj sadržaj?")) {
+      return;
+    }
+        
+    // Izbriši iz localStorage
+    const existingContent: ContentItem[] = JSON.parse(localStorage.getItem("contentItems") || "[]");
     const updatedContent = existingContent.filter(
       (item: ContentItem) => item.contentId !== content.contentId
     );
@@ -105,7 +91,7 @@ function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: Conte
             />
         );
       case "article":
-        return <div className="content-article">{content.text}</div>;
+        return <div className="content-article">{content.description}</div>;
       default:
         return <div>Nepoznat tip sadržaja</div>;
     }
@@ -125,6 +111,7 @@ function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: Conte
   return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
         <button className="myButton modal-close" onClick={onClose}>✕</button>
         {allowEdit && (
           <>
@@ -136,7 +123,8 @@ function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: Conte
             </button>
             <button className="myButton deleteContentButtonModal" onClick={handleDeleteContent}>Izbriši</button>
           </>
-        )}
+          )}
+        </div>
         <div className="content-view">
           <div className="content-main">
             <h1>{content.title}</h1>

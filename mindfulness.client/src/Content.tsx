@@ -5,11 +5,12 @@ import Header from "./components/Header";
 import ContentViewModal from "./components/ContentViewModal";
 import ContentCard from "./components/ContentCard";
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
+import type { ContentItem } from "./types/ContentItem";
 import "./Content.css"
 
 function Content() {
   const [isOpen, setIsOpen] = useState(false);
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<ContentItem | null>(null);
   const videosRef = useRef<HTMLDivElement | null>(null);
   const articlesRef = useRef<HTMLDivElement | null>(null);
 
@@ -38,7 +39,8 @@ function Content() {
       posterLink: "https://img.youtube.com/vi/tVBZq2fq-WA/maxresdefault.jpg",
       authorId: "author1",
       category: "mindfulness",
-      description: "A comprehensive tutorial on React Player library."
+      description: "A comprehensive tutorial on React Player library.",
+      duration: "15"
     },
     {
       contentId: 2,
@@ -48,7 +50,8 @@ function Content() {
       posterLink: "https://img.youtube.com/vi/9eHEOAn2FOA/maxresdefault.jpg",
       authorId: "author1",
       category: "mindfulness",
-      description: "Learn the top 5 techniques for creating stunning web animations."
+      description: "Learn the top 5 techniques for creating stunning web animations.",
+      duration: "10"
     },
     {
       contentId: 3,
@@ -58,7 +61,8 @@ function Content() {
       posterLink: "https://img.youtube.com/vi/2OEL4P1Rz04/maxresdefault.jpg",
       authorId: "author1",
       category: "mindfulness",
-      description: "A guided mindfulness meditation session for beginners."
+      description: "A guided mindfulness meditation session for beginners.",
+      duration: "20"
     },
     {
       contentId: 4,
@@ -68,7 +72,8 @@ function Content() {
       posterLink: "https://img.youtube.com/vi/VaoV1PrYft4/maxresdefault.jpg",
       authorId: "author1",
       category: "mindfulness",
-      description: "Start your day with this energizing 10 minute yoga flow."
+      description: "Start your day with this energizing 10 minute yoga flow.",
+      duration: "10"
     },
     {
       contentId: 5,
@@ -78,7 +83,8 @@ function Content() {
       posterLink: "https://img.youtube.com/vi/tybOi4hjZFQ/maxresdefault.jpg",
       authorId: "author1",
       category: "mindfulness",
-      description: "Learn effective breathing exercises to help relieve stress."
+      description: "Learn effective breathing exercises to help relieve stress.",
+      duration: "8"
     },
     {
       contentId: 6,
@@ -88,14 +94,14 @@ function Content() {
       posterLink: "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg",
       authorId: "author1",
       category: "mindfulness",
-      description: "A guided meditation to help you achieve deep, restful sleep."
+      description: "A guided meditation to help you achieve deep, restful sleep.",
+      duration: "30"
     },
     {
       contentId: 7,
       type: "article" as const,
       title: "The Science Behind Mindfulness",
       text: "Discover how mindfulness meditation affects your brain...",
-      posterLink: "https://images.unsplash.com/photo-1516321318423-f06f70d504d0?auto=format&fit=crop&w=600&q=80",
       authorId: "author1",
       category: "mindfulness",
       description: "An in-depth look at the scientific research on mindfulness."
@@ -114,8 +120,8 @@ function Content() {
 
   localStorage.setItem("contentItems", JSON.stringify(sampleContent));
 
-  const videos = sampleContent.filter((item: any) => item.type === "video");
-  const articles = sampleContent.filter((item: any) => item.type === "article");
+  const videos = sampleContent.filter((item: ContentItem) => item.type === "video");
+  const articles = sampleContent.filter((item: ContentItem) => item.type === "article");
 
   return (
     <>
@@ -132,7 +138,7 @@ function Content() {
               </div>
             </div>
             <div className="contentList" ref={videosRef}>
-              {videos.map((item : any) => (
+              {videos.map((item : ContentItem) => (
                 <ContentCard
                   key={item.contentId} 
                   content={item}
@@ -155,7 +161,7 @@ function Content() {
               </div>
             </div>
             <div className="contentList" ref={articlesRef}>
-              {articles.map((item : any) => (
+              {articles.map((item : ContentItem) => (
                 <ContentCard
                   key={item.contentId} 
                   content={item}
@@ -174,7 +180,7 @@ function Content() {
                 <h2 className="sectionTitle">Sve</h2>
               </div>
               <div className="contentGrid">
-                {sampleContent.map((item: any) => (
+                {sampleContent.map((item: ContentItem) => (
                   <ContentCard
                     key={item.contentId} 
                     content={item}
@@ -188,7 +194,7 @@ function Content() {
               </div>
 
             </div>
-         {isOpen && <ContentViewModal isOpen={isOpen} onClose={handleClose} content={content} allowEdit={userRole === "admin"} />}
+         {isOpen && content && <ContentViewModal isOpen={isOpen} onClose={handleClose} content={content} allowEdit={userRole === "admin"} />}
         </div>
         </div>
       </div>
