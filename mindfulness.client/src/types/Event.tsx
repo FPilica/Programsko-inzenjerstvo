@@ -1,5 +1,5 @@
 interface Event {
-    eventId: string;
+    id: string;
     title: string;
     description: string;
     startTime: string;
