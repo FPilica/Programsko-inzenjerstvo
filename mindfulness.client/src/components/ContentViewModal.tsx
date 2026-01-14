@@ -56,7 +56,14 @@ function ContentViewModal({ content, isOpen, onClose, allowEdit = false}: Conten
     };
   
   const handleDeleteContent = () => {
-    const existingContent = JSON.parse(localStorage.getItem("contentItems") || "[]");
+
+    // potvrdi brisanje
+    if (!window.confirm("Jeste li sigurni da želite izbrisati ovaj sadržaj?")) {
+      return;
+    }
+        
+    // Izbriši iz localStorage
+    const existingContent: ContentItem[] = JSON.parse(localStorage.getItem("contentItems") || "[]");
     const updatedContent = existingContent.filter(
       (item: ContentItem) => item.contentId !== content.contentId
     );

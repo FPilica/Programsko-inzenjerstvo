@@ -79,7 +79,13 @@ function EditContent() {
     navigate(-1);
   };
 
-  const handleDelete = () => {
+    const handleDelete = () => {
+      
+    // potvrdi brisanje
+    if (!window.confirm("Jeste li sigurni da želite izbrisati ovaj sadržaj?")) {
+      return;
+    }
+        
     // Izbriši iz localStorage
     const storedContent = JSON.parse(
       localStorage.getItem("contentItems") || "[]"

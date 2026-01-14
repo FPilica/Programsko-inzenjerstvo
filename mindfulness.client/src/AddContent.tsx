@@ -39,11 +39,15 @@ function AddContent() {
 
   useEffect(() => {
     // fetchMyContent();
-    let storedContent = JSON.parse(localStorage.getItem("contentItems") || "[]");
-    storedContent = storedContent.filter((item: ContentItem) => item.authorId === "author1");
-    setMyContent(storedContent);
+    loadContent();
   }, []);
 
+  const loadContent = () => {
+    let storedContent : ContentItem[] = JSON.parse(localStorage.getItem("contentItems") || "[]");
+    storedContent = storedContent.filter((item: ContentItem) => item.authorId === "author1");
+    setMyContent(storedContent);
+  }
+    
   const fetchMyContent = async () => {
     try {
       const response = await fetch(
@@ -98,6 +102,7 @@ function AddContent() {
   const handleClose = () => {
     setIsOpen(false);
     setContent(null);
+    loadContent();
   };
 
   return (
