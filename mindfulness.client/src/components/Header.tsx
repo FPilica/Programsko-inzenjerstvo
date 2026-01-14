@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import logoPurple from '../assets/logo_boja 2.png'
-import { HouseIcon, PlayIcon, ChartBarIcon, CalendarBlankIcon, BellIcon, UserIcon, PlusIcon} from '@phosphor-icons/react';
+import { HouseIcon, PlayIcon, ChartBarIcon, CalendarBlankIcon, BellIcon, UserIcon, PencilIcon} from '@phosphor-icons/react';
 import '../App.css'
 import './Header.css'
 
@@ -29,7 +29,7 @@ function Header({ userRole } : { userRole: string }) {
             {/* ako admin ili trener dodaj dio za dodavanje sadržaja */}
             {(userRole === "admin" || userRole === "coach") && (
                 <NavLink to="/addContent">
-                    <PlusIcon className="addIcon" size={35} color="black"/>
+                    <PencilIcon className="addIcon" size={35} color="black"/>
                 </NavLink>
             )}
             <BellIcon size={35} color="black"/>

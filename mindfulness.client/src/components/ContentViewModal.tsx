@@ -85,6 +85,15 @@ function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: Conte
     onClose();
   }
 
+  const handleDeleteReview = (reviewId: number) => {
+    const existingReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+    const updatedReviews = existingReviews.filter(
+      (review: Review) => review.id !== reviewId
+    );
+    localStorage.setItem("reviews", JSON.stringify(updatedReviews));
+    loadReviews();
+  }
+
   const renderContent = () => {
     switch (content.type) {
       case "video":
@@ -143,40 +152,42 @@ function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: Conte
               </div>
             </div>
 
-            <div className="review-form">
-              <h3>Ostavi recenziju</h3>
-              <div className="rating-input">
-                <label>Ocjena:</label>
-                <select
-                  className="rating-select"
-                  value={newReview.rating}
+            {!allowEdit && (
+              <div className="review-form">
+                <h3>Ostavi recenziju</h3>
+                <div className="rating-input">
+                  <label>Ocjena:</label>
+                  <select
+                    className="rating-select"
+                    value={newReview.rating}
+                    onChange={(e) =>
+                      setNewReview({
+                        ...newReview,
+                        rating: parseInt(e.target.value),
+                      })
+                    }
+                  >
+                    <option value="5">5 ⭐</option>
+                    <option value="4">4 ⭐</option>
+                    <option value="3">3 ⭐</option>
+                    <option value="2">2 ⭐</option>
+                    <option value="1">1 ⭐</option>
+                  </select>
+                </div>
+                <textarea
+                  className="review-textarea"
+                  placeholder="Tvoja recenzija..."
+                  value={newReview.comment}
                   onChange={(e) =>
-                    setNewReview({
-                      ...newReview,
-                      rating: parseInt(e.target.value),
-                    })
+                    setNewReview({ ...newReview, comment: e.target.value })
                   }
-                >
-                  <option value="5">5 ⭐</option>
-                  <option value="4">4 ⭐</option>
-                  <option value="3">3 ⭐</option>
-                  <option value="2">2 ⭐</option>
-                  <option value="1">1 ⭐</option>
-                </select>
+                  rows={4}
+                />
+                <button onClick={handleAddReview} className="myButton review-submit">
+                  Objavi
+                </button>
               </div>
-              <textarea
-                className="review-textarea"
-                placeholder="Tvoja recenzija..."
-                value={newReview.comment}
-                onChange={(e) =>
-                  setNewReview({ ...newReview, comment: e.target.value })
-                }
-                rows={4}
-              />
-              <button onClick={handleAddReview} className="myButton review-submit">
-                Objavi
-              </button>
-            </div>
+            )}
 
             <div className="reviews-list">
               {reviews.map((review) => (
@@ -189,6 +200,9 @@ function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: Conte
                     {"⭐".repeat(review.rating)}
                   </div>
                   <p className="review-text">{review.comment}</p>
+                  {allowEdit && (
+                    <button className="myButton deleteReviewButton" onClick={() => handleDeleteReview(review.id)}>Izbriši</button>
+                  )}
                 </div>
               ))}
             </div>
