@@ -83,7 +83,7 @@
 }
 
 .streakCard {
-    cursor: default;;
+    cursor: default;
 }
 
 .streakCard> :nth-child(2) {
