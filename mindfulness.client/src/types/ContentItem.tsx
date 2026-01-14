@@ -4,7 +4,6 @@ interface ContentItem {
   description: string;
   videoLink?: string;
   articleLink?: string;
-  text?: string;
   posterLink?: string;
   type: "video" | "article";
   authorId: string;
