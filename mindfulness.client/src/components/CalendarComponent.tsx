@@ -59,7 +59,7 @@ function CalendarComponent() {
       window.confirm("Jeste li sigurni da želite izbrisati ovaj događaj?")
     ) {
       const updatedEvents = events.filter(
-        (event) => event.id !== selectedEvent.id
+        (event) => event.eventId !== selectedEvent.id
       );
       setEvents(updatedEvents);
       localStorage.setItem("events", JSON.stringify(updatedEvents));
