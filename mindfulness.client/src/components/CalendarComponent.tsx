@@ -6,10 +6,11 @@ import listPlugin from "@fullcalendar/list";
 import { useEffect, useState } from "react";
 import ModalEventView from "./ModalEventView";
 import ModalEventAdd from "./ModalEventAdd";
+import type { Event } from "../types/Event";
 import "./CalendarComponent.css";
 
 function CalendarComponent() {
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [isOpenView, setIsOpenView] = useState(false);
   const [isOpenAdd, setIsOpenAdd] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);

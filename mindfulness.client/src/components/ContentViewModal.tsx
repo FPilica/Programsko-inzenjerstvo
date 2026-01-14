@@ -2,30 +2,9 @@ import { useEffect, useState } from "react";
 import VideoPlayer from "./VideoPlayer";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import type { Review } from "../types/Review";
+import type {ContentItem } from "../types/ContentItem"
 import "./ContentViewModal.css";
-
-interface Review {
-  id: number;
-  rating: number;
-  comment?: string;
-  date: string;
-  userId: string;
-  contentId: number;
-}
-
-interface ContentItem {
-  contentId: number;
-  title: string;
-  description: string;
-  videoLink?: string;
-  articleLink?: string;
-  text?: string;
-  posterLink?: string;
-  type: "video" | "article";
-  authorId: string;
-  category: string;
-  duration: string;
-}
 
 interface ContentViewProps {
   content: ContentItem;

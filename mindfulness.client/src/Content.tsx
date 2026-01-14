@@ -5,11 +5,12 @@ import Header from "./components/Header";
 import ContentViewModal from "./components/ContentViewModal";
 import ContentCard from "./components/ContentCard";
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
+import type { ContentItem } from "./types/ContentItem";
 import "./Content.css"
 
 function Content() {
   const [isOpen, setIsOpen] = useState(false);
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<ContentItem | null>(null);
   const videosRef = useRef<HTMLDivElement | null>(null);
   const articlesRef = useRef<HTMLDivElement | null>(null);
 
@@ -119,8 +120,8 @@ function Content() {
 
   localStorage.setItem("contentItems", JSON.stringify(sampleContent));
 
-  const videos = sampleContent.filter((item: any) => item.type === "video");
-  const articles = sampleContent.filter((item: any) => item.type === "article");
+  const videos = sampleContent.filter((item: ContentItem) => item.type === "video");
+  const articles = sampleContent.filter((item: ContentItem) => item.type === "article");
 
   return (
     <>
@@ -137,7 +138,7 @@ function Content() {
               </div>
             </div>
             <div className="contentList" ref={videosRef}>
-              {videos.map((item : any) => (
+              {videos.map((item : ContentItem) => (
                 <ContentCard
                   key={item.contentId} 
                   content={item}
@@ -160,7 +161,7 @@ function Content() {
               </div>
             </div>
             <div className="contentList" ref={articlesRef}>
-              {articles.map((item : any) => (
+              {articles.map((item : ContentItem) => (
                 <ContentCard
                   key={item.contentId} 
                   content={item}
@@ -179,7 +180,7 @@ function Content() {
                 <h2 className="sectionTitle">Sve</h2>
               </div>
               <div className="contentGrid">
-                {sampleContent.map((item: any) => (
+                {sampleContent.map((item: ContentItem) => (
                   <ContentCard
                     key={item.contentId} 
                     content={item}
@@ -193,7 +194,7 @@ function Content() {
               </div>
 
             </div>
-         {isOpen && <ContentViewModal isOpen={isOpen} onClose={handleClose} content={content} allowEdit={userRole === "admin"} />}
+         {isOpen && content && <ContentViewModal isOpen={isOpen} onClose={handleClose} content={content} allowEdit={userRole === "admin"} />}
         </div>
         </div>
       </div>

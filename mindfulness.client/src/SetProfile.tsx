@@ -188,7 +188,7 @@ function SetProfile() {
                 <div className="profileActions">
                   <button
                     className="myButton profileButton"
-                    onClick={() => navigate("/profile")}
+                    onClick={() => navigate(-1)}
                   >
                     Odustani
                   </button>

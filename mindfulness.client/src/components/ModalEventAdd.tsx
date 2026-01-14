@@ -34,11 +34,13 @@ function ModalEventAdd({
     const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
     const newEvent = {
       id: String(Date.now()),
+      userId: "user123", // treba promijeniti posli
       title: title,
       start: start,
       end: end,
       allDay: allDay,
       description: description,
+      contentId: undefined,  
     };
 
     localStorage.setItem(

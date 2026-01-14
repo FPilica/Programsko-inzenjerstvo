@@ -1,7 +1,6 @@
 import "./App.css";
 import "./Profile.css";
 import Header from "./components/Header.tsx";
-import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
