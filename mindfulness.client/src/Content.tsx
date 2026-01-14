@@ -31,67 +31,67 @@ function Content() {
 
   const sampleContent = localStorage.getItem("contentItems") ? JSON.parse(localStorage.getItem("contentItems") || "[]") : [
     {
-      contentId: Date.now(),
+      contentId: 1,
       type: "video" as const,
       title: "React Player Tutorial - Learn from Basics",
       videoLink: "https://www.youtube.com/watch?v=tVBZq2fq-WA&t=23s",
       posterLink: "https://img.youtube.com/vi/tVBZq2fq-WA/maxresdefault.jpg",
       authorId: "author1",
-      category: "Mindfulness",
+      category: "mindfulness",
       description: "A comprehensive tutorial on React Player library."
     },
     {
-      contentId: Date.now(),
+      contentId: 2,
       type: "video" as const,
       title: "Top 5 Techniques for Web Animation",
       videoLink: "https://www.youtube.com/watch?v=9eHEOAn2FOA",
       posterLink: "https://img.youtube.com/vi/9eHEOAn2FOA/maxresdefault.jpg",
       authorId: "author1",
-      category: "Mindfulness",
+      category: "mindfulness",
       description: "Learn the top 5 techniques for creating stunning web animations."
     },
     {
-      contentId: Date.now(),
+      contentId: 3,
       type: "video" as const,
       title: "Mindfulness Meditation for Beginners",
       videoLink: "https://www.youtube.com/watch?v=2OEL4P1Rz04",
       posterLink: "https://img.youtube.com/vi/2OEL4P1Rz04/maxresdefault.jpg",
       authorId: "author1",
-      category: "Mindfulness",
+      category: "mindfulness",
       description: "A guided mindfulness meditation session for beginners."
     },
     {
-      contentId: Date.now(),
+      contentId: 4,
       type: "video" as const,
       title: "10 Minute Morning Yoga Flow",
       videoLink: "https://www.youtube.com/watch?v=VaoV1PrYft4",
       posterLink: "https://img.youtube.com/vi/VaoV1PrYft4/maxresdefault.jpg",
       authorId: "author1",
-      category: "Mindfulness",
+      category: "mindfulness",
       description: "Start your day with this energizing 10 minute yoga flow."
     },
     {
-      contentId: Date.now(),
+      contentId: 5,
       type: "video" as const,
       title: "Breathing Exercises for Stress Relief",
       videoLink: "https://www.youtube.com/watch?v=tybOi4hjZFQ",
       posterLink: "https://img.youtube.com/vi/tybOi4hjZFQ/maxresdefault.jpg",
       authorId: "author1",
-      category: "Mindfulness",
+      category: "mindfulness",
       description: "Learn effective breathing exercises to help relieve stress."
     },
     {
-      contentId: Date.now(),
+      contentId: 6,
       type: "video" as const,
       title: "Deep Sleep Meditation - Guided Relaxation",
       videoLink: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
       posterLink: "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg",
       authorId: "author1",
-      category: "Mindfulness",
+      category: "mindfulness",
       description: "A guided meditation to help you achieve deep, restful sleep."
     },
     {
-      contentId: Date.now(),
+      contentId: 7,
       type: "article" as const,
       title: "The Science Behind Mindfulness",
       text: "Discover how mindfulness meditation affects your brain...",
@@ -101,7 +101,7 @@ function Content() {
       description: "An in-depth look at the scientific research on mindfulness."
     },
     {
-      contentId: Date.now(),
+      contentId: 8,
       type: "article" as const,
       title: "10 Tips for Better Sleep Quality",
       text: "Learn practical techniques to improve your sleep tonight...",
@@ -140,6 +140,7 @@ function Content() {
                     setContent(item);
                     setIsOpen(true);
                   }}
+                  allowEdit={userRole === "admin"}
                 />
               ))}
             </div>
@@ -162,6 +163,7 @@ function Content() {
                     setContent(item);
                     setIsOpen(true);
                   }}
+                  allowEdit={userRole === "admin"}
                 />
               ))}
             </div>
@@ -180,12 +182,13 @@ function Content() {
                       setContent(item);
                       setIsOpen(true);
                     }}
+                    allowEdit={userRole === "admin"} 
                   />
                 ))}
               </div>
 
             </div>
-         {isOpen && <ContentViewModal isOpen={isOpen} onClose={handleClose} content={content} />}
+         {isOpen && <ContentViewModal isOpen={isOpen} onClose={handleClose} content={content} allowEdit={userRole === "admin"} />}
         </div>
         </div>
       </div>

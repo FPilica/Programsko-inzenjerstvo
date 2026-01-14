@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import VideoPlayer from "./VideoPlayer";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import "./ContentViewModal.css";
 
 interface Review {
@@ -9,31 +10,32 @@ interface Review {
   comment?: string;
   date: string;
   userId: string;
-  contentId?: number;
+  contentId: number;
 }
 
 interface ContentItem {
-  contentId?: number;
+  contentId: number;
   title: string;
-  description?: string;
+  description: string;
   videoLink?: string;
   articleLink?: string;
   text?: string;
   posterLink?: string;
-  subtitlesLink?: string;
   type: "video" | "article";
   authorId: string;
-  category?: string;
-  duration?: number;
+  category: string;
+  duration: string;
 }
 
 interface ContentViewProps {
   content: ContentItem;
   isOpen: boolean;
   onClose: () => void;
+  allowEdit?: boolean;
 }
 
-function ContentViewModal({ content, isOpen, onClose }: ContentViewProps) {
+function ContentViewModal({ content, isOpen, onClose , allowEdit = false}: ContentViewProps) {
+  const navigate = useNavigate();
   const [reviews, setReviews] = useState<Review[]>([]);
 
   useEffect(() => {
@@ -72,17 +74,26 @@ function ContentViewModal({ content, isOpen, onClose }: ContentViewProps) {
     loadReviews();
         
     setNewReview({ userId: "user123", comment: "", rating: 5 });
-  };
+    };
+  
+  const handleDeleteContent = () => {
+    const existingContent = JSON.parse(localStorage.getItem("contentItems") || "[]");
+    const updatedContent = existingContent.filter(
+      (item: ContentItem) => item.contentId !== content.contentId
+    );
+    localStorage.setItem("contentItems", JSON.stringify(updatedContent));
+    onClose();
+  }
 
   const renderContent = () => {
     switch (content.type) {
       case "video":
         return (
-          <VideoPlayer
-            videoLink={content.videoLink || ""}
-            videoName={content.title}
-            posterLink={content.posterLink}
-          />
+            <VideoPlayer
+              videoLink={content.videoLink || ""}
+              videoName={content.title}
+              posterLink={content.posterLink}
+            />
         );
       case "article":
         return <div className="content-article">{content.text}</div>;
@@ -105,9 +116,18 @@ function ContentViewModal({ content, isOpen, onClose }: ContentViewProps) {
   return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>
-          ✕
-        </button>
+        <button className="myButton modal-close" onClick={onClose}>✕</button>
+        {allowEdit && (
+          <>
+            <button 
+              className="myButton editContentButtonModal"
+              onClick={() => navigate(`/editcontent/${content.contentId}`)}
+            >
+              Uredi
+            </button>
+            <button className="myButton deleteContentButtonModal" onClick={handleDeleteContent}>Izbriši</button>
+          </>
+        )}
         <div className="content-view">
           <div className="content-main">
             <h1>{content.title}</h1>

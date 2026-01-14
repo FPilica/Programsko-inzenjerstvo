@@ -6,21 +6,21 @@ import "./AddContent.css";
 
 
 interface ContentItem {
-  contentId?: number;
+  contentId: number;
   title: string;
-  description?: string;
+  description: string;
   videoLink?: string;
   articleLink?: string;
   text?: string;
   posterLink?: string;
-  subtitlesLink?: string;
   type: "video" | "article";
   authorId: string;
-  category?: string;
-  duration?: number;
+  category: string;
+  duration: string;
 }
 
 function AddContent() {
+
   const userRole = localStorage.getItem("userRole");
 
   const [isOpen, setIsOpen] = useState(false);
@@ -65,7 +65,7 @@ function AddContent() {
     }
   };
 
-  const handleSumbit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const newContentItem: ContentItem = {
@@ -75,7 +75,7 @@ function AddContent() {
       type: contentType as "video" | "article",
       authorId: "author1",
       category,
-      duration: contentType === "video" ? parseInt(duration) : undefined,
+      duration: contentType === "video" ? duration : "",
       videoLink: contentType === "video" ? videoLink : undefined,
       text: contentType === "article" ? articleText : undefined,
       posterLink: thumbnailLink || undefined,
@@ -125,16 +125,17 @@ function AddContent() {
                 </div>
               ) : (
                 <div className="addContentList">
-                  {myContent.map((content: ContentItem) => (
-                    <ContentCard
-                      key={content.contentId}
-                      content={content}
-                      onClick={() => {
-                        setContent(content);
-                        setIsOpen(true);
-                      }}
-                    />
-                  ))}
+                    {myContent.map((content: ContentItem) => (
+                      <ContentCard
+                          key={content.contentId}
+                          content={content}
+                          onClick={() => {
+                            setContent(content);
+                            setIsOpen(true);
+                          }}
+                          allowEdit={true}
+                      />
+                    ))}
                 </div>
               )}
             </>
@@ -147,7 +148,7 @@ function AddContent() {
                 Natrag
               </button>
 
-              <form className="contentForm" onSubmit={handleSumbit}>
+              <form className="contentForm" onSubmit={handleSubmit}>
                 <div className="formGroup">
                   <label>Tip sadržaja:</label>
                     <select
@@ -242,7 +243,7 @@ function AddContent() {
                 )}
 
                 <button type="submit" className="myButton submitContentButton">
-                  Dodaj sadržaj
+                  Dodaj
                 </button>
               </form>
             </>
@@ -252,6 +253,7 @@ function AddContent() {
               isOpen={isOpen} 
               onClose={handleClose} 
               content={content} 
+              allowEdit={true}
             />
           )}
         </div>

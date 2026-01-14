@@ -36,7 +36,6 @@
 }
 
 /* Buttons */
-
 .addContentButton {
     color: #7c3aed
 }
@@ -118,6 +117,23 @@
   padding: 14px;
   font-size: 16px;
   font-weight: 600;
+}
+
+/* edit content */
+.editContentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.backButtonEdit {
+  color: #7c3aed;
+}
+
+.deleteContentButton {
+  background-color: #ef4444;
+  color: white;
 }
 
 /* Responsive */
