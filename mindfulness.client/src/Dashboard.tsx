@@ -39,7 +39,7 @@ function Dashboard() {
   useEffect(() => {
     // fetchUserData();
     if (!userRole) {
-      localStorage.setItem("userRole", "admin"); // (user, coach, admin) postavi ulogu za koju zelis da bude dok ne spojimo sa backendom
+      localStorage.setItem("userRole", "user"); // (user, coach, admin) postavi ulogu za koju zelis da bude dok ne spojimo sa backendom
     }
     setUserRole(localStorage.getItem("userRole") || "");
   }, []);

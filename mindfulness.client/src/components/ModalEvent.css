@@ -44,13 +44,11 @@
 }
 
 .modalCloseButton {
-    position: absolute;
-    top: 30px;
-    right: 20px;
     height: 30px;
     width: 30px;
     background-color: #957CFE;
     color: white;
+    margin-bottom: 10px;
 }
 
 .modalDeleteButton {
@@ -153,4 +151,10 @@
     background-color: #957CFE;
     color: white;
     margin-top: 10px;
+}
+
+.clickableContentTitle {
+    cursor: pointer;
+    color: #957CFE;
+    text-decoration: underline;
 }

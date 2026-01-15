@@ -1,5 +1,6 @@
 import { createPortal } from "react-dom";
 import { useState } from "react";
+import type { Event } from "../types/Event";
 import "./ModalEvent.css";
 
 function ModalEventAdd({
@@ -7,11 +8,13 @@ function ModalEventAdd({
   onClose,
   selectInfo,
   addEvent,
+  contentId
 }: {
   isOpen: boolean;
   onClose: () => void;
   selectInfo: any;
-  addEvent: () => void;
+    addEvent: () => void;
+  contentId? : number;
 }) {
     if (!isOpen) return null;
     
@@ -32,7 +35,7 @@ function ModalEventAdd({
     e.preventDefault();
 
     const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
-    const newEvent = {
+    const newEvent : Event = {
       id: String(Date.now()),
       userId: "user123", // treba promijeniti posli
       title: title,
@@ -40,13 +43,10 @@ function ModalEventAdd({
       end: end,
       allDay: allDay,
       description: description,
-      contentId: undefined,  
+      contentId: contentId || undefined,
     };
 
-    localStorage.setItem(
-      "events",
-      JSON.stringify([...existingEvents, newEvent])
-    );
+    localStorage.setItem("events", JSON.stringify([...existingEvents, newEvent]));
     addEvent();
   };
 
@@ -54,7 +54,7 @@ function ModalEventAdd({
     <div className="modalOverlay">
       <div className="modalContent">
         <button className="myButton modalCloseButton" onClick={onClose}>
-          x
+          ✕
         </button>
 
         <h2>Dodaj događaj</h2>
