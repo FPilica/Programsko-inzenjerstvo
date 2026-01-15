@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mindfulness.Server.Dtos.ContentCategory;
@@ -6,7 +7,7 @@ using Mindfulness.Server.Models;
 
 namespace Mindfulness.Server.Controllers;
 
-// [Authorize]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ContentCategoryController : ControllerBase
