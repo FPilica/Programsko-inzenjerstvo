@@ -21,6 +21,15 @@ function ContentViewModal({
 }: ContentViewProps) {
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [showAddToCalendarForm, setShowAddToCalendarForm] = useState(false);
+  const [eventData, setEventData] = useState({
+    title: content.title,
+    start: "",
+    end: "",
+    allDay: false,
+    description: "",
+    contentId: content.contentId,
+  });
 
   useEffect(() => {
     loadReviews();
@@ -86,6 +95,43 @@ function ContentViewModal({
     loadReviews();
   };
 
+  const handleAddToCalendar = () => {
+    setShowAddToCalendarForm(true);
+  };
+
+  const handleCancelAddToCalendar = () => {
+    setShowAddToCalendarForm(false);
+    setEventData({
+      start: "",
+      end: "",
+      allDay: false,
+      description: "",
+      title: content.title,
+      contentId: content.contentId,
+    });
+  };
+
+  const handleSaveEvent = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
+    const newEvent = {
+      id: String(Date.now()),
+      userId: "user123",
+      title: content.title,
+      start: eventData.start,
+      end: eventData.end,
+      allDay: eventData.allDay,
+      description: eventData.description,
+      contentId: content.contentId,
+    };
+
+    localStorage.setItem("events", JSON.stringify([...existingEvents, newEvent]));
+    
+    alert("Događaj uspješno dodan u kalendar!");
+    handleCancelAddToCalendar();
+  };
+
   const renderContent = () => {
     switch (content.type) {
       case "video":
@@ -101,6 +147,68 @@ function ContentViewModal({
       default:
         return <div>Nepoznat tip sadržaja</div>;
     }
+  };
+
+  const renderAddToCalendarForm = () => {
+    return (
+      <div className="addToCalendarFormContainer">
+        <h2>Dodaj u kalendar</h2>
+        <form className="addEventForm">
+          <div>
+            <label htmlFor="start">Početak:</label>
+            <input
+              type="datetime-local"
+              id="start"
+              value={eventData.start}
+              onChange={(e) => setEventData({ ...eventData, start: e.target.value })}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="end">Kraj:</label>
+            <input
+              type="datetime-local"
+              id="end"
+              value={eventData.end}
+              onChange={(e) => setEventData({ ...eventData, end: e.target.value })}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="allDay">
+              <input
+                type="checkbox"
+                id="allDay"
+                checked={eventData.allDay}
+                onChange={(e) => setEventData({ ...eventData, allDay: e.target.checked })}
+              />
+              Cjelodnevni događaj
+            </label>
+          </div>
+          <div>
+            <label htmlFor="description">Opis (opcionalno):</label>
+            <textarea
+              id="description"
+              value={eventData.description}
+              onChange={(e) => setEventData({ ...eventData, description: e.target.value })}
+              rows={3}
+              placeholder="Dodaj bilješku..."
+            />
+          </div>
+        </form>
+          <div className="formButtons">
+            <button
+              className="myButton cancelEventButton"
+              onClick={handleCancelAddToCalendar}
+            >
+              Odustani
+            </button>
+            <button className="myButton saveEventButton" onClick={handleSaveEvent}>
+              Spremi u kalendar
+            </button>
+          </div>
+      </div>
+    );
   };
 
   const averageRating =
@@ -141,12 +249,17 @@ function ContentViewModal({
                   </button>
                 </>
               )}
-              <button className="myButton addContentToCalendarButtonModal">
+              <button
+                className="myButton addContentToCalendarButtonModal"
+                onClick={handleAddToCalendar}
+              >
                 + Dodaj u kalendar
               </button>
             </div>
             <h1>{content.title}</h1>
-            <div className="content-player">{renderContent()}</div>
+            <div className="content-player">
+              {showAddToCalendarForm ? renderAddToCalendarForm() : renderContent()}
+            </div>
           </div>
 
           <div className="content-review">

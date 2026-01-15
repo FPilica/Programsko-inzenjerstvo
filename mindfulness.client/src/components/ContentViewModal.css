@@ -268,6 +268,24 @@
     cursor: pointer;
 }
 
+/* Event Form */
+.addToCalendarFormContainer h2 {
+  color: black;
+}
+
+.formButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.saveEventButton {
+    background-color: #7c3aed;
+    color: white;
+}
+
 /* Scrollbar styling */
 .reviews-list::-webkit-scrollbar {
   width: 6px;
