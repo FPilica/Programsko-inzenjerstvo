@@ -11,7 +11,7 @@ import "./Content.css"
 function Content() {
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState<ContentItem | null>(null);
-  const [contentItems, setContentItems] = useState<any[] | null>(null);
+  const [contentItems, setContentItems] = useState<ContentItem[] | null>(null);
   const videosRef = useRef<HTMLDivElement | null>(null);
   const articlesRef = useRef<HTMLDivElement | null>(null);
   const userRole = localStorage.getItem("userRole");
@@ -68,17 +68,7 @@ function Content() {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
           },
-          body: `{
-            "contentId": "${item.contentId}"
-            "title": "${item.title}",
-            "description": "${item.description}",
-            "contentLink": "${item.contentLink || ""}",
-            "thumbnailLink": "${item.thumbnailLink || ""}",
-            "contentType": "${item.contentType}",
-            "userId": "${item.userId}",
-            "contentCategory": "${item.contentCategory}",
-            "duration": "${item.duration || ""}"
-          }`,
+          body: JSON.stringify(item),
         }
       );
 

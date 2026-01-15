@@ -18,6 +18,9 @@ function CalendarComponent() {
 
   // kad se bude moglo sa drugih stranica dodat da se moze ucitat samo ce svi localStorage ic na bazu
   useEffect(() => {
+    // getEvents();  // otkomentiraj kad se spoji sa bazom
+
+    // zakomentiraj kad se spoji sa bazom
     const eventsData = localStorage.getItem("events");
     if (eventsData) {
       try {
@@ -29,12 +32,39 @@ function CalendarComponent() {
     }
   }, []);
 
+  const getEvents = async () => {
+    // fetch events from backend
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        {
+          method: "GET",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      const eventsData = await response.json();
+      setEvents(eventsData);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
+
   const handleSelect = (selectInfo: any) => {
     setSelectInfo(selectInfo);
     setIsOpenAdd(true);
   };
 
   const handleAddEvent = () => {
+
     const eventsData = localStorage.getItem("events");
     if (eventsData) {
       try {
@@ -46,6 +76,7 @@ function CalendarComponent() {
     }
     setSelectInfo(null);
     setIsOpenAdd(false);
+    // getEvents(); // kad se doda na backend,  otkomentirat
   };
 
   const handleEventClick = (clickInfo: any) => {
@@ -53,18 +84,49 @@ function CalendarComponent() {
     setIsOpenView(true);
   };
 
+  const handleDeleteEventDatabase = async (eventId: string) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/`, //treba dodati ostatl linka, i dodaj id u req
+        {
+          method: "DELETE",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
+  }
+
   const handleDeleteEvent = () => {
+
     if (
       selectedEvent &&
       window.confirm("Jeste li sigurni da želite izbrisati ovaj događaj?")
     ) {
+      // otkomentiraj kad se spoji sa bazom
+      // handleDeleteEventDatabase(selectedEvent.id);
+
+      // zakomentiraj kad se spoji za bazom
       const updatedEvents = events.filter(
         (event) => event.id !== selectedEvent.id
       );
       setEvents(updatedEvents);
       localStorage.setItem("events", JSON.stringify(updatedEvents));
+
+      // ostavi
       setIsOpenView(false);
       setSelectedEvent(null);
+      // getEvents(); // kad se doda na backend,  otkomentirat
     }
   };
 

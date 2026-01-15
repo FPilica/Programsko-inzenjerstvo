@@ -31,6 +31,38 @@ function ModalEventAdd({
   const [allDay, setAllDay] = useState(selectInfo?.allDay ? selectInfo.allDay : false);
   const [description, setDescription] = useState("");
 
+  // koristit ce se za dodavanje na backend
+  const addEventToDatabase = async (newEvent: Event) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        {
+          method: "POST",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+          body: `{
+            title: ${newEvent.title},
+            startTime: ${newEvent.start},
+            endTime: ${newEvent.end},
+            contentId: ""
+            userId: ${newEvent.userId},
+            description: ${newEvent.description}
+          }`,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+    } catch (error) {
+      console.error("Error adding event:", error);
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -46,7 +78,11 @@ function ModalEventAdd({
       contentId: contentId || undefined,
     };
 
+    // trenutno se spremaju u localStorage, posli na backend
     localStorage.setItem("events", JSON.stringify([...existingEvents, newEvent]));
+
+    // za backend dodavanje, otkomentirat
+    // addEventToDatabase(newEvent);
     addEvent();
   };
 
