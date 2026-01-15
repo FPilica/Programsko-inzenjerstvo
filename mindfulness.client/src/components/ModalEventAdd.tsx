@@ -54,7 +54,7 @@ function ModalEventAdd({
     <div className="modalOverlay">
       <div className="modalContent">
         <button className="myButton modalCloseButton" onClick={onClose}>
-          x
+          ✕
         </button>
 
         <h2>Dodaj događaj</h2>
