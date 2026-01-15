@@ -33,9 +33,37 @@ function ContentViewModal({
   });
 
   useEffect(() => {
+    // fetchReviews(); // za bazu
     loadReviews();
   }, [content.contentId]);
 
+  // kad bude baza
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+      }
+      
+      const data = await response.json();
+      return data;
+      setReviews(data)
+
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
+  // dok nema baze
   const loadReviews = () => {
     const oldReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
     const contentReviews = oldReviews.filter(
@@ -50,6 +78,35 @@ function ContentViewModal({
     comment: "",
   });
 
+  const addReviewToDatabase = async (review: Review) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        {
+          method: "POST",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+          body: `{
+            userId: ${review.userId},
+            contentId: ${review.contentId},
+            rating: ${review.rating},
+            comment: ${review.comment},
+            date: ${review.date}
+          }`,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+    } catch (error) {
+      console.error("Error adding review:", error);
+    }
+  };
+
   const handleAddReview = () => {
     const reviewToAdd: Review = {
       id: Date.now(),
@@ -60,6 +117,10 @@ function ContentViewModal({
       contentId: content.contentId,
     };
 
+    // otkomentiraj za bazu
+    // addReviewToDatabase(reviewToAdd);
+
+    // zakomentiraj za bazu
     const existingReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
     localStorage.setItem(
       "reviews",
@@ -112,7 +173,35 @@ function ContentViewModal({
     onClose();
   };
 
+  const deleteReviewFromDatabase = async (reviewId: number) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        {
+          method: "DELETE",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+    } catch (error) {
+      console.error("Error deleting review:", error);
+    }
+  };
+
   const handleDeleteReview = (reviewId: number) => {
+
+    // otkomentiraj za bazu
+    // deleteReviewFromDatabase(reviewId);
+
+    // zakomentiraj za bazu
     const existingReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
     const updatedReviews = existingReviews.filter(
       (review: Review) => review.id !== reviewId
