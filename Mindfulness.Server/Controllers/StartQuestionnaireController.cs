@@ -16,7 +16,7 @@ public class StartQuestionnaireController : ControllerBase
     private readonly MindfulnessDbContext _context;
     private readonly IMapper _mapper;
     
-    public StartQuestionnaireController(MindfulnessDbContext context,IMapper mapper)
+    public StartQuestionnaireController(MindfulnessDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
@@ -62,8 +62,7 @@ public class StartQuestionnaireController : ControllerBase
         
         var userGuid = Guid.Parse(userId);
         
-        var questionnaire = await _context.StartQuestionnaires
-            .FirstOrDefaultAsync(sq => sq.UserId == userGuid);
+        var questionnaire = await _context.StartQuestionnaires.FirstOrDefaultAsync(sq => sq.UserId == userGuid);
 
         if (questionnaire is null)
         {
@@ -72,5 +71,4 @@ public class StartQuestionnaireController : ControllerBase
         
         return Ok(_mapper.Map<StartQuestionnaireDetailsDto>(questionnaire));
     }
-    
 }
