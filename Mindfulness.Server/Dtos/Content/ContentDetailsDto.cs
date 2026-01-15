@@ -22,6 +22,10 @@ public class ContentDetailsDto
     
     public string? ContentType { get; set; }
     
+    public string? ContentLink { get; set; }
+
+    public string? ThumbnailLink { get; set; }
+    
     public Models.AudioLanguage? AudioLanguage { get; set; }
 
     public List<Models.Review> Reviews { get; set; } = [];

@@ -17,6 +17,10 @@ public class ContentCreateDto
     public Guid CategoryId { get; set; }
     
     public string? ContentType { get; set; }
+
+    public string? ContentLink { get; set; }
+
+    public string? ThumbnailLink { get; set; }
     
     public Guid? AudioLanguageId { get; set; }
 }
