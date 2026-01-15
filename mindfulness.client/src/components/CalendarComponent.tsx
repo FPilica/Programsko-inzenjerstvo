@@ -71,7 +71,7 @@ function CalendarComponent() {
   return (
     <>
       <div className="calendarContent">
-        <button className="myButton addEventButton nonDesktop" onClick={handleSelect}>+ Dodaj događaj</button>
+        <button className="myButton addEventButton nonDesktopAddEventButton" onClick={handleSelect}>+ Dodaj događaj</button>
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView={"dayGridMonth"}
@@ -100,7 +100,7 @@ function CalendarComponent() {
         />
 
         <div className="rightSideCalendar">
-          <button className="myButton addEventButton desktopOnly" onClick={handleSelect}>+ Dodaj događaj</button>
+          <button className="myButton addEventButton desktopOnlyAddEventButton" onClick={handleSelect}>+ Dodaj događaj</button>
           <FullCalendar
             plugins={[listPlugin, interactionPlugin]}
             initialView={"listWeek"}

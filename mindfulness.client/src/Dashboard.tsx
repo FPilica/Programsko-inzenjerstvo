@@ -6,13 +6,14 @@ import { useEffect, useState } from "react";
 import AdminDash from "./AdminDash.tsx";
 
 function Dashboard() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
 
-  const fetchUserData = async () => {
+  // dohvacanje user podataka sa backenda
+  const getUser = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/userprofile/getprofile`,
+        `https://localhost:7070/api/UserProfile/getprofile`,
         {
           method: "GET",
           headers: {
@@ -29,21 +30,23 @@ function Dashboard() {
 
       const userData = await response.json();
       setUser(userData);
-      setUserRole(userData.role);
-      localStorage.setItem("userRole", userData.role);
+      // setUserRole(userData.role);
+      // localStorage.setItem("userRole", userData.role);
 
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
   };
+
   useEffect(() => {
-    // fetchUserData();
+    getUser();
     if (!userRole) {
-      localStorage.setItem("userRole", "user"); // (user, coach, admin) postavi ulogu za koju zelis da bude dok ne spojimo sa backendom
+      localStorage.setItem("userRole", "coach"); // (user, coach, admin) postavi ulogu za koju zelis da bude dok ne spojimo sa backendom
     }
     setUserRole(localStorage.getItem("userRole") || "");
   }, []);
 
+  // admin ima svoj dashboard, coach i user imaju isti jer je coach user koji moze dodavati sadrzaj
   if (userRole === "admin") {
 
     return (
@@ -54,12 +57,13 @@ function Dashboard() {
 
   } else if (userRole === "coach" || userRole === "user") {
 
+    // logika za preporuceni plan i sadrzaj nije jos napravljena
     return (
       <>
         <div className="background">
           <div className="dashboardContainer">
             <Header userRole={userRole || ""} />
-            <p className="dashGreeting">Pozdrav, [Ime]</p>
+            <p className="dashGreeting">Pozdrav {user?.firstName}</p>
             <div className="cardsContainer">
               <div className="dashCard dailyFocusCard">
                 <CaretRightIcon className="cardArrow" size={16} color="gray" />
@@ -67,7 +71,6 @@ function Dashboard() {
                 <p>fokus</p>
               </div>
               <div className="dashCard streakCard">
-                {/* <CaretRightIcon className="cardArrow" size={16} color="gray" /> */}
                 <p>Dan</p>
                 <p>8</p>
                 <p>Čestitamo</p>

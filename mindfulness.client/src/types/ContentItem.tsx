@@ -3,12 +3,11 @@ interface ContentItem {
   title: string;
   description: string;
   videoLink?: string;
-  articleLink?: string;
   posterLink?: string;
   type: "video" | "article";
   authorId: string;
   category: string;
-  duration: string;
+  duration?: string;
 }
 
 export type { ContentItem };

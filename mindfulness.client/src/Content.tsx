@@ -1,5 +1,5 @@
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import ContentViewModal from "./components/ContentViewModal";
@@ -11,9 +11,9 @@ import "./Content.css"
 function Content() {
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState<ContentItem | null>(null);
+  const [contentItems, setContentItems] = useState<any[] | null>(null);
   const videosRef = useRef<HTMLDivElement | null>(null);
   const articlesRef = useRef<HTMLDivElement | null>(null);
-
   const userRole = localStorage.getItem("userRole");
 
   const handleClose = () => {
@@ -30,7 +30,69 @@ function Content() {
     }
   };
 
-  const sampleContent = localStorage.getItem("contentItems") ? JSON.parse(localStorage.getItem("contentItems") || "[]") : [
+  // napravljeno za spajanje sa bazom, ali jos nije spojeno
+  const getContentItems = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        {
+          method: "GET",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      const contentItemsData = await response.json();
+      setContentItems(contentItemsData);
+    } catch (error) {
+      console.error("Error fetching content items:", error);
+    }
+  }
+
+  // ovo nece ici u zavrsnu verziju, samo je za ubacivanje ovih pocetnih videa i clanaka u bazu
+  const addContentItemToDatabase = async (item: ContentItem) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        {
+          method: "POST",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+          body: `{
+            "contentId": "${item.contentId}"
+            "title": "${item.title}",
+            "description": "${item.description}",
+            "contentLink": "${item.videoLink || ""}",
+            "thumbnailLink": "${item.posterLink || ""}",
+            "contentType": "${item.type}",
+            "userId": "${item.authorId}",
+            "contentCategory": "${item.category}",
+            "duration": "${item.duration || ""}"
+          }`,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      console.log("Content items added successfully.");
+    } catch (error) {
+      console.error("Error adding content items:", error);
+    }
+  };
+
+  const sampleContent : ContentItem[] = [
     {
       contentId: 1,
       type: "video" as const,
@@ -101,27 +163,45 @@ function Content() {
       contentId: 7,
       type: "article" as const,
       title: "The Science Behind Mindfulness",
-      text: "Discover how mindfulness meditation affects your brain...",
+      description: "Discover how mindfulness meditation affects your brain...",
       authorId: "author1",
       category: "mindfulness",
-      description: "An in-depth look at the scientific research on mindfulness."
     },
     {
       contentId: 8,
       type: "article" as const,
       title: "10 Tips for Better Sleep Quality",
-      text: "Learn practical techniques to improve your sleep tonight...",
+      description: "Learn practical techniques to improve your sleep tonight...",
       posterLink: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
       authorId: "author1",
       category: "mindfulness",
-      description: "Simple and effective tips to enhance your sleep quality."
     },
   ];
 
-  localStorage.setItem("contentItems", JSON.stringify(sampleContent));
+  useEffect(() => {
 
-  const videos = sampleContent.filter((item: ContentItem) => item.type === "video");
-  const articles = sampleContent.filter((item: ContentItem) => item.type === "article");
+    // aktivirati kad se spoji sa bazom
+    // getContentItems();
+    // if (contentItems === null || contentItems.length === 0) {
+    //   setContentItems(sampleContent);
+    //   sampleContent.forEach(item => {
+    //     addContentItemToDatabase(item);
+    //   });
+    // }
+    
+    // maknuti kad se spoji sa bazom
+    const contentFromStorage = localStorage.getItem("contentItems");
+    if (contentFromStorage) {
+      setContentItems(JSON.parse(contentFromStorage));
+    } else {
+      setContentItems(sampleContent);
+      localStorage.setItem("contentItems", JSON.stringify(sampleContent));
+    }
+  }, []);
+
+
+  const videos = contentItems?.filter((item: ContentItem) => item.type === "video");
+  const articles = contentItems?.filter((item: ContentItem) => item.type === "article");
 
   return (
     <>
@@ -138,7 +218,7 @@ function Content() {
               </div>
             </div>
             <div className="contentList" ref={videosRef}>
-              {videos.map((item : ContentItem) => (
+              {videos?.map((item : ContentItem) => (
                 <ContentCard
                   key={item.contentId} 
                   content={item}
@@ -161,7 +241,7 @@ function Content() {
               </div>
             </div>
             <div className="contentList" ref={articlesRef}>
-              {articles.map((item : ContentItem) => (
+              {articles?.map((item : ContentItem) => (
                 <ContentCard
                   key={item.contentId} 
                   content={item}
@@ -180,7 +260,7 @@ function Content() {
                 <h2 className="sectionTitle">Sve</h2>
               </div>
               <div className="contentGrid">
-                {sampleContent.map((item: ContentItem) => (
+                {contentItems?.map((item: ContentItem) => (
                   <ContentCard
                     key={item.contentId} 
                     content={item}
@@ -203,4 +283,3 @@ function Content() {
 }
 
 export default Content;
-
