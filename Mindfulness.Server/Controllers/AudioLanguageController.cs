@@ -10,7 +10,7 @@ using Mindfulness.Server.Models;
 
 namespace Mindfulness.Server.Controllers;
 
-[Authorize]
+//[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class AudioLanguageController(MindfulnessDbContext context, IMapper mapper) : ControllerBase
@@ -19,7 +19,7 @@ public class AudioLanguageController(MindfulnessDbContext context, IMapper mappe
     public async Task<ActionResult<AudioLanguageDetailsDto>> CreateAudioLanguage([FromBody] AudioLanguageCreateDto dto)
     {
         
-        var contentExists = await context.AudioLanguages.AnyAsync(x => x.Name.Equals(dto.Name));
+        var contentExists = await context.Contents.AnyAsync(x => x.Id == dto.Id);
 
         if (contentExists)
         {
@@ -41,7 +41,7 @@ public class AudioLanguageController(MindfulnessDbContext context, IMapper mappe
     public async Task<ActionResult<AudioLanguageDetailsDto>> UpdateAudioLanguage(Guid Id, [FromBody] AudioLanguageUpdateDto dto)
     {
         
-        var audioLanguage = await context.AudioLanguages.FirstOrDefaultAsync(x => x.Id == dto.Id);
+        var audioLanguage = await context.AudioLanguages.FirstOrDefaultAsync(x => x.Id == Id);
 
         if (audioLanguage is null)
         {
