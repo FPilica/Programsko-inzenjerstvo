@@ -1,14 +1,14 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Mindfulness.Server.Dtos.AudioLanguage;
 using Mindfulness.Server.Dtos.Challenge;
 using Mindfulness.Server.Models;
 
 namespace Mindfulness.Server.Controllers;
 
-//[Authorize]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ChallengeController(MindfulnessDbContext context, IMapper mapper) : ControllerBase
@@ -19,6 +19,24 @@ public class ChallengeController(MindfulnessDbContext context, IMapper mapper) :
         var newChallenge = mapper.Map<Challenge>(dto);
         newChallenge.Title = dto.Title;
         newChallenge.Id = Guid.NewGuid();
+        
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        if (userId is null)
+        {
+            return BadRequest("User not found");
+        }
+
+        var userGuid = Guid.Parse(userId);
+
+        var temp = await context.Users.FindAsync(userGuid);
+
+        if (temp is null)
+        {
+            return BadRequest("User not found");
+        }
+        
+        newChallenge.Users.Add(temp);
         
         context.Challenges.Add(newChallenge);
         
@@ -71,5 +89,28 @@ public class ChallengeController(MindfulnessDbContext context, IMapper mapper) :
         var challenges = await context.Challenges.ToListAsync();
         
         return Ok(mapper.Map<List<ChallengeDetailsDto>>(challenges));
+    }
+
+    
+    [HttpGet("forUser")]
+    public async Task<ActionResult<ChallengeDetailsDto>> GetUserChallenges()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        if (userId is null)
+        {
+            return BadRequest("User not found");
+        }
+
+        var userGuid = Guid.Parse(userId);
+
+        var user = await context.Users.Include(u => u.Challenges).FirstOrDefaultAsync(u => u.Id == userGuid);
+
+        if (user is null)
+            return NotFound("User not found");
+        
+        var usersChallenges = await context.Challenges.Where(c => c.Users.Any(u => u.Id == userGuid)).ToListAsync();
+        
+        return Ok(mapper.Map<List<ChallengeDetailsDto>>(usersChallenges));
     }
 }
