@@ -46,16 +46,23 @@ public class ReviewController : ControllerBase
         review.UserId = userGuid;
         review.CreatedAt = DateTimeOffset.UtcNow;
         
-        _context.Reviews.Add(review);
+        var addedReview = _context.Reviews.Add(review);
         
         await _context.SaveChangesAsync();
         
-        return Ok(_mapper.Map<ReviewDetailsDto>(review));
+        return Ok(_mapper.Map<ReviewDetailsDto>(addedReview.Entity));
     }
 
     [HttpPut("{reviewId:guid}")]
     public async Task<ActionResult<ReviewDetailsDto>> UpdateReview(Guid reviewId, [FromBody] ReviewUpdateDto dto)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return BadRequest("User not found");
+        }
+        
         var review = await _context.Reviews.FirstOrDefaultAsync(x => x.Id == reviewId);
 
         if (review is null)
@@ -63,6 +70,11 @@ public class ReviewController : ControllerBase
             return NotFound();
         }
 
+        if (review.UserId != Guid.Parse(userId))
+        {
+            return Unauthorized();
+        }
+        
         review.Comment = dto.Comment;
         review.Rating = dto.Rating;
         review.CreatedAt = DateTimeOffset.UtcNow;
@@ -76,11 +88,23 @@ public class ReviewController : ControllerBase
     [HttpDelete("{reviewId:guid}")]
     public async Task<IActionResult> DeleteReview(Guid reviewId)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return BadRequest("User not found");
+        }
+        
         var review = await _context.Reviews.FirstOrDefaultAsync(x => x.Id == reviewId);
 
         if (review is null)
         {
             return NotFound();
+        }
+
+        if (review.UserId != Guid.Parse(userId))
+        {
+            return Unauthorized();
         }
         
         _context.Reviews.Remove(review);
