@@ -46,3 +46,9 @@
 .fc-toolbar-title {
     font-size: 20px !important;
 }
+
+@media (max-width: 640px) {
+  .rightSideCalendar{
+    display: none;
+  }
+}

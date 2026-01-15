@@ -8,8 +8,8 @@ function Header({ userRole } : { userRole: string }) {
 
     return (
         <header className="header">
-        <NavLink to="/dashboard">
-            <img src={logoPurple} alt="logo_purple" width="177" height="41" />
+        <NavLink className="hide" to="/dashboard">
+            <img  src={logoPurple} alt="logo_purple" width="177" height="41" />
         </NavLink>
         <div className="middleIcons">
             <NavLink to="/dashboard" >

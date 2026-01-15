@@ -55,3 +55,26 @@
     flex-direction: row;
     gap: 40px;
 }
+
+@media (max-width: 640px) {
+    .header {
+        flex-direction: row;
+        align-items: center;
+        height: auto;
+        padding: 20px;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .middleIcons {
+        gap: 30px;
+        margin-top: 10px;
+    }
+
+    .rightIcons {
+        gap: 20px;
+        margin-top: 10px;
+    }
+}

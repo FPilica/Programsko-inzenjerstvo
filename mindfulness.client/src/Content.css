@@ -71,10 +71,15 @@
   .contentList {
     gap: 18px;
   }
+  
 }
 
 @media (max-width: 640px) {
   .contentList {
     gap: 12px;
+  }
+  .contentBody > .section:nth-child(1),
+  .contentBody > .section:nth-child(2) {
+    display: none;
   }
 }
