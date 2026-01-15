@@ -12,11 +12,11 @@ public class Event
     [MaxLength(300)]
     public string? Description { get; set; }
     
-    public DateTimeOffset StartTime { get; set; }
+    public DateTimeOffset? StartTime { get; set; }
     
-    public DateTimeOffset EndTime { get; set; }
+    public DateTimeOffset? EndTime { get; set; }
     
-    public Guid ContentId { get; set; }
+    public Guid? ContentId { get; set; }
     
     public required Content Content { get; set; }
     

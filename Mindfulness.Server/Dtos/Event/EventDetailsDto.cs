@@ -12,5 +12,5 @@ public class EventDetailsDto
     
     public DateTimeOffset EndTime { get; set; }
     
-    public Guid ContentId {get; set;}
+    public Guid? ContentId { get; set; }
 }

@@ -49,6 +49,15 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
         {
             return BadRequest("User not found");
         }
+
+        if (dto.ContentId is not null)
+        {
+            var postojiContent = await context.Contents.AnyAsync(c => c.Id == dto.ContentId.Value);
+            if (!postojiContent)
+            {
+                return BadRequest("Content not found");
+            }
+        }
         
         var userGuid = Guid.Parse(userId);
         
@@ -58,7 +67,7 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
         context.Events.Add(newEvent);
         await context.SaveChangesAsync();
 
-        return Ok(_mapper.Map<EventCreateDto>(newEvent));
+        return Ok(_mapper.Map<EventDetailsDto>(newEvent));
     }
 
     [HttpPut("{id:guid}")]
@@ -70,20 +79,32 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
         {
             return BadRequest("User not found");
         }
+        
+        if (newEvent.ContentId is not null)
+        {
+            var postojiContent = await context.Contents.AnyAsync(c => c.Id == newEvent.ContentId.Value);
+            if (!postojiContent)
+            {
+                return BadRequest("Content not found");
+            }
+        }
+        
         var userGuid = Guid.Parse(userId);
         var eventForChange = await context.Events.FirstOrDefaultAsync(e => e.UserId == userGuid && e.Id == id);
         if (eventForChange is null)
         {
             return NotFound();
         }
-        
-        var newEventAdded = _mapper.Map<Event>(newEvent);
-        eventForChange.Title = newEventAdded.Title ?? eventForChange.Title;
-        eventForChange.Description = newEventAdded.Description ?? eventForChange.Description;
+
+        eventForChange.EndTime = newEvent.EndTime ?? eventForChange.EndTime;
+        eventForChange.StartTime = newEvent.StartTime ?? eventForChange.StartTime;
+        eventForChange.ContentId = newEvent.ContentId ?? eventForChange.ContentId;
+        eventForChange.Title = newEvent.Title ?? eventForChange.Title;
+        eventForChange.Description = newEvent.Description ?? eventForChange.Description;
 
         await context.SaveChangesAsync();
 
-        return Ok(_mapper.Map<EventCreateDto>(newEventAdded));
+        return Ok(_mapper.Map<EventDetailsDto>(eventForChange));
     }
 
     [HttpDelete("{id:guid}")]
