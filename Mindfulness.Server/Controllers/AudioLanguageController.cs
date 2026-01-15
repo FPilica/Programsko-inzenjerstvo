@@ -16,7 +16,7 @@ public class AudioLanguageController(MindfulnessDbContext context, IMapper mappe
     public async Task<ActionResult<AudioLanguageDetailsDto>> CreateAudioLanguage([FromBody] AudioLanguageCreateDto dto)
     {
         
-        var contentExists = await context.Contents.AnyAsync(x => x.Id == dto.Id);
+        var contentExists = await context.AudioLanguages.AnyAsync(x => x.Name.Equals(dto.Name));
 
         if (contentExists)
         {
@@ -38,25 +38,24 @@ public class AudioLanguageController(MindfulnessDbContext context, IMapper mappe
     public async Task<ActionResult<AudioLanguageDetailsDto>> UpdateAudioLanguage(Guid Id, [FromBody] AudioLanguageUpdateDto dto)
     {
         
-        var audioLanguage = await context.AudioLanguages.FirstOrDefaultAsync(x => x.Id == Id);
+        var audioLanguage = await context.AudioLanguages.FindAsync(Id);
 
         if (audioLanguage is null)
         {
             return NotFound();
         }
-        else
-        {
-            var newNameExists = await context.AudioLanguages.AnyAsync(x => x.Name.Equals(dto.Name) && x.Id != audioLanguage.Id);
 
-            if (newNameExists)
-            {
-                return BadRequest("Language already exists");
-            }
-            
-            audioLanguage.Name = dto.Name;
-            
+        var newNameExists = await context.AudioLanguages.AnyAsync(x => x.Name.Equals(dto.Name) && x.Id != audioLanguage.Id);
+
+        if (newNameExists)
+        {
+            return BadRequest("Language already exists");
         }
+            
+        audioLanguage.Name = dto.Name;
         
+        
+        context.AudioLanguages.Update(audioLanguage);
         await context.SaveChangesAsync();
         
         return Ok(mapper.Map<AudioLanguageDetailsDto>(audioLanguage));
@@ -65,7 +64,7 @@ public class AudioLanguageController(MindfulnessDbContext context, IMapper mappe
     [HttpDelete("{Id:guid}")]
     public async Task<IActionResult> DeleteAudioLanguage(Guid Id)
     {
-        var audioLanguage = await context.AudioLanguages.FirstOrDefaultAsync(x => x.Id == Id);
+        var audioLanguage = await context.AudioLanguages.FindAsync(Id);
         if (audioLanguage is null)
         {
             return NotFound();

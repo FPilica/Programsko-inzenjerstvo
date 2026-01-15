@@ -38,7 +38,7 @@ public class Content
     public string? ThumbnailLink { get; set; }
     
     public Guid? AudioLanguageId { get; set; }
-    public required AudioLanguage? AudioLanguage { get; set; }
+    public AudioLanguage? AudioLanguage { get; set; }
     
     public List<Review> Reviews { get; set; } = [];
 }
