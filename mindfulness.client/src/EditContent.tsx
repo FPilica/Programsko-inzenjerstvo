@@ -121,17 +121,6 @@ function EditContent() {
           </div>
 
           <form className="contentForm" onSubmit={handleSubmit}>
-            <div className="formGroup">
-              <label>Tip sadržaja:</label>
-              <select
-                value={contentType}
-                onChange={(e) => setContentType(e.target.value)}
-                required
-              >
-                <option value="video">Video</option>
-                <option value="article">Članak</option>
-              </select>
-            </div>
 
             <div className="formGroup">
               <label>Naslov:</label>
@@ -177,17 +166,6 @@ function EditContent() {
                     type="number"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="formGroup">
-                  <label>YouTube link:</label>
-                  <input
-                    type="url"
-                    placeholder="https://www.youtube.com/watch?v=..."
-                    value={videoLink}
-                    onChange={(e) => setVideoLink(e.target.value)}
                     required
                   />
                 </div>
