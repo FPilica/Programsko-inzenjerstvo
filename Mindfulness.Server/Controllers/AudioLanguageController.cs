@@ -1,107 +1,87 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Mindfulness.Server.Dtos.User;
-using Mindfulness.Server.Enums;
+using Mindfulness.Server.Dtos.AudioLanguage;
 using Mindfulness.Server.Models;
 
 namespace Mindfulness.Server.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
-
 public class AudioLanguageController(MindfulnessDbContext context, IMapper mapper) : ControllerBase
 {
-    private readonly IMapper _mapper = mapper;
-
-    [HttpGet]
-    public async Task<IActionResult> GetAudioLanguage()
-    {
-        
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (userId is null)
-        {
-            return BadRequest("User not found");
-        }
-        
-        var userGuid = Guid.Parse(userId);
-        
-        var events = await context.Events.Where(sq => sq.UserId == userGuid).ToListAsync();
-
-        return Ok();
-    }
-
     [HttpPost]
-    public async Task<IActionResult> CreateAudioLnaguage([FromBody] Event @event)
+    public async Task<ActionResult<AudioLanguageDetailsDto>> CreateAudioLanguage([FromBody] AudioLanguageCreateDto dto)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        var contentExists = await context.AudioLanguages.AnyAsync(x => x.Name.Equals(dto.Name));
 
-        if (userId is null)
+        if (contentExists)
         {
-            return BadRequest("User not found");
+            return BadRequest("Language already exists");
         }
         
-        var userGuid = Guid.Parse(userId);
-        context.Events.Add(@event);
+        var newAudioLanguage = mapper.Map<AudioLanguage>(dto);
+        newAudioLanguage.Name = dto.Name;
+        newAudioLanguage.Id = Guid.NewGuid();
+        
+        context.AudioLanguages.Add(newAudioLanguage);
+        
         await context.SaveChangesAsync();
-
-        return Ok();
+        
+        return Ok(mapper.Map<AudioLanguageDetailsDto>(newAudioLanguage));
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateAudioLanguage(Guid id, [FromBody] Event newEvent)
+    [HttpPut("{Id:guid}")]
+    public async Task<ActionResult<AudioLanguageDetailsDto>> UpdateAudioLanguage(Guid Id, [FromBody] AudioLanguageUpdateDto dto)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         
-        if (userId is null)
+        var audioLanguage = await context.AudioLanguages.FindAsync(Id);
+
+        if (audioLanguage is null)
         {
-            return BadRequest("User not found");
+            return NotFound();
         }
-        var userGuid = Guid.Parse(userId);
-        var eventForChange = await context.Events.FirstOrDefaultAsync(e => e.UserId == userGuid && e.Id == id);
-        if (eventForChange is null)
+
+        var newNameExists = await context.AudioLanguages.AnyAsync(x => x.Name.Equals(dto.Name) && x.Id != audioLanguage.Id);
+
+        if (newNameExists)
+        {
+            return BadRequest("Language already exists");
+        }
+            
+        audioLanguage.Name = dto.Name;
+        
+        
+        context.AudioLanguages.Update(audioLanguage);
+        await context.SaveChangesAsync();
+        
+        return Ok(mapper.Map<AudioLanguageDetailsDto>(audioLanguage));
+    }
+
+    [HttpDelete("{Id:guid}")]
+    public async Task<IActionResult> DeleteAudioLanguage(Guid Id)
+    {
+        var audioLanguage = await context.AudioLanguages.FindAsync(Id);
+        if (audioLanguage is null)
         {
             return NotFound();
         }
         
-        eventForChange.Title = newEvent.Title ?? eventForChange.Title;
-        eventForChange.Description = newEvent.Description ?? eventForChange.Description;
-
+        context.AudioLanguages.Remove(audioLanguage);
         await context.SaveChangesAsync();
+        
 
         return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAudioLanguage(int id)
+    [HttpGet]
+    public async Task<ActionResult<List<AudioLanguageDetailsDto>>> GetLanguages()
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (userId is null)
-        {
-            return BadRequest("User not found");
-        }
-
-        var @event = await context.Events.FindAsync(id);
-
-        if (@event != null && userId.CompareTo(@event.UserId) == 0)
-        {
-            context.Events.Remove(@event);
-            await context.SaveChangesAsync();
-        }
-        else
-        {
-            return BadRequest("Event not found");
-        }
+        var languages = await context.AudioLanguages.ToListAsync();
         
-        return NoContent();
+        return Ok(mapper.Map<List<AudioLanguageDetailsDto>>(languages));
     }
-    
 }

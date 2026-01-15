@@ -1,15 +1,9 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Mindfulness.Server.Dtos.Event;
-using Mindfulness.Server.Dtos.User;
-using Mindfulness.Server.Enums;
 using Mindfulness.Server.Models;
 
 namespace Mindfulness.Server.Controllers;
