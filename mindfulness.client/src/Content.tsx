@@ -72,11 +72,11 @@ function Content() {
             "contentId": "${item.contentId}"
             "title": "${item.title}",
             "description": "${item.description}",
-            "contentLink": "${item.videoLink || ""}",
-            "thumbnailLink": "${item.posterLink || ""}",
-            "contentType": "${item.type}",
-            "userId": "${item.authorId}",
-            "contentCategory": "${item.category}",
+            "contentLink": "${item.contentLink || ""}",
+            "thumbnailLink": "${item.thumbnailLink || ""}",
+            "contentType": "${item.contentType}",
+            "userId": "${item.userId}",
+            "contentCategory": "${item.contentCategory}",
             "duration": "${item.duration || ""}"
           }`,
         }
@@ -95,86 +95,86 @@ function Content() {
   const sampleContent : ContentItem[] = [
     {
       contentId: 1,
-      type: "video" as const,
+      contentType: "video" as const,
       title: "React Player Tutorial - Learn from Basics",
-      videoLink: "https://www.youtube.com/watch?v=tVBZq2fq-WA&t=23s",
-      posterLink: "https://img.youtube.com/vi/tVBZq2fq-WA/maxresdefault.jpg",
-      authorId: "author1",
-      category: "mindfulness",
+      contentLink: "https://www.youtube.com/watch?v=tVBZq2fq-WA&t=23s",
+      thumbnailLink: "https://img.youtube.com/vi/tVBZq2fq-WA/maxresdefault.jpg",
+      userId: "author1",
+      contentCategory: "mindfulness",
       description: "A comprehensive tutorial on React Player library.",
       duration: "15"
     },
     {
       contentId: 2,
-      type: "video" as const,
+      contentType: "video" as const,
       title: "Top 5 Techniques for Web Animation",
-      videoLink: "https://www.youtube.com/watch?v=9eHEOAn2FOA",
-      posterLink: "https://img.youtube.com/vi/9eHEOAn2FOA/maxresdefault.jpg",
-      authorId: "author1",
-      category: "mindfulness",
+      contentLink: "https://www.youtube.com/watch?v=9eHEOAn2FOA",
+      thumbnailLink: "https://img.youtube.com/vi/9eHEOAn2FOA/maxresdefault.jpg",
+      userId: "author1",
+      contentCategory: "mindfulness",
       description: "Learn the top 5 techniques for creating stunning web animations.",
       duration: "10"
     },
     {
       contentId: 3,
-      type: "video" as const,
+      contentType: "video" as const,
       title: "Mindfulness Meditation for Beginners",
-      videoLink: "https://www.youtube.com/watch?v=2OEL4P1Rz04",
-      posterLink: "https://img.youtube.com/vi/2OEL4P1Rz04/maxresdefault.jpg",
-      authorId: "author1",
-      category: "mindfulness",
+      contentLink: "https://www.youtube.com/watch?v=2OEL4P1Rz04",
+      thumbnailLink: "https://img.youtube.com/vi/2OEL4P1Rz04/maxresdefault.jpg",
+      userId: "author1",
+      contentCategory: "mindfulness",
       description: "A guided mindfulness meditation session for beginners.",
       duration: "20"
     },
     {
       contentId: 4,
-      type: "video" as const,
+      contentType: "video" as const,
       title: "10 Minute Morning Yoga Flow",
-      videoLink: "https://www.youtube.com/watch?v=VaoV1PrYft4",
-      posterLink: "https://img.youtube.com/vi/VaoV1PrYft4/maxresdefault.jpg",
-      authorId: "author1",
-      category: "mindfulness",
+      contentLink: "https://www.youtube.com/watch?v=VaoV1PrYft4",
+      thumbnailLink: "https://img.youtube.com/vi/VaoV1PrYft4/maxresdefault.jpg",
+      userId: "author1",
+      contentCategory: "mindfulness",
       description: "Start your day with this energizing 10 minute yoga flow.",
       duration: "10"
     },
     {
       contentId: 5,
-      type: "video" as const,
+      contentType: "video" as const,
       title: "Breathing Exercises for Stress Relief",
-      videoLink: "https://www.youtube.com/watch?v=tybOi4hjZFQ",
-      posterLink: "https://img.youtube.com/vi/tybOi4hjZFQ/maxresdefault.jpg",
-      authorId: "author1",
-      category: "mindfulness",
+      contentLink: "https://www.youtube.com/watch?v=tybOi4hjZFQ",
+      thumbnailLink: "https://img.youtube.com/vi/tybOi4hjZFQ/maxresdefault.jpg",
+      userId: "author1",
+      contentCategory: "mindfulness",
       description: "Learn effective breathing exercises to help relieve stress.",
       duration: "8"
     },
     {
       contentId: 6,
-      type: "video" as const,
+      contentType: "video" as const,
       title: "Deep Sleep Meditation - Guided Relaxation",
-      videoLink: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
-      posterLink: "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg",
-      authorId: "author1",
-      category: "mindfulness",
+      contentLink: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
+      thumbnailLink: "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg",
+      userId: "author1",
+      contentCategory: "mindfulness",
       description: "A guided meditation to help you achieve deep, restful sleep.",
       duration: "30"
     },
     {
       contentId: 7,
-      type: "article" as const,
+      contentType: "article" as const,
       title: "The Science Behind Mindfulness",
       description: "Discover how mindfulness meditation affects your brain...",
-      authorId: "author1",
-      category: "mindfulness",
+      userId: "author1",
+      contentCategory: "mindfulness",
     },
     {
       contentId: 8,
-      type: "article" as const,
+      contentType: "article" as const,
       title: "10 Tips for Better Sleep Quality",
       description: "Learn practical techniques to improve your sleep tonight...",
-      posterLink: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
-      authorId: "author1",
-      category: "mindfulness",
+      thumbnailLink: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
+      userId: "author1",
+      contentCategory: "mindfulness",
     },
   ];
 
@@ -200,8 +200,8 @@ function Content() {
   }, []);
 
 
-  const videos = contentItems?.filter((item: ContentItem) => item.type === "video");
-  const articles = contentItems?.filter((item: ContentItem) => item.type === "article");
+  const videos = contentItems?.filter((item: ContentItem) => item.contentType === "video");
+  const articles = contentItems?.filter((item: ContentItem) => item.contentType === "article");
 
   return (
     <>

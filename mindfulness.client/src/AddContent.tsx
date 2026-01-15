@@ -2,25 +2,13 @@ import Header from "./components/Header";
 import { useState, useEffect } from "react";
 import ContentViewModal from "./components/ContentViewModal";
 import ContentCard from "./components/ContentCard";
+import type {ContentItem} from "./types/ContentItem";
 import "./AddContent.css";
 
 
-interface ContentItem {
-  contentId: number;
-  title: string;
-  description: string;
-  videoLink?: string;
-  articleLink?: string;
-  text?: string;
-  posterLink?: string;
-  type: "video" | "article";
-  authorId: string;
-  category: string;
-  duration: string;
-}
-
 function AddContent() {
 
+  const [contentItems, setContentItems] = useState<any[]>([]);
   const userRole = localStorage.getItem("userRole");
 
   const [isOpen, setIsOpen] = useState(false);
@@ -44,14 +32,14 @@ function AddContent() {
 
   const loadContent = () => {
     let storedContent : ContentItem[] = JSON.parse(localStorage.getItem("contentItems") || "[]");
-    storedContent = storedContent.filter((item: ContentItem) => item.authorId === "author1");
+    storedContent = storedContent.filter((item: ContentItem) => item.userId === "author1");
     setMyContent(storedContent);
   }
     
   const fetchMyContent = async () => {
     try {
       const response = await fetch(
-        "https://localhost:7070/api/content/mycontent",
+        "https://localhost:7070/api/", // dodati ostatak
         {
           method: "GET",
           headers: {
@@ -76,12 +64,12 @@ function AddContent() {
       contentId: Date.now(),
       title,
       description: contentType === "article" ? articleText : description,
-      type: contentType as "video" | "article",
-      authorId: "author1",
-      category,
+      contentType: contentType as "video" | "article",
+      userId: "author1",
+      contentCategory: category,
       duration: contentType === "video" ? duration : "",
-      videoLink: contentType === "video" ? videoLink : undefined,
-      posterLink: thumbnailLink || undefined,
+      contentLink: contentType === "video" ? videoLink : undefined,
+      thumbnailLink: thumbnailLink || undefined,
     };
 
     setMyContent([...myContent, newContentItem]);

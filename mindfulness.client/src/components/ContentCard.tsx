@@ -1,9 +1,10 @@
 import { PencilIcon } from "@phosphor-icons/react/dist/icons/Pencil";
 import { useNavigate } from "react-router-dom";
+import type {ContentItem} from "../types/ContentItem";
 import "./ContentCard.css";
 
 interface ContentCardProps {
-    content: any;
+    content: ContentItem;
     onClick: () => void;
     allowEdit?: boolean;
 }
@@ -17,22 +18,22 @@ function ContentCard({content, onClick, allowEdit} : ContentCardProps) {
                 <button className="editContentButton" onClick={(e) => { e.stopPropagation(); navigate(`/editcontent/${content.contentId}`); }}><PencilIcon size={20} /></button>
             }
             <div className="cardThumbnail">
-                {(content.type === "video" || (content.type === "article" && content.posterLink)) &&
-                    <img src={content.posterLink} alt={content.title} />
+                {(content.contentType === "video" || (content.contentType === "article" && content.thumbnailLink)) &&
+                    <img src={content.thumbnailLink} alt={content.title} />
                 }
             </div>
             <div className="cardContent">
                 <h3 className="cardTitle">{content.title}</h3>
-                {content.type === "video" && (
+                {content.contentType === "video" && (
                     <p>{content.description}</p>
                 )}
                 <div className="cardFooter">
-                    <span className="contentType">{content.type === "article" ? "članak" : content.type}</span>
-                    {content.type === "video" && (
+                    <span className="contentType">{content.contentType === "article" ? "članak" : content.contentType}</span>
+                    {content.contentType === "video" && (
                         <span className="contentDuration">{content.duration} min</span>
                     )
                     }
-                    <span className="contentCategory">{content.category}</span>
+                    <span className="contentCategory">{content.contentCategory}</span>
                 </div>
             </div>
         </div>

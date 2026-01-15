@@ -133,13 +133,13 @@ function ContentViewModal({
   };
 
   const renderContent = () => {
-    switch (content.type) {
+    switch (content.contentType) {
       case "video":
         return (
           <VideoPlayer
-            videoLink={content.videoLink || ""}
+            videoLink={content.contentLink || ""}
             videoName={content.title}
-            posterLink={content.posterLink}
+            posterLink={content.thumbnailLink}
           />
         );
       case "article":
