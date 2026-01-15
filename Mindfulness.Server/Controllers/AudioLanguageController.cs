@@ -1,16 +1,13 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Mindfulness.Server.Dtos.AudioLanguage;
-using Mindfulness.Server.Dtos.Review;
 using Mindfulness.Server.Models;
 
 namespace Mindfulness.Server.Controllers;
 
-//[Authorize]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class AudioLanguageController(MindfulnessDbContext context, IMapper mapper) : ControllerBase
