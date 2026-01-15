@@ -20,7 +20,13 @@ public class ContentDetailsDto
     
     public required Models.ContentCategory Category { get; set; }
     
-    public Models.AudioLanguage? AudioLanguage { get; set; }
+    public string? ContentType { get; set; }
+    
+    public string? ContentLink { get; set; }
 
-    public List<Models.Review> Reviews { get; set; } = [];
+    public string? ThumbnailLink { get; set; }
+    
+    public Guid AudioLanguage { get; set; }
+
+    public List<Guid> Reviews { get; set; } = [];
 }

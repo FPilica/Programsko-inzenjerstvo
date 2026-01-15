@@ -1,4 +1,5 @@
-﻿using Mindfulness.Server.Enums;
+﻿using Microsoft.AspNetCore.Identity;
+using Mindfulness.Server.Enums;
 
 namespace Mindfulness.Server.Dtos.User;
 
@@ -6,6 +7,8 @@ public class UserDetailsDto
 {
     //prikaz detalja o korisniku
     public Guid Id { get; set; }
+    
+    public IdentityRole? Role {get; set;}
     
     public required string FirstName { get; set; }
     
