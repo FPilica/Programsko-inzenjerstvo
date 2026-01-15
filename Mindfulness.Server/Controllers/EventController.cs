@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Mindfulness.Server.Dtos.Event;
 using Mindfulness.Server.Dtos.User;
 using Mindfulness.Server.Enums;
 using Mindfulness.Server.Models;
@@ -35,11 +36,11 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
         
         var events = await context.Events.Where(sq => sq.UserId == userGuid).ToListAsync();
 
-        return Ok();
+        return Ok(_mapper.Map<List<EventDetailsDto>>(events));
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateEvent([FromBody] Event @event)
+    public async Task<IActionResult> CreateEvent([FromBody] EventCreateDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -48,15 +49,21 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
             return BadRequest("User not found");
         }
         
+        
+        
         var userGuid = Guid.Parse(userId);
-        context.Events.Add(@event);
+        
+        var newEvent = _mapper.Map<Event>(dto);
+        newEvent.Id = Guid.NewGuid();
+        newEvent.UserId = userGuid;
+        context.Events.Add(newEvent);
         await context.SaveChangesAsync();
 
         return Ok();
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] Event newEvent)
+    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventUpdateDto newEvent)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         
@@ -71,8 +78,9 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
             return NotFound();
         }
         
-        eventForChange.Title = newEvent.Title ?? eventForChange.Title;
-        eventForChange.Description = newEvent.Description ?? eventForChange.Description;
+        var newEventAdded = _mapper.Map<Event>(newEvent);
+        eventForChange.Title = newEventAdded.Title ?? eventForChange.Title;
+        eventForChange.Description = newEventAdded.Description ?? eventForChange.Description;
 
         await context.SaveChangesAsync();
 
@@ -80,7 +88,7 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteEvent(int id)
+    public async Task<IActionResult> DeleteEvent(Guid id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -88,10 +96,12 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
         {
             return BadRequest("User not found");
         }
-
+        
+        var userGuid = Guid.Parse(userId);
+        
         var @event = await context.Events.FindAsync(id);
 
-        if (@event != null && userId.CompareTo(@event.UserId) == 0)
+        if (@event != null && @event.UserId == userGuid)
         {
             context.Events.Remove(@event);
             await context.SaveChangesAsync();
@@ -101,7 +111,7 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
             return BadRequest("Event not found");
         }
         
-        return NoContent();
+        return Ok();
     }
     
 }

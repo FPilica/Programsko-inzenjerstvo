@@ -28,6 +28,7 @@ public class Content
     public required ContentCategory Category { get; set; }
     
     //je li za stres, meditaciju bla bla
+    [MaxLength(50)]
     public required string? ContentType { get; set; }
     
     [MaxLength(300)]
