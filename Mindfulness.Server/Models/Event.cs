@@ -18,6 +18,8 @@ public class Event
     
     public Guid ContentId { get; set; }
     
+    public required Content Content { get; set; }
+    
     public Guid UserId { get; set; }
     public required User User { get; set; }
 }

@@ -14,6 +14,7 @@ using Mindfulness.Server.Models;
 
 namespace Mindfulness.Server.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 
@@ -40,7 +41,7 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateEvent([FromBody] EventCreateDto dto)
+    public async Task<ActionResult<EventCreateDto>> CreateEvent([FromBody] EventCreateDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -48,8 +49,6 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
         {
             return BadRequest("User not found");
         }
-        
-        
         
         var userGuid = Guid.Parse(userId);
         
@@ -59,11 +58,11 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
         context.Events.Add(newEvent);
         await context.SaveChangesAsync();
 
-        return Ok();
+        return Ok(_mapper.Map<EventCreateDto>(newEvent));
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventUpdateDto newEvent)
+    [HttpPut("{id:guid}")]
+    public async Task<ActionResult<EventUpdateDto>> UpdateEvent(Guid id, [FromBody] EventUpdateDto newEvent)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         
@@ -84,10 +83,10 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
 
         await context.SaveChangesAsync();
 
-        return Ok();
+        return Ok(_mapper.Map<EventCreateDto>(newEventAdded));
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteEvent(Guid id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
