@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import type { Review } from "../types/Review";
 import type { ContentItem } from "../types/ContentItem";
+import type { Event } from "../types/Event";
 import "./ContentViewModal.css";
 
 interface ContentViewProps {
@@ -69,13 +70,38 @@ function ContentViewModal({
     setNewReview({ userId: "user123", comment: "", rating: 5 });
   };
 
+  const deleteContentFromDatabase = async (contentId: number) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+      
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+    } catch (error) {
+      console.error("Error deleting content item:", error);
+    }
+  };
+
   const handleDeleteContent = () => {
     // potvrdi brisanje
     if (!window.confirm("Jeste li sigurni da želite izbrisati ovaj sadržaj?")) {
       return;
     }
 
-    // Izbriši iz localStorage
+    // otkomentiraj za bazu
+    // deleteContentFromDatabase(content.contentId);
+
+    // Izbriši iz localStorage // zakomentiraj za bazu
     const existingContent: ContentItem[] = JSON.parse(
       localStorage.getItem("contentItems") || "[]"
     );
@@ -99,6 +125,36 @@ function ContentViewModal({
     setShowAddToCalendarForm(true);
   };
 
+  const addEventToDatabase = async (newEvent: Event) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        {
+          method: "POST",
+          headers: {
+            Accept: "text/plain",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+          body: `{
+              title: ${newEvent.title},
+              startTime: ${newEvent.start},
+              endTime: ${newEvent.end},
+              contentId: ${newEvent.contentId}
+              userId: ${newEvent.userId},
+              description: ${newEvent.description}
+            }`,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+    } catch (error) {
+      console.error("Error adding event:", error);
+    }
+  };
+
   const handleCancelAddToCalendar = () => {
     setShowAddToCalendarForm(false);
     setEventData({
@@ -113,7 +169,7 @@ function ContentViewModal({
 
   const handleSaveEvent = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
     const newEvent = {
       id: String(Date.now()),
@@ -126,8 +182,15 @@ function ContentViewModal({
       contentId: content.contentId,
     };
 
-    localStorage.setItem("events", JSON.stringify([...existingEvents, newEvent]));
-    
+    // otkomentiraj za bazu
+    // addEventToCalendarDatabase(newEvent);
+
+    // zakomentiraj za bazu
+    localStorage.setItem(
+      "events",
+      JSON.stringify([...existingEvents, newEvent])
+    );
+
     alert("Događaj uspješno dodan u kalendar!");
     handleCancelAddToCalendar();
   };
@@ -160,7 +223,9 @@ function ContentViewModal({
               type="datetime-local"
               id="start"
               value={eventData.start}
-              onChange={(e) => setEventData({ ...eventData, start: e.target.value })}
+              onChange={(e) =>
+                setEventData({ ...eventData, start: e.target.value })
+              }
               required
             />
           </div>
@@ -170,7 +235,9 @@ function ContentViewModal({
               type="datetime-local"
               id="end"
               value={eventData.end}
-              onChange={(e) => setEventData({ ...eventData, end: e.target.value })}
+              onChange={(e) =>
+                setEventData({ ...eventData, end: e.target.value })
+              }
               required
             />
           </div>
@@ -180,7 +247,9 @@ function ContentViewModal({
                 type="checkbox"
                 id="allDay"
                 checked={eventData.allDay}
-                onChange={(e) => setEventData({ ...eventData, allDay: e.target.checked })}
+                onChange={(e) =>
+                  setEventData({ ...eventData, allDay: e.target.checked })
+                }
               />
               Cjelodnevni događaj
             </label>
@@ -190,23 +259,28 @@ function ContentViewModal({
             <textarea
               id="description"
               value={eventData.description}
-              onChange={(e) => setEventData({ ...eventData, description: e.target.value })}
+              onChange={(e) =>
+                setEventData({ ...eventData, description: e.target.value })
+              }
               rows={3}
               placeholder="Dodaj bilješku..."
             />
           </div>
         </form>
-          <div className="formButtons">
-            <button
-              className="myButton cancelEventButton"
-              onClick={handleCancelAddToCalendar}
-            >
-              Odustani
-            </button>
-            <button className="myButton saveEventButton" onClick={handleSaveEvent}>
-              Spremi u kalendar
-            </button>
-          </div>
+        <div className="formButtons">
+          <button
+            className="myButton cancelEventButton"
+            onClick={handleCancelAddToCalendar}
+          >
+            Odustani
+          </button>
+          <button
+            className="myButton saveEventButton"
+            onClick={handleSaveEvent}
+          >
+            Spremi u kalendar
+          </button>
+        </div>
       </div>
     );
   };
@@ -258,7 +332,9 @@ function ContentViewModal({
             </div>
             <h1>{content.title}</h1>
             <div className="content-player">
-              {showAddToCalendarForm ? renderAddToCalendarForm() : renderContent()}
+              {showAddToCalendarForm
+                ? renderAddToCalendarForm()
+                : renderContent()}
             </div>
           </div>
 

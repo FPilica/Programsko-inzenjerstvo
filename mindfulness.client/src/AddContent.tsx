@@ -57,6 +57,41 @@ function AddContent() {
     }
   };
 
+  const addContentItemToDatabase = async (item: ContentItem) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        {
+          method: "POST",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+          body: `{
+            title: ${item.title},
+            description: ${item.description},
+            contentType: ${item.contentType},
+            userId: ${item.userId},
+            contentCategory: ${item.contentCategory},
+            duration: ${item.duration},
+            contentLink: ${item.contentLink},
+            thumbnailLink: ${item.thumbnailLink}
+          }`,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      setMyContent([...myContent, item]);
+
+    } catch (error) {
+      console.error("Error adding content item:", error);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -72,6 +107,10 @@ function AddContent() {
       thumbnailLink: thumbnailLink || undefined,
     };
 
+    // otkomentiraj za bazu
+    // addContentItemToDatabase(newContentItem);
+
+    // trenutno se spremaju u localStorage, posli na backend
     setMyContent([...myContent, newContentItem]);
     const storedContent = JSON.parse(localStorage.getItem("contentItems") || "[]");
     localStorage.setItem("contentItems", JSON.stringify([...storedContent, newContentItem]));
