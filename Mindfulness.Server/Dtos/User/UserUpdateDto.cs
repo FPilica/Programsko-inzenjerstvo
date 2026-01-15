@@ -11,6 +11,8 @@ public class UserUpdateDto
 
     public string? LastName { get; set; }
     
+    public IdentityRole? Role { get; set; }
+    
     public Gender? Gender { get; set; }
     
     public DateTimeOffset? DateOfBirth { get; set; }

@@ -8,9 +8,9 @@ public class ReviewDetailsDto
 
     public string? Comment { get; set; }
     
-    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
+    public DateTimeOffset CreatedAt { get; set; }
 
-    public required Models.User User { get; set; }
+    public required Guid UserId { get; set; }
 
-    public required Models.Content Content { get; set; }
+    public required Guid ContentId { get; set; }
 }
