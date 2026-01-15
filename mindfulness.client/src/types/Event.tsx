@@ -1,10 +1,11 @@
 interface Event {
     id: string;
     title: string;
+    start: string;
+    end: string;
+    allDay: boolean;
     description: string;
-    startTime: string;
-    endTime: string;
-    organizerId: string;
+    userId: string;
     contentId?: number;
 }
 

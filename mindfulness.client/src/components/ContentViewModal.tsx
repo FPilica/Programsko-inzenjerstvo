@@ -3,7 +3,7 @@ import VideoPlayer from "./VideoPlayer";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import type { Review } from "../types/Review";
-import type {ContentItem } from "../types/ContentItem"
+import type { ContentItem } from "../types/ContentItem";
 import "./ContentViewModal.css";
 
 interface ContentViewProps {
@@ -13,21 +13,26 @@ interface ContentViewProps {
   allowEdit?: boolean;
 }
 
-function ContentViewModal({ content, isOpen, onClose, allowEdit = false}: ContentViewProps) {
+function ContentViewModal({
+  content,
+  isOpen,
+  onClose,
+  allowEdit = false,
+}: ContentViewProps) {
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<Review[]>([]);
 
   useEffect(() => {
     loadReviews();
   }, [content.contentId]);
-    
+
   const loadReviews = () => {
     const oldReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
     const contentReviews = oldReviews.filter(
       (element: Review) => element.contentId === content.contentId
     );
     setReviews(contentReviews);
-  }
+  };
 
   const [newReview, setNewReview] = useState({
     userId: "user123",
@@ -35,7 +40,7 @@ function ContentViewModal({ content, isOpen, onClose, allowEdit = false}: Conten
     comment: "",
   });
 
-    const handleAddReview = () => {
+  const handleAddReview = () => {
     const reviewToAdd: Review = {
       id: Date.now(),
       rating: newReview.rating,
@@ -51,25 +56,26 @@ function ContentViewModal({ content, isOpen, onClose, allowEdit = false}: Conten
       JSON.stringify([reviewToAdd, ...existingReviews])
     );
     loadReviews();
-        
-    setNewReview({ userId: "user123", comment: "", rating: 5 });
-    };
-  
-  const handleDeleteContent = () => {
 
+    setNewReview({ userId: "user123", comment: "", rating: 5 });
+  };
+
+  const handleDeleteContent = () => {
     // potvrdi brisanje
     if (!window.confirm("Jeste li sigurni da želite izbrisati ovaj sadržaj?")) {
       return;
     }
-        
+
     // Izbriši iz localStorage
-    const existingContent: ContentItem[] = JSON.parse(localStorage.getItem("contentItems") || "[]");
+    const existingContent: ContentItem[] = JSON.parse(
+      localStorage.getItem("contentItems") || "[]"
+    );
     const updatedContent = existingContent.filter(
       (item: ContentItem) => item.contentId !== content.contentId
     );
     localStorage.setItem("contentItems", JSON.stringify(updatedContent));
     onClose();
-  }
+  };
 
   const handleDeleteReview = (reviewId: number) => {
     const existingReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
@@ -78,17 +84,17 @@ function ContentViewModal({ content, isOpen, onClose, allowEdit = false}: Conten
     );
     localStorage.setItem("reviews", JSON.stringify(updatedReviews));
     loadReviews();
-  }
+  };
 
   const renderContent = () => {
     switch (content.type) {
       case "video":
         return (
-            <VideoPlayer
-              videoLink={content.videoLink || ""}
-              videoName={content.title}
-              posterLink={content.posterLink}
-            />
+          <VideoPlayer
+            videoLink={content.videoLink || ""}
+            videoName={content.title}
+            posterLink={content.posterLink}
+          />
         );
       case "article":
         return <div className="content-article">{content.description}</div>;
@@ -111,22 +117,34 @@ function ContentViewModal({ content, isOpen, onClose, allowEdit = false}: Conten
   return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-        <button className="myButton modal-close" onClick={onClose}>✕</button>
-        {allowEdit && (
-          <>
-            <button 
-              className="myButton editContentButtonModal"
-              onClick={() => navigate(`/editcontent/${content.contentId}`)}
-            >
-              Uredi
-            </button>
-            <button className="myButton deleteContentButtonModal" onClick={handleDeleteContent}>Izbriši</button>
-          </>
-          )}
-        </div>
         <div className="content-view">
           <div className="content-main">
+            <div className="modal-header">
+              <button className="myButton modal-close" onClick={onClose}>
+                ✕
+              </button>
+              {allowEdit && (
+                <>
+                  <button
+                    className="myButton editContentButtonModal"
+                    onClick={() =>
+                      navigate(`/editcontent/${content.contentId}`)
+                    }
+                  >
+                    Uredi
+                  </button>
+                  <button
+                    className="myButton deleteContentButtonModal"
+                    onClick={handleDeleteContent}
+                  >
+                    Izbriši
+                  </button>
+                </>
+              )}
+              <button className="myButton addContentToCalendarButtonModal">
+                + Dodaj u kalendar
+              </button>
+            </div>
             <h1>{content.title}</h1>
             <div className="content-player">{renderContent()}</div>
           </div>
@@ -171,7 +189,10 @@ function ContentViewModal({ content, isOpen, onClose, allowEdit = false}: Conten
                   }
                   rows={4}
                 />
-                <button onClick={handleAddReview} className="myButton review-submit">
+                <button
+                  onClick={handleAddReview}
+                  className="myButton review-submit"
+                >
                   Objavi
                 </button>
               </div>
@@ -189,7 +210,12 @@ function ContentViewModal({ content, isOpen, onClose, allowEdit = false}: Conten
                   </div>
                   <p className="review-text">{review.comment}</p>
                   {allowEdit && (
-                    <button className="myButton deleteReviewButton" onClick={() => handleDeleteReview(review.id)}>Izbriši</button>
+                    <button
+                      className="myButton deleteReviewButton"
+                      onClick={() => handleDeleteReview(review.id)}
+                    >
+                      Izbriši
+                    </button>
                   )}
                 </div>
               ))}
