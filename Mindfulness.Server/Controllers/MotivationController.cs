@@ -7,6 +7,7 @@ using Mindfulness.Server.Models;
 
 namespace Mindfulness.Server.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class MotivationController : ControllerBase
