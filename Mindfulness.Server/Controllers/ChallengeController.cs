@@ -38,8 +38,8 @@ public class ChallengeController(MindfulnessDbContext context, IMapper mapper) :
             return NotFound();
         }
         
-        challenge.Title = dto.Title;
-        challenge.Description = dto.Description;
+        challenge.Title = dto.Title ??  challenge.Title;
+        challenge.Description = dto.Description ??   challenge.Description;
         challenge.Duration = dto.Duration;
         challenge.Difficulty = dto.Difficulty;
         
