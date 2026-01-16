@@ -18,5 +18,5 @@ public class DailyCheckInDetailsDto
     
     public string? DailyNotes { get; set; }
 
-    public required Models.User User { get; set; }
+    public Guid UserId { get; set; }
 }

@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
-using Mindfulness.Server.Enums;
-using Mindfulness.Server.Models;
+﻿using Mindfulness.Server.Enums;
 
 namespace Mindfulness.Server.Dtos.User;
 
@@ -11,13 +8,11 @@ public class UserUpdateDto
 
     public string? LastName { get; set; }
     
-    public IdentityRole? Role { get; set; }
+    public string? Role { get; set; }
     
     public Gender? Gender { get; set; }
     
     public DateTimeOffset? DateOfBirth { get; set; }
     
     public string? Email { get; set; }
-    
-    public string? Password { get; set; }
 }

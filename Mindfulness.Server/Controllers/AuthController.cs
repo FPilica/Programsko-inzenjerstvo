@@ -54,6 +54,13 @@ public sealed class AuthController : ControllerBase
             return BadRequest(result.Errors);
         }
         
+        result = await _userManager.AddToRoleAsync(user, "User");
+        
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+        
         return Ok("User registration successful.");
     }
 
@@ -141,6 +148,13 @@ public sealed class AuthController : ControllerBase
         
         var result = await _userManager.CreateAsync(user);
 
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+        
+        result = await _userManager.AddToRoleAsync(user, "User");
+        
         if (!result.Succeeded)
         {
             return BadRequest(result.Errors);
