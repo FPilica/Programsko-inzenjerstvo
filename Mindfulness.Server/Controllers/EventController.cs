@@ -14,8 +14,6 @@ namespace Mindfulness.Server.Controllers;
 
 public class EventController(MindfulnessDbContext context, IMapper mapper) : ControllerBase
 {
-    private readonly IMapper _mapper = mapper;
-
     [HttpGet]
     public async Task<IActionResult> GetEvents()
     {
@@ -31,7 +29,7 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
         
         var events = await context.Events.Where(sq => sq.UserId == userGuid).ToListAsync();
 
-        return Ok(_mapper.Map<List<EventDetailsDto>>(events));
+        return Ok(mapper.Map<List<EventDetailsDto>>(events));
     }
 
     [HttpPost]
@@ -55,13 +53,13 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
         
         var userGuid = Guid.Parse(userId);
         
-        var newEvent = _mapper.Map<Event>(dto);
+        var newEvent = mapper.Map<Event>(dto);
         newEvent.Id = Guid.NewGuid();
         newEvent.UserId = userGuid;
         context.Events.Add(newEvent);
         await context.SaveChangesAsync();
 
-        return Ok(_mapper.Map<EventDetailsDto>(newEvent));
+        return Ok(mapper.Map<EventDetailsDto>(newEvent));
     }
 
     [HttpPut("{id:guid}")]
@@ -89,7 +87,8 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
         {
             return NotFound();
         }
-
+        
+        eventForChange.AllDay = newEvent.AllDay ?? eventForChange.AllDay;
         eventForChange.EndTime = newEvent.EndTime ?? eventForChange.EndTime;
         eventForChange.StartTime = newEvent.StartTime ?? eventForChange.StartTime;
         eventForChange.ContentId = newEvent.ContentId ?? eventForChange.ContentId;
@@ -98,7 +97,7 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
 
         await context.SaveChangesAsync();
 
-        return Ok(_mapper.Map<EventDetailsDto>(eventForChange));
+        return Ok(mapper.Map<EventDetailsDto>(eventForChange));
     }
 
     [HttpDelete("{id:guid}")]
@@ -127,5 +126,4 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
         
         return Ok();
     }
-    
 }

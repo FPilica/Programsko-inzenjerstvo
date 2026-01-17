@@ -44,7 +44,7 @@ public class ReviewController : ControllerBase
         var review = _mapper.Map<Review>(dto);
         review.Id = Guid.NewGuid();
         review.UserId = userGuid;
-        review.CreatedAt = DateTimeOffset.UtcNow;
+        review.CreatedAt = DateTimeOffset.Now;
         
         var addedReview = _context.Reviews.Add(review);
         
@@ -75,9 +75,9 @@ public class ReviewController : ControllerBase
             return Unauthorized();
         }
         
-        review.Comment = dto.Comment;
-        review.Rating = dto.Rating;
-        review.CreatedAt = DateTimeOffset.UtcNow;
+        review.Comment = dto.Comment ?? review.Comment;
+        review.Rating = dto.Rating ?? review.Rating;
+        review.CreatedAt = DateTimeOffset.Now;
         
         _context.Reviews.Update(review);
         await _context.SaveChangesAsync();

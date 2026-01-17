@@ -84,4 +84,17 @@ public class AudioLanguageController(MindfulnessDbContext context, IMapper mappe
         
         return Ok(mapper.Map<List<AudioLanguageDetailsDto>>(languages));
     }
+    
+    [HttpGet("{languageName}")]
+    public async Task<ActionResult<List<AudioLanguageDetailsDto>>> GetLanguages(string languageName)
+    {
+        var languages = await context.AudioLanguages.FirstOrDefaultAsync(al => al.Name == languageName);
+
+        if (languages is null)
+        {
+            return NotFound();
+        }
+        
+        return Ok(mapper.Map<AudioLanguageDetailsDto>(languages));
+    }
 }

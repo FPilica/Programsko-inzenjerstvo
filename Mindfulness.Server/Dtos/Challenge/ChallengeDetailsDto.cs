@@ -10,11 +10,9 @@ public class ChallengeDetailsDto
     
     public string? Description { get; set; }
     
-    public Difficulty Difficulty { get; set; }
+    public Difficulty? Difficulty { get; set; }
     
-    public TimeSpan Duration { get; set; }
+    public TimeSpan? Duration { get; set; }
 
-    public DateTimeOffset CreatedAt { get; set; }
-    
-    public List<Models.User> Users { get; set; } = [];
+    public DateTimeOffset? CreatedAt { get; set; }
 }

@@ -17,26 +17,8 @@ public class ChallengeController(MindfulnessDbContext context, IMapper mapper) :
     public async Task<ActionResult<ChallengeDetailsDto>> CreateChallenge([FromBody] ChallengeCreateDto dto)
     {
         var newChallenge = mapper.Map<Challenge>(dto);
-        newChallenge.Title = dto.Title;
         newChallenge.Id = Guid.NewGuid();
-        
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
-        if (userId is null)
-        {
-            return BadRequest("User not found");
-        }
-
-        var userGuid = Guid.Parse(userId);
-
-        var temp = await context.Users.FindAsync(userGuid);
-
-        if (temp is null)
-        {
-            return BadRequest("User not found");
-        }
-        
-        newChallenge.Users.Add(temp);
+        newChallenge.CreatedAt = DateTimeOffset.Now;
         
         context.Challenges.Add(newChallenge);
         
@@ -45,32 +27,67 @@ public class ChallengeController(MindfulnessDbContext context, IMapper mapper) :
         return Ok(mapper.Map<ChallengeDetailsDto>(newChallenge));
     }
 
-    [HttpPut("{Id:guid}")]
-    public async Task<ActionResult<ChallengeDetailsDto>> UpdateChallenge(Guid Id, [FromBody] ChallengeUpdateDto dto)
+    [HttpPost("{id:guid}")]
+    public async Task<IActionResult> EnrollChallenge(Guid id)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         
-        var challenge = await context.Challenges.FindAsync(Id);
+        if (userId is null)
+        {
+            return BadRequest("User not found");
+        }
+
+        var userGuid = Guid.Parse(userId);
+        
+        var user = await context.Users.FindAsync(userGuid);
+
+        if (user is null)
+        {
+            return BadRequest("User not found");
+        }
+        
+        var challenge = await context.Challenges.FindAsync(id);
+
+        if (challenge is null)
+        {
+            return NotFound("Challenge not found");
+        }
+
+        challenge.Users.Add(user);
+        
+        context.Challenges.Update(challenge);
+        await context.SaveChangesAsync();
+        
+        return Ok();
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<ActionResult<ChallengeDetailsDto>> UpdateChallenge(Guid id, [FromBody] ChallengeUpdateDto dto)
+    {
+        var challenge = await context.Challenges.FindAsync(id);
 
         if (challenge is null)
         {
             return NotFound();
         }
         
-        challenge.Title = dto.Title ??  challenge.Title;
-        challenge.Description = dto.Description ??   challenge.Description;
+        challenge.Title = dto.Title;
+        challenge.Description = dto.Description;
         challenge.Duration = dto.Duration;
         challenge.Difficulty = dto.Difficulty;
+        challenge.CreatedAt = DateTimeOffset.Now;
         
         context.Challenges.Update(challenge);
         await context.SaveChangesAsync();
         
         return Ok(mapper.Map<ChallengeDetailsDto>(challenge));
     }
-
-    [HttpDelete("{Id:guid}")]
-    public async Task<IActionResult> DeleteChallenge(Guid Id)
+    
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteChallenge(Guid id)
     {
-        var challenge = await context.Challenges.FindAsync(Id);
+        var challenge = await context.Challenges.FindAsync(id);
+        
         if (challenge is null)
         {
             return NotFound();
@@ -78,13 +95,12 @@ public class ChallengeController(MindfulnessDbContext context, IMapper mapper) :
         
         context.Challenges.Remove(challenge);
         await context.SaveChangesAsync();
-        
 
         return Ok();
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<ChallengeDetailsDto>>> GetChallenges()
+    public async Task<ActionResult<List<ChallengeDetailsDto>>> GetAllChallenges()
     {
         var challenges = await context.Challenges.ToListAsync();
         
@@ -92,7 +108,7 @@ public class ChallengeController(MindfulnessDbContext context, IMapper mapper) :
     }
 
     
-    [HttpGet("forUser")]
+    [HttpGet("enrolled")]
     public async Task<ActionResult<ChallengeDetailsDto>> GetUserChallenges()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -107,10 +123,10 @@ public class ChallengeController(MindfulnessDbContext context, IMapper mapper) :
         var user = await context.Users.Include(u => u.Challenges).FirstOrDefaultAsync(u => u.Id == userGuid);
 
         if (user is null)
+        {
             return NotFound("User not found");
+        }
         
-        var usersChallenges = await context.Challenges.Where(c => c.Users.Any(u => u.Id == userGuid)).ToListAsync();
-        
-        return Ok(mapper.Map<List<ChallengeDetailsDto>>(usersChallenges));
+        return Ok(mapper.Map<List<ChallengeDetailsDto>>(user.Challenges));
     }
 }

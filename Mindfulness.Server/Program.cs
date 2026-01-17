@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Mindfulness.Server;
 using Mindfulness.Server.Models;
+using Mindfulness.Server.Services;
 
 const string corsPolicyName = "FrontendCorsPolicy";
 
@@ -128,5 +129,13 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
+
+using var scope = app.Services.CreateScope();
+var dbContext = scope.ServiceProvider.GetService<MindfulnessDbContext>();
+var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole<Guid>>>();
+var userManager = scope.ServiceProvider.GetService<UserManager<User>>();
+var dbSeeder = new DataSeeder(dbContext ?? throw new NullReferenceException(),
+    roleManager ?? throw new NullReferenceException(), userManager ?? throw new NullReferenceException());
+await dbSeeder.SeedDataAsync();
 
 app.Run();

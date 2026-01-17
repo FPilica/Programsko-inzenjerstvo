@@ -10,5 +10,7 @@ public class EventUpdateDto
     
     public DateTimeOffset? EndTime { get; set; }
     
+    public bool? AllDay { get; set; }
+    
     public Guid? ContentId { get; set; }
 }
