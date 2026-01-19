@@ -75,8 +75,8 @@ public class ReviewController : ControllerBase
             return Unauthorized();
         }
         
-        review.Comment = dto.Comment;
-        review.Rating = dto.Rating;
+        review.Comment = dto.Comment ?? review.Comment;
+        review.Rating = dto.Rating ?? review.Rating;
         review.CreatedAt = DateTimeOffset.Now;
         
         _context.Reviews.Update(review);
