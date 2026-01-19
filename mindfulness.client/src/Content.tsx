@@ -34,7 +34,7 @@ function Content() {
   const getContentItems = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        `https://localhost:7070/api/content`, //treba dodati ostatl linka
         {
           method: "GET",
           headers: {
@@ -55,6 +55,56 @@ function Content() {
       console.error("Error fetching content items:", error);
     }
   }
+
+  const getCategoryIdByName = async (contentCategory: string) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/ContentCategory/${contentCategory}`,
+        {
+          method: "GET",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      const categoryData = await response.json();
+      return categoryData.contentCategoryId;
+    } catch (error) {
+      console.error("Error fetching category ID:", error);
+    }
+  };
+
+  const getAudioLanguageIdByName = async (language: string) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/AudioLanguage/${language}`,
+        {
+          method: "GET",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      const languageData = await response.json();
+      return languageData.audioLanguageId;
+    } catch (error) {
+      console.error("Error fetching audio language ID:", error);
+    }
+  };
 
   // ovo nece ici u zavrsnu verziju, samo je za ubacivanje ovih pocetnih videa i clanaka u bazu
   const addContentItemToDatabase = async (item: ContentItem) => {
@@ -84,87 +134,79 @@ function Content() {
 
   const sampleContent : ContentItem[] = [
     {
-      contentId: 1,
       contentType: "video" as const,
       title: "React Player Tutorial - Learn from Basics",
       contentLink: "https://www.youtube.com/watch?v=tVBZq2fq-WA&t=23s",
       thumbnailLink: "https://img.youtube.com/vi/tVBZq2fq-WA/maxresdefault.jpg",
-      userId: "author1",
-      contentCategory: "mindfulness",
+      categoryId: "mindfulness",
       description: "A comprehensive tutorial on React Player library.",
-      duration: "15"
+      duration: "15",
+      audioLanguageId: "eng"
     },
     {
-      contentId: 2,
       contentType: "video" as const,
       title: "Top 5 Techniques for Web Animation",
       contentLink: "https://www.youtube.com/watch?v=9eHEOAn2FOA",
       thumbnailLink: "https://img.youtube.com/vi/9eHEOAn2FOA/maxresdefault.jpg",
-      userId: "author1",
-      contentCategory: "mindfulness",
+      categoryId: "mindfulness",
       description: "Learn the top 5 techniques for creating stunning web animations.",
-      duration: "10"
+      duration: "10",
+      audioLanguageId: "eng"
     },
     {
-      contentId: 3,
       contentType: "video" as const,
       title: "Mindfulness Meditation for Beginners",
       contentLink: "https://www.youtube.com/watch?v=2OEL4P1Rz04",
       thumbnailLink: "https://img.youtube.com/vi/2OEL4P1Rz04/maxresdefault.jpg",
-      userId: "author1",
-      contentCategory: "mindfulness",
+      categoryId: "mindfulness",
       description: "A guided mindfulness meditation session for beginners.",
-      duration: "20"
+      duration: "20",
+      audioLanguageId: "eng"
     },
     {
-      contentId: 4,
       contentType: "video" as const,
       title: "10 Minute Morning Yoga Flow",
       contentLink: "https://www.youtube.com/watch?v=VaoV1PrYft4",
       thumbnailLink: "https://img.youtube.com/vi/VaoV1PrYft4/maxresdefault.jpg",
-      userId: "author1",
-      contentCategory: "mindfulness",
+      categoryId: "mindfulness",
       description: "Start your day with this energizing 10 minute yoga flow.",
-      duration: "10"
+      duration: "10",
+      audioLanguageId: "eng"
     },
     {
-      contentId: 5,
       contentType: "video" as const,
       title: "Breathing Exercises for Stress Relief",
       contentLink: "https://www.youtube.com/watch?v=tybOi4hjZFQ",
       thumbnailLink: "https://img.youtube.com/vi/tybOi4hjZFQ/maxresdefault.jpg",
-      userId: "author1",
-      contentCategory: "mindfulness",
+      categoryId: "mindfulness",
       description: "Learn effective breathing exercises to help relieve stress.",
-      duration: "8"
+      duration: "8",
+      audioLanguageId: "eng"
     },
     {
-      contentId: 6,
       contentType: "video" as const,
       title: "Deep Sleep Meditation - Guided Relaxation",
       contentLink: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
       thumbnailLink: "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg",
-      userId: "author1",
-      contentCategory: "mindfulness",
+      categoryId: "mindfulness",
       description: "A guided meditation to help you achieve deep, restful sleep.",
-      duration: "30"
+      duration: "30",
+      audioLanguageId: "eng"
     },
     {
-      contentId: 7,
       contentType: "article" as const,
       title: "The Science Behind Mindfulness",
       description: "Discover how mindfulness meditation affects your brain...",
-      userId: "author1",
-      contentCategory: "mindfulness",
+      categoryId: "mindfulness",
+      audioLanguageId: "eng"
     },
     {
-      contentId: 8,
       contentType: "article" as const,
       title: "10 Tips for Better Sleep Quality",
       description: "Learn practical techniques to improve your sleep tonight...",
       thumbnailLink: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
-      userId: "author1",
-      contentCategory: "mindfulness",
+      categoryId: "mindfulness",
+      audioLanguageId: "eng"
     },
   ];
 
