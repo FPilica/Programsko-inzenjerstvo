@@ -6,11 +6,13 @@ namespace Mindfulness.Server.Services;
 
 public class DataSeeder
 {
+    private readonly MindfulnessDbContext _dbContext;
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
     private readonly UserManager<User> _userManager;
 
-    public DataSeeder(RoleManager<IdentityRole<Guid>> roleManager, UserManager<User> userManager)
+    public DataSeeder(MindfulnessDbContext dbContext, RoleManager<IdentityRole<Guid>> roleManager, UserManager<User> userManager)
     {
+        _dbContext = dbContext;
         _roleManager = roleManager;
         _userManager = userManager;
     }
@@ -46,5 +48,39 @@ public class DataSeeder
         }
         
         await _userManager.AddToRoleAsync(createdUser, "Admin");
+
+        _dbContext.ContentCategories.Add(new ContentCategory
+        {
+            Id = Guid.NewGuid(),
+            Name = "meditacija",
+        });
+        _dbContext.ContentCategories.Add(new ContentCategory
+        {
+            Id = Guid.NewGuid(),
+            Name = "disanje",
+        });
+        _dbContext.ContentCategories.Add(new ContentCategory
+        {
+            Id = Guid.NewGuid(),
+            Name = "yoga"
+        });
+        _dbContext.ContentCategories.Add(new ContentCategory
+        {
+            Id = Guid.NewGuid(),
+            Name = "mindfulness"
+        });
+
+        _dbContext.AudioLanguages.Add(new AudioLanguage
+        {
+            Id = Guid.NewGuid(),
+            Name = "hr"
+        });
+        _dbContext.AudioLanguages.Add(new AudioLanguage
+        {
+            Id = Guid.NewGuid(),
+            Name = "eng"
+        });
+
+        await _dbContext.SaveChangesAsync();
     }
 }
