@@ -6,6 +6,7 @@ import type { Review } from "../types/Review";
 import type { ContentItem } from "../types/ContentItem";
 import type { Event } from "../types/Event";
 import "./ContentViewModal.css";
+import { TextUnderlineIcon } from "@phosphor-icons/react";
 
 interface ContentViewProps {
   content: ContentItem;
@@ -29,19 +30,19 @@ function ContentViewModal({
     end: "",
     allDay: false,
     description: "",
-    contentId: content.contentId,
+    contentId: content.id,
   });
 
   useEffect(() => {
-    // fetchReviews(); // za bazu
-    loadReviews();
-  }, [content.contentId]);
+    fetchReviews(); // za bazu
+    // loadReviews();
+  }, [content.id]);
 
   // kad bude baza
   const fetchReviews = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        `https://localhost:7070/api/review/by-content-id/${content.id}`, //treba dodati ostatl linka
         {
           method: "GET",
           headers: {
@@ -55,7 +56,6 @@ function ContentViewModal({
       }
       
       const data = await response.json();
-      return data;
       setReviews(data)
 
     } catch (error) {
@@ -67,7 +67,7 @@ function ContentViewModal({
   const loadReviews = () => {
     const oldReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
     const contentReviews = oldReviews.filter(
-      (element: Review) => element.contentId === content.contentId
+      (element: Review) => element.contentId === content.id
     );
     setReviews(contentReviews);
   };
@@ -81,7 +81,7 @@ function ContentViewModal({
   const addReviewToDatabase = async (review: Review) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        `https://localhost:7070/api/review`, //treba dodati ostatl linka
         {
           method: "POST",
           headers: {
@@ -89,13 +89,11 @@ function ContentViewModal({
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
           },
-          body: `{
-            userId: ${review.userId},
-            contentId: ${review.contentId},
-            rating: ${review.rating},
-            comment: ${review.comment},
-            date: ${review.date}
-          }`,
+          body: JSON.stringify({
+            rating: review.rating,
+            comment: review.comment,
+            contentId: review.contentId,
+          }),
         }
       );
 
@@ -107,34 +105,34 @@ function ContentViewModal({
     }
   };
 
-  const handleAddReview = () => {
+  const handleAddReview = async () => {
     const reviewToAdd: Review = {
-      id: Date.now(),
       rating: newReview.rating,
       comment: newReview.comment,
       date: new Date().toLocaleDateString("hr-HR"),
       userId: newReview.userId,
-      contentId: content.contentId,
+      contentId: content.id,
     };
 
     // otkomentiraj za bazu
-    // addReviewToDatabase(reviewToAdd);
+    await addReviewToDatabase(reviewToAdd);
 
     // zakomentiraj za bazu
-    const existingReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-    localStorage.setItem(
-      "reviews",
-      JSON.stringify([reviewToAdd, ...existingReviews])
-    );
-    loadReviews();
+    // const existingReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+    // localStorage.setItem(
+    //   "reviews",
+    //   JSON.stringify([reviewToAdd, ...existingReviews])
+    // );
+    // loadReviews();
 
-    setNewReview({ userId: "user123", comment: "", rating: 5 });
+    // setNewReview({ userId: "user123", comment: "", rating: 5 });
+    await fetchReviews();
   };
 
-  const deleteContentFromDatabase = async (contentId: number) => {
+  const deleteContentFromDatabase = async (contentId: string) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        `https://localhost:7070/api/content/${contentId}`, //treba dodati ostatl linka
         {
           method: "DELETE",
           headers: {
@@ -160,23 +158,23 @@ function ContentViewModal({
     }
 
     // otkomentiraj za bazu
-    // deleteContentFromDatabase(content.contentId);
+    deleteContentFromDatabase(content.id || "");
 
     // Izbriši iz localStorage // zakomentiraj za bazu
-    const existingContent: ContentItem[] = JSON.parse(
-      localStorage.getItem("contentItems") || "[]"
-    );
-    const updatedContent = existingContent.filter(
-      (item: ContentItem) => item.contentId !== content.contentId
-    );
-    localStorage.setItem("contentItems", JSON.stringify(updatedContent));
+    // const existingContent: ContentItem[] = JSON.parse(
+    //   localStorage.getItem("contentItems") || "[]"
+    // );
+    // const updatedContent = existingContent.filter(
+    //   (item: ContentItem) => item.id !== content.id
+    // );
+    // localStorage.setItem("contentItems", JSON.stringify(updatedContent));
     onClose();
   };
 
-  const deleteReviewFromDatabase = async (reviewId: number) => {
+  const deleteReviewFromDatabase = async (reviewId: string) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        `https://localhost:7070/api/review/${reviewId}`, //treba dodati ostatl linka
         {
           method: "DELETE",
           headers: {
@@ -196,44 +194,39 @@ function ContentViewModal({
     }
   };
 
-  const handleDeleteReview = (reviewId: number) => {
+  const handleDeleteReview = async (reviewId: string) => {
 
     // otkomentiraj za bazu
-    // deleteReviewFromDatabase(reviewId);
+    await deleteReviewFromDatabase(reviewId);
 
     // zakomentiraj za bazu
-    const existingReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-    const updatedReviews = existingReviews.filter(
-      (review: Review) => review.id !== reviewId
-    );
-    localStorage.setItem("reviews", JSON.stringify(updatedReviews));
-    loadReviews();
+    // const existingReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+    // const updatedReviews = existingReviews.filter(
+    //   (review: Review) => review.id !== reviewId
+    // );
+    // localStorage.setItem("reviews", JSON.stringify(updatedReviews));
+    // loadReviews();
+
+    await fetchReviews();
   };
 
   const handleAddToCalendar = () => {
     setShowAddToCalendarForm(true);
   };
 
-  const addEventToDatabase = async (newEvent: Event) => {
+  const addEventToDatabase = async (newEvent: any) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        `https://localhost:7070/api/event`, //treba dodati ostatl linka
         {
           method: "POST",
           headers: {
-            Accept: "text/plain",
+            "Accept": "text/plain",
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
           },
-          body: `{
-              title: ${newEvent.title},
-              startTime: ${newEvent.start},
-              endTime: ${newEvent.end},
-              contentId: ${newEvent.contentId}
-              userId: ${newEvent.userId},
-              description: ${newEvent.description}
-            }`,
-        }
+          body: JSON.stringify(newEvent),
+        },
       );
 
       if (!response.ok) {
@@ -252,33 +245,31 @@ function ContentViewModal({
       allDay: false,
       description: "",
       title: content.title,
-      contentId: content.contentId,
+      contentId: content.id,
     });
   };
 
-  const handleSaveEvent = (e: React.FormEvent) => {
+  const handleSaveEvent = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
+    // const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
     const newEvent = {
-      id: String(Date.now()),
-      userId: "user123",
       title: content.title,
-      start: eventData.start,
-      end: eventData.end,
+      startTime: eventData.start,
+      endTime: eventData.end,
       allDay: eventData.allDay,
       description: eventData.description,
-      contentId: content.contentId,
+      contentId: content.id,
     };
 
     // otkomentiraj za bazu
-    // addEventToCalendarDatabase(newEvent);
+    await addEventToDatabase(newEvent);
 
     // zakomentiraj za bazu
-    localStorage.setItem(
-      "events",
-      JSON.stringify([...existingEvents, newEvent])
-    );
+    // localStorage.setItem(
+    //   "events",
+    //   JSON.stringify([...existingEvents, newEvent])
+    // );
 
     alert("Događaj uspješno dodan u kalendar!");
     handleCancelAddToCalendar();
@@ -399,7 +390,7 @@ function ContentViewModal({
                   <button
                     className="myButton editContentButtonModal"
                     onClick={() =>
-                      navigate(`/editcontent/${content.contentId}`)
+                      navigate(`/editcontent/${content.id}`)
                     }
                   >
                     Uredi
@@ -490,7 +481,7 @@ function ContentViewModal({
                   {allowEdit && (
                     <button
                       className="myButton deleteReviewButton"
-                      onClick={() => handleDeleteReview(review.id)}
+                      onClick={() => handleDeleteReview(review.id || "")}
                     >
                       Izbriši
                     </button>

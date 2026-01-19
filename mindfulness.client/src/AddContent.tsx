@@ -8,8 +8,12 @@ import "./AddContent.css";
 
 function AddContent() {
 
-  const [contentItems, setContentItems] = useState<any[]>([]);
+  // const [contentItems, setContentItems] = useState<any[]>([]);
+  const [user, setUser] = useState<any | null>(null);
   const userRole = localStorage.getItem("userRole");
+
+  const [categoryId, setCategoryId] = useState<string>("");
+  const [languageId, setLanguageId] = useState<string>("");
 
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState<ContentItem | null>(null);
@@ -26,20 +30,21 @@ function AddContent() {
   const [articleText, setArticleText] = useState("");
 
   useEffect(() => {
-    // fetchMyContent();
-    loadContent();
+    getUser();
+    fetchMyContent();
+    // loadContent();
   }, []);
 
   const loadContent = () => {
     let storedContent : ContentItem[] = JSON.parse(localStorage.getItem("contentItems") || "[]");
-    storedContent = storedContent.filter((item: ContentItem) => item.userId === "author1");
+    storedContent = storedContent.filter((item: ContentItem) => item.userId === user.userId);
     setMyContent(storedContent);
   }
     
   const fetchMyContent = async () => {
     try {
       const response = await fetch(
-        "https://localhost:7070/api/", // dodati ostatak
+        "https://localhost:7070/api/content", // dodati ostatak
         {
           method: "GET",
           headers: {
@@ -57,28 +62,106 @@ function AddContent() {
     }
   };
 
-  const addContentItemToDatabase = async (item: ContentItem) => {
+  const getUser = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        `https://localhost:7070/api/userprofile/getprofile`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
-            "Accept": "text/plain",
+            "accept": "text/plain",
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
           },
-          body: `{
-            title: ${item.title},
-            description: ${item.description},
-            contentType: ${item.contentType},
-            userId: ${item.userId},
-            contentCategory: ${item.contentCategory},
-            duration: ${item.duration},
-            contentLink: ${item.contentLink},
-            thumbnailLink: ${item.thumbnailLink}
-          }`,
         }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      const userData = await response.json();
+      setUser(userData);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const getCategoryIdByName = async (contentCategory: string) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/ContentCategory/${contentCategory}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "text/plain",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      const categoryData = await response.json();
+      console.log("m " + categoryData.id);
+      setCategoryId(categoryData.id);
+      console.log("m " + categoryId);
+    } catch (error) {
+      console.error("Error fetching category ID:", error);
+    }
+  };
+
+  const getAudioLanguageIdByName = async (language: string) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/AudioLanguage/${language}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "text/plain",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      const languageData = await response.json();
+      setLanguageId(languageData.id);
+    } catch (error) {
+      console.error("Error fetching audio language ID:", error);
+    }
+  };
+
+  const addContentItemToDatabase = async (item: ContentItem) => {
+    try {  
+      const response = await fetch(
+        `https://localhost:7070/api/content`, //treba dodati ostatl linka
+        {
+          method: "POST",
+          headers: {
+            Accept: "text/plain",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+          body: JSON.stringify({
+            title: item.title,
+            description: item.description,
+            difficulty: "easy",
+            duration: item.duration,
+            contentType: item.contentType,
+            contentLink: item.contentLink,
+            thumbnailLink: item.thumbnailLink,
+            categoryId: item.categoryId,
+            audioLanguageId: item.audioLanguageId,
+          }),
+        },
       );
 
       if (!response.ok) {
@@ -92,28 +175,33 @@ function AddContent() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    await getCategoryIdByName(category || "mindfulness");
+    await getAudioLanguageIdByName("eng");
+
     const newContentItem: ContentItem = {
-      contentId: Date.now(),
       title,
       description: contentType === "article" ? articleText : description,
       contentType: contentType as "video" | "article",
       userId: "author1",
-      contentCategory: category,
-      duration: contentType === "video" ? duration : "",
+      categoryId: categoryId,
+      audioLanguageId: languageId,
+      duration: contentType === "video" ? duration : "0",
       contentLink: contentType === "video" ? videoLink : undefined,
       thumbnailLink: thumbnailLink || undefined,
     };
 
+    console.log("t " + newContentItem.categoryId);
+
     // otkomentiraj za bazu
-    // addContentItemToDatabase(newContentItem);
+    addContentItemToDatabase(newContentItem);
 
     // trenutno se spremaju u localStorage, posli na backend
-    setMyContent([...myContent, newContentItem]);
-    const storedContent = JSON.parse(localStorage.getItem("contentItems") || "[]");
-    localStorage.setItem("contentItems", JSON.stringify([...storedContent, newContentItem]));
+    // setMyContent([...myContent, newContentItem]);
+    // const storedContent = JSON.parse(localStorage.getItem("contentItems") || "[]");
+    // localStorage.setItem("contentItems", JSON.stringify([...storedContent, newContentItem]));
 
     setShowForm(false);
     setTitle("");
@@ -158,7 +246,7 @@ function AddContent() {
                 <div className="addContentList">
                     {myContent.map((content: ContentItem) => (
                       <ContentCard
-                          key={content.contentId}
+                          key={content.id}
                           content={content}
                           onClick={() => {
                             setContent(content);

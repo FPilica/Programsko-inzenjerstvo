@@ -12,6 +12,8 @@ function Content() {
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState<ContentItem | null>(null);
   const [contentItems, setContentItems] = useState<ContentItem[] | null>(null);
+  const [categoryId, setCategoryId] = useState<string | null>(null);
+  const [languageId, setLanguageId] = useState<string | null>(null);
   const videosRef = useRef<HTMLDivElement | null>(null);
   const articlesRef = useRef<HTMLDivElement | null>(null);
   const userRole = localStorage.getItem("userRole");
@@ -50,6 +52,7 @@ function Content() {
       }
 
       const contentItemsData = await response.json();
+      console.log("Fetched content items:", contentItemsData);
       setContentItems(contentItemsData);
     } catch (error) {
       console.error("Error fetching content items:", error);
@@ -75,7 +78,7 @@ function Content() {
       }
 
       const categoryData = await response.json();
-      return categoryData.contentCategoryId;
+      setCategoryId(categoryData.id);
     } catch (error) {
       console.error("Error fetching category ID:", error);
     }
@@ -100,7 +103,7 @@ function Content() {
       }
 
       const languageData = await response.json();
-      return languageData.audioLanguageId;
+      setLanguageId(languageData.id);
     } catch (error) {
       console.error("Error fetching audio language ID:", error);
     }
@@ -110,7 +113,7 @@ function Content() {
   const addContentItemToDatabase = async (item: ContentItem) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        `https://localhost:7070/api/content`, //treba dodati ostatl linka
         {
           method: "POST",
           headers: {
@@ -118,8 +121,18 @@ function Content() {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
           },
-          body: JSON.stringify(item),
-        }
+          body: JSON.stringify({
+            title: item.title,
+            description: item.description,
+            difficulty: "easy",
+            duration: item.duration ?? "0",
+            contentType: item.contentType,
+            contentLink: item.contentLink,
+            thumbnailLink: item.thumbnailLink,
+            categoryId: categoryId ?? "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            audioLanguageId: languageId ?? "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          }),
+        },
       );
 
       if (!response.ok) {
@@ -138,97 +151,100 @@ function Content() {
       title: "React Player Tutorial - Learn from Basics",
       contentLink: "https://www.youtube.com/watch?v=tVBZq2fq-WA&t=23s",
       thumbnailLink: "https://img.youtube.com/vi/tVBZq2fq-WA/maxresdefault.jpg",
-      categoryId: "mindfulness",
+      categoryId: categoryId ?? undefined,
       description: "A comprehensive tutorial on React Player library.",
       duration: "15",
-      audioLanguageId: "eng"
+      audioLanguageId: languageId ?? undefined
     },
     {
       contentType: "video" as const,
       title: "Top 5 Techniques for Web Animation",
       contentLink: "https://www.youtube.com/watch?v=9eHEOAn2FOA",
       thumbnailLink: "https://img.youtube.com/vi/9eHEOAn2FOA/maxresdefault.jpg",
-      categoryId: "mindfulness",
+      categoryId: categoryId ?? undefined,
       description: "Learn the top 5 techniques for creating stunning web animations.",
       duration: "10",
-      audioLanguageId: "eng"
+      audioLanguageId: languageId ?? undefined
     },
     {
       contentType: "video" as const,
       title: "Mindfulness Meditation for Beginners",
       contentLink: "https://www.youtube.com/watch?v=2OEL4P1Rz04",
       thumbnailLink: "https://img.youtube.com/vi/2OEL4P1Rz04/maxresdefault.jpg",
-      categoryId: "mindfulness",
+      categoryId: categoryId ?? undefined,
       description: "A guided mindfulness meditation session for beginners.",
       duration: "20",
-      audioLanguageId: "eng"
+      audioLanguageId: languageId ?? undefined
     },
     {
       contentType: "video" as const,
       title: "10 Minute Morning Yoga Flow",
       contentLink: "https://www.youtube.com/watch?v=VaoV1PrYft4",
       thumbnailLink: "https://img.youtube.com/vi/VaoV1PrYft4/maxresdefault.jpg",
-      categoryId: "mindfulness",
+      categoryId: categoryId ?? undefined,
       description: "Start your day with this energizing 10 minute yoga flow.",
       duration: "10",
-      audioLanguageId: "eng"
+      audioLanguageId: languageId ?? undefined
     },
     {
       contentType: "video" as const,
       title: "Breathing Exercises for Stress Relief",
       contentLink: "https://www.youtube.com/watch?v=tybOi4hjZFQ",
       thumbnailLink: "https://img.youtube.com/vi/tybOi4hjZFQ/maxresdefault.jpg",
-      categoryId: "mindfulness",
+      categoryId: categoryId ?? undefined,
       description: "Learn effective breathing exercises to help relieve stress.",
       duration: "8",
-      audioLanguageId: "eng"
+      audioLanguageId: languageId ?? undefined
     },
     {
       contentType: "video" as const,
       title: "Deep Sleep Meditation - Guided Relaxation",
       contentLink: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
       thumbnailLink: "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg",
-      categoryId: "mindfulness",
+      categoryId: categoryId ?? undefined,
       description: "A guided meditation to help you achieve deep, restful sleep.",
       duration: "30",
-      audioLanguageId: "eng"
+      audioLanguageId: languageId ?? undefined
     },
     {
       contentType: "article" as const,
       title: "The Science Behind Mindfulness",
       description: "Discover how mindfulness meditation affects your brain...",
-      categoryId: "mindfulness",
-      audioLanguageId: "eng"
+      categoryId: categoryId ?? undefined,
+      audioLanguageId: languageId ?? undefined
     },
     {
       contentType: "article" as const,
       title: "10 Tips for Better Sleep Quality",
       description: "Learn practical techniques to improve your sleep tonight...",
       thumbnailLink: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
-      categoryId: "mindfulness",
-      audioLanguageId: "eng"
+      categoryId: categoryId ?? undefined,
+      audioLanguageId: languageId ?? undefined
     },
   ];
 
   useEffect(() => {
-
+    console.log("effect");
     // aktivirati kad se spoji sa bazom
-    // getContentItems();
-    // if (contentItems === null || contentItems.length === 0) {
-    //   setContentItems(sampleContent);
-    //   sampleContent.forEach(item => {
-    //     addContentItemToDatabase(item);
-    //   });
-    // }
+    getContentItems();
+    getCategoryIdByName("mindfulness");
+    getAudioLanguageIdByName("eng");
+    if (contentItems === null || contentItems.length === 0) {
+      // setContentItems(sampleContent);
+      console.log("adding content to database");
+      for (const item of sampleContent) {
+        addContentItemToDatabase(item);
+      }
+    }
     
     // maknuti kad se spoji sa bazom
-    const contentFromStorage = localStorage.getItem("contentItems");
-    if (contentFromStorage) {
-      setContentItems(JSON.parse(contentFromStorage));
-    } else {
-      setContentItems(sampleContent);
-      localStorage.setItem("contentItems", JSON.stringify(sampleContent));
-    }
+    // const contentFromStorage = localStorage.getItem("contentItems");
+    // if (contentFromStorage) {
+    //   setContentItems(JSON.parse(contentFromStorage));
+    // } else {
+    //   setContentItems(sampleContent);
+    //   localStorage.setItem("contentItems", JSON.stringify(sampleContent));
+    // }
   }, []);
 
 
@@ -252,7 +268,7 @@ function Content() {
             <div className="contentList" ref={videosRef}>
               {videos?.map((item : ContentItem) => (
                 <ContentCard
-                  key={item.contentId} 
+                  key={item.id} 
                   content={item}
                   onClick={() => {
                     setContent(item);
@@ -275,7 +291,7 @@ function Content() {
             <div className="contentList" ref={articlesRef}>
               {articles?.map((item : ContentItem) => (
                 <ContentCard
-                  key={item.contentId} 
+                  key={item.id} 
                   content={item}
                   onClick={() => {
                     setContent(item);
@@ -294,7 +310,7 @@ function Content() {
               <div className="contentGrid">
                 {contentItems?.map((item: ContentItem) => (
                   <ContentCard
-                    key={item.contentId} 
+                    key={item.id} 
                     content={item}
                     onClick={() => {
                       setContent(item);

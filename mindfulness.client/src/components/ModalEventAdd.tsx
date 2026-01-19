@@ -32,10 +32,10 @@ function ModalEventAdd({
   const [description, setDescription] = useState("");
 
   // koristit ce se za dodavanje na backend
-  const addEventToDatabase = async (newEvent: Event) => {
+  const addEventToDatabase = async (newEvent: any) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/`, //treba dodati ostatl linka
+        `https://localhost:7070/api/event`, //treba dodati ostatl linka
         {
           method: "POST",
           headers: {
@@ -43,46 +43,35 @@ function ModalEventAdd({
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
           },
-          body: `{
-            title: ${newEvent.title},
-            startTime: ${newEvent.start},
-            endTime: ${newEvent.end},
-            contentId: ""
-            userId: ${newEvent.userId},
-            description: ${newEvent.description}
-          }`,
-        }
+          body: JSON.stringify(newEvent),
+        },
       );
 
       if (!response.ok) {
         throw new Error("Something went wrong!");
       }
-
     } catch (error) {
       console.error("Error adding event:", error);
     }
-  }
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
-    const newEvent : Event = {
-      id: String(Date.now()),
-      userId: "user123", // treba promijeniti posli
+    // const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
+    const newEvent = { // treba promijeniti posli
       title: title,
-      start: start,
-      end: end,
+      startTime: start,
+      endTime: end,
       allDay: allDay,
       description: description,
-      contentId: contentId || undefined,
     };
 
     // trenutno se spremaju u localStorage, posli na backend
-    localStorage.setItem("events", JSON.stringify([...existingEvents, newEvent]));
+    // localStorage.setItem("events", JSON.stringify([...existingEvents, newEvent]));
 
     // za backend dodavanje, otkomentirat
-    // addEventToDatabase(newEvent);
+    await addEventToDatabase(newEvent);
     addEvent();
   };
 

@@ -15,7 +15,7 @@ function ContentCard({content, onClick, allowEdit} : ContentCardProps) {
     return (
         <div className="contentCard" onClick={onClick}>
             {allowEdit &&
-                <button className="editContentButton" onClick={(e) => { e.stopPropagation(); navigate(`/editcontent/${content.contentId}`); }}><PencilIcon size={20} /></button>
+                <button className="editContentButton" onClick={(e) => { e.stopPropagation(); navigate(`/editcontent/${content.id}`); }}><PencilIcon size={20} /></button>
             }
             <div className="cardThumbnail">
                 {(content.contentType === "video" || (content.contentType === "article" && content.thumbnailLink)) &&
