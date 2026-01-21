@@ -2,6 +2,7 @@ import { PencilIcon } from "@phosphor-icons/react/dist/icons/Pencil";
 import { useNavigate } from "react-router-dom";
 import type {ContentItem} from "../types/ContentItem";
 import "./ContentCard.css";
+import { use, useEffect, useState } from "react";
 
 interface ContentCardProps {
     content: ContentItem;
@@ -11,6 +12,20 @@ interface ContentCardProps {
 
 function ContentCard({content, onClick, allowEdit} : ContentCardProps) {
     const navigate = useNavigate();
+    const [categoryName, setCategoryName] = useState<string>("");
+
+    useEffect(() => {
+        const getCategoryName = (categoryId: string) => {
+            if (!categoryId) return;
+            console.log("Fetching category name for ID:", content.categoryId);
+            const categories = JSON.parse(sessionStorage.getItem("categories") || "[]");
+            const category = categories.find((cat: any) => cat.id === categoryId);
+            setCategoryName(category ? category.name : "");
+            console.log("Category name set to:", category ? category.name : "");
+        }
+        
+        getCategoryName(content.categoryId || "");
+    }, [content.categoryId]);
 
     return (
         <div className="contentCard" onClick={onClick}>
@@ -29,11 +44,11 @@ function ContentCard({content, onClick, allowEdit} : ContentCardProps) {
                 )}
                 <div className="cardFooter">
                     <span className="contentType">{content.contentType === "article" ? "članak" : content.contentType}</span>
-                    {content.contentType === "video" && (
-                        <span className="contentDuration">{content.duration} min</span>
+                    {content.contentType === "video" && content.duration && (
+                        <span className="contentDuration">{content.duration.split(':')[0].split('.')[0]} min</span>
                     )
                     }
-                    <span className="contentCategory">{content.contentCategory}</span>
+                    <span className="contentCategory">{categoryName}</span>
                 </div>
             </div>
         </div>

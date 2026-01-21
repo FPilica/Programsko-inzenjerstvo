@@ -44,7 +44,7 @@ function AddContent() {
   const fetchMyContent = async () => {
     try {
       const response = await fetch(
-        "https://localhost:7070/api/content", // dodati ostatak
+        "https://localhost:7070/api/content", 
         {
           method: "GET",
           headers: {
@@ -142,13 +142,13 @@ function AddContent() {
   const addContentItemToDatabase = async (item: ContentItem) => {
     try {  
       const response = await fetch(
-        `https://localhost:7070/api/content`, //treba dodati ostatl linka
+        `https://localhost:7070/api/content`, 
         {
           method: "POST",
           headers: {
-            Accept: "text/plain",
+            "Accept": "text/plain",
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
           },
           body: JSON.stringify({
             title: item.title,
@@ -185,7 +185,6 @@ function AddContent() {
       title,
       description: contentType === "article" ? articleText : description,
       contentType: contentType as "video" | "article",
-      userId: "author1",
       categoryId: categoryId,
       audioLanguageId: languageId,
       duration: contentType === "video" ? duration : "0",
@@ -214,10 +213,10 @@ function AddContent() {
     setArticleText("");
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     setIsOpen(false);
     setContent(null);
-    loadContent();
+    await fetchMyContent();
   };
 
   return (
@@ -334,20 +333,16 @@ function AddContent() {
                           type="url"
                           placeholder="https://www.youtube.com/watch?v=..."
                           value={videoLink}
-                          onChange={(e) => {setVideoLink(e.target.value); setThumbnailLink(`https://img.youtube.com/vi/${e.target.value.split("v=")[1]}/maxresdefault.jpg`);}}
+                          onChange={(e) => {
+                            setVideoLink(e.target.value); 
+                            const videoId = e.target.value.split("v=")[1]?.split("&")[0];
+                            if (videoId) {
+                              setThumbnailLink(`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`);
+                            }
+                          }}
                           required
                         />
                     </div>
-
-                    {/* <div className="formGroup">
-                      <label>Thumbnail link (opcionalno):</label>
-                      <input 
-                        type="url" 
-                        placeholder="https://..."
-                        value={thumbnailLink}
-                        onChange={(e) => setThumbnailLink(e.target.value)}
-                      />
-                    </div> */}
                   </>
                 )}
 

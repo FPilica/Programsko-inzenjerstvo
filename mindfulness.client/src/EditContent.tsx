@@ -50,12 +50,14 @@ function EditContent() {
         (item: ContentItem) => item.id === id,
       );
 
+      const category = JSON.parse(sessionStorage.getItem("categories") || "[]").find((cat: any) => cat.id === contentToEdit.categoryId);
+
       if (contentToEdit) {
         setContentType(contentToEdit.contentType);
         setTitle(contentToEdit.title);
         setDescription(contentToEdit.description);
-        setCategory(contentToEdit.categoryId || "");
-        setDuration(contentToEdit.duration?.toString() || "0");
+        setCategory(category ? category.name : "");
+        setDuration(contentToEdit.duration?.split(':')[0].split('.')[0] || "0");
         setVideoLink(contentToEdit.contentLink || "");
         setThumbnailLink(contentToEdit.thumbnailLink || "");
         setArticleText(contentToEdit.description || "");
@@ -95,28 +97,19 @@ function EditContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const categoryId = JSON.parse(sessionStorage.getItem("categories") || "[]").find((cat: any) => cat.name === category)?.id || "";
+
     const updatedContent: ContentItem = {
       title,
       description: contentType === "article" ? articleText : description,
       contentType: contentType as "video" | "article",
-      contentCategory: category,
+      categoryId: categoryId,
       duration: contentType === "video" ? duration : "0",
       contentLink: contentType === "video" ? videoLink : undefined,
       thumbnailLink: thumbnailLink || undefined,
     };
 
     await editContent(updatedContent);
-
-    // Ažuriraj u localStorage
-    // const storedContent = JSON.parse(
-    //   localStorage.getItem("contentItems") || "[]"
-    // );
-    // const updatedList = storedContent.map((item: ContentItem) =>
-    //   item.id === id ? updatedContent : item
-    // );
-    // localStorage.setItem("contentItems", JSON.stringify(updatedList));
-
-    // Vrati se nazad
     navigate(-1);
   };
 
@@ -129,7 +122,7 @@ function EditContent() {
       
       try {
         const response = await fetch(
-          `https://localhost:7070/api/content/${id}`, //treba dodati ostatl linka
+          `https://localhost:7070/api/content/${id}`,
           {
             method: "DELETE",
             headers: {
@@ -148,18 +141,7 @@ function EditContent() {
       } catch (error) {
         console.error("Error deleting content:", error);
       }
-        
-    // Izbriši iz localStorage
-    // const storedContent = JSON.parse(
-    //   localStorage.getItem("contentItems") || "[]"
-    // );
-    // const updatedList = storedContent.filter(
-    //   (item: ContentItem) => item.id !== id
-    // );
 
-    // localStorage.setItem("contentItems", JSON.stringify(updatedList));
-
-    // Vrati se nazad
     navigate(-1);
   };
 

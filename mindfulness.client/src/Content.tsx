@@ -223,28 +223,24 @@ function Content() {
     },
   ];
 
-  useEffect(() => {
-    console.log("effect");
-    // aktivirati kad se spoji sa bazom
-    getContentItems();
-    getCategoryIdByName("mindfulness");
-    getAudioLanguageIdByName("eng");
+  const loadContent = async () => {
+    await getContentItems();
+    // await getCategoryIdByName("mindfulness");
+    setCategoryId(JSON.parse(sessionStorage.getItem("categories") || "[]").find((cat: any) => cat.name === "mindfulness").id || null);
+    await getAudioLanguageIdByName("eng");
     if (contentItems === null || contentItems.length === 0) {
       // setContentItems(sampleContent);
       console.log("adding content to database");
       for (const item of sampleContent) {
-        addContentItemToDatabase(item);
+        await addContentItemToDatabase(item);
       }
     }
-    
-    // maknuti kad se spoji sa bazom
-    // const contentFromStorage = localStorage.getItem("contentItems");
-    // if (contentFromStorage) {
-    //   setContentItems(JSON.parse(contentFromStorage));
-    // } else {
-    //   setContentItems(sampleContent);
-    //   localStorage.setItem("contentItems", JSON.stringify(sampleContent));
-    // }
+    await getContentItems();
+  };
+
+  useEffect(() => {
+    console.log("effect");
+    loadContent();
   }, []);
 
 

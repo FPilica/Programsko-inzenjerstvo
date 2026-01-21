@@ -63,17 +63,7 @@ function ContentViewModal({
     }
   };
 
-  // dok nema baze
-  const loadReviews = () => {
-    const oldReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-    const contentReviews = oldReviews.filter(
-      (element: Review) => element.contentId === content.id
-    );
-    setReviews(contentReviews);
-  };
-
   const [newReview, setNewReview] = useState({
-    userId: "user123",
     rating: 5,
     comment: "",
   });
@@ -109,13 +99,12 @@ function ContentViewModal({
     const reviewToAdd: Review = {
       rating: newReview.rating,
       comment: newReview.comment,
-      date: new Date().toLocaleDateString("hr-HR"),
-      userId: newReview.userId,
       contentId: content.id,
     };
 
     // otkomentiraj za bazu
     await addReviewToDatabase(reviewToAdd);
+    setNewReview({ rating: 5, comment: "" });
 
     // zakomentiraj za bazu
     // const existingReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
@@ -195,18 +184,8 @@ function ContentViewModal({
   };
 
   const handleDeleteReview = async (reviewId: string) => {
-
     // otkomentiraj za bazu
     await deleteReviewFromDatabase(reviewId);
-
-    // zakomentiraj za bazu
-    // const existingReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-    // const updatedReviews = existingReviews.filter(
-    //   (review: Review) => review.id !== reviewId
-    // );
-    // localStorage.setItem("reviews", JSON.stringify(updatedReviews));
-    // loadReviews();
-
     await fetchReviews();
   };
 
@@ -264,13 +243,6 @@ function ContentViewModal({
 
     // otkomentiraj za bazu
     await addEventToDatabase(newEvent);
-
-    // zakomentiraj za bazu
-    // localStorage.setItem(
-    //   "events",
-    //   JSON.stringify([...existingEvents, newEvent])
-    // );
-
     alert("Događaj uspješno dodan u kalendar!");
     handleCancelAddToCalendar();
   };

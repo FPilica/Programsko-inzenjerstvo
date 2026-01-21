@@ -38,8 +38,28 @@ function Dashboard() {
     }
   };
 
+  const getCategories = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/contentcategory`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        },
+      );
+      const categories = await response.json();
+      sessionStorage.setItem("categories", JSON.stringify(categories));
+    } catch (error) {
+      console.error("Error fetching category name:", error);
+    }
+  };
+
   useEffect(() => {
     getUser();
+    getCategories();
     if (!userRole) {
       localStorage.setItem("userRole", "coach"); // (user, coach, admin) postavi ulogu za koju zelis da bude dok ne spojimo sa backendom
     }
