@@ -15,4 +15,10 @@ public class UserUpdateDto
     public DateTimeOffset? DateOfBirth { get; set; }
     
     public string? Email { get; set; }
+        
+    public DateTimeOffset? lastCheckin { get; set; }
+
+    public DateTimeOffset? lastFocus { get; set; }
+
+    public int Streak { get; set; } 
 }
