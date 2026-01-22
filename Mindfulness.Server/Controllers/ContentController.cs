@@ -49,7 +49,7 @@ public class ContentController : ControllerBase
         
         var userGuid = Guid.Parse(userId);
 
-        /*if (!await _context.ContentCategories.AnyAsync(cc => cc.Id == dto.CategoryId))
+        if (!await _context.ContentCategories.AnyAsync(cc => cc.Id == dto.CategoryId))
         {
             return BadRequest("Invalid category id");
         }
@@ -57,7 +57,7 @@ public class ContentController : ControllerBase
         if (dto.AudioLanguageId is not null && !await _context.AudioLanguages.AnyAsync(al => al.Id == dto.AudioLanguageId))
         {
             return BadRequest("Invalid audio language id");
-        }*/
+        }
 
         var content = _mapper.Map<Models.Content>(dto);
         content.Id = Guid.NewGuid();
@@ -89,12 +89,12 @@ public class ContentController : ControllerBase
             return NotFound();
         }
 
-        if (content.UserId != userGuid || !User.IsInRole("Admin"))
+        if (content.UserId != userGuid && !User.IsInRole("Admin"))
         {
             return Unauthorized();
         }
         
-        /*if (dto.CategoryId is not null && !await _context.ContentCategories.AnyAsync(cc => cc.Id == dto.CategoryId))
+        if (dto.CategoryId is not null && !await _context.ContentCategories.AnyAsync(cc => cc.Id == dto.CategoryId))
         {
             return BadRequest("Invalid category id");
         }
@@ -102,7 +102,7 @@ public class ContentController : ControllerBase
         if (dto.AudioLanguageId is not null && !await _context.AudioLanguages.AnyAsync(al => al.Id == dto.AudioLanguageId))
         {
             return BadRequest("Invalid audio language id");
-        }*/
+        }
         
         content.Title = dto.Title ?? content.Title;
         content.Description = dto.Description ?? content.Description;

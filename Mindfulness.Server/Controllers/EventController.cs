@@ -116,7 +116,7 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
 
         if (@event != null)
         {
-            if (@event.UserId != userGuid || !User.IsInRole("Admin"))
+            if (@event.UserId != userGuid && !User.IsInRole("Admin"))
             {
                 return Unauthorized();
             }

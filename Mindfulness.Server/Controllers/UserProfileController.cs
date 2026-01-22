@@ -114,7 +114,7 @@ public class UserProfileController : ControllerBase
             return NotFound("User not found");
         }
 
-        if (!User.IsInRole("Admin") || user.Id != id)
+        if (!User.IsInRole("Admin") && user.Id != id)
         {
             return Unauthorized();
         }
