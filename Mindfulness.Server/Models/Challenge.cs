@@ -20,9 +20,4 @@ public class Challenge
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
     
     public List<User> Users { get; set; } = [];
-    
-    public Guid UserId { get; set; }
-    
-    public required User User { get; set; }
-
 }
