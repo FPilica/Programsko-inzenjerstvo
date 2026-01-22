@@ -48,6 +48,14 @@ function Profile() {
     }
   };
 
+  const handleLogout = () => {
+    if (window.confirm("Jeste li sigurni da se želite odjaviti?")) {
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("userRole");
+      navigate("/auth/login");
+    }
+  };
+
   return (
     <>
       <div className="background">
@@ -72,6 +80,9 @@ function Profile() {
               </button>
               <button className="myButton onboardingRezButton" onClick={() => navigate("/profile/onboardingrez")}>
                 Rezultati ankete
+              </button>
+              <button className="myButton logoutButton" onClick={handleLogout}>
+                Odjavi se
               </button>
             </div>
           </div>

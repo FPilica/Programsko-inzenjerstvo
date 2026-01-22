@@ -21,6 +21,7 @@ function ContentViewModal({
 }: ContentViewProps) {
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [userReview, setUserReview] = useState<Review | null>(null);
   const [isEditingReview, setIsEditingReview] = useState(false);
   const [showAddToCalendarForm, setShowAddToCalendarForm] = useState(false);
@@ -93,22 +94,44 @@ function ContentViewModal({
   // kad bude baza
   const fetchReviews = async () => {
     try {
-      const response = await fetch(
-        `https://localhost:7070/api/review/by-content-id/${content.id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
-          },
-        }
-      );
+      const [reviewsResponse, usersResponse] = await Promise.all([
+        fetch(
+          `https://localhost:7070/api/review/by-content-id/${content.id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+            },
+          }
+        ),
+        fetch(
+          `https://localhost:7070/api/UserProfile/getallusers`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+            },
+          }
+        ),
+      ]);
 
-      if (!response.ok) {
+      if (!reviewsResponse.ok) {
+        console.error("Error fetching reviews");
+      }
+
+      if (!usersResponse.ok) {
+        console.error("Error fetching users");
       }
       
-      const data = await response.json();
-      setReviews(data);
+      const reviewsData = await reviewsResponse.json();
+      const usersData = await usersResponse.json();
+      
+      setReviews(reviewsData);
+      setUsers(usersData);
+      // Možete pohraniti usersData ako vam treba
+      console.log("Users data:", usersData);
 
     } catch (error) {
       console.error("Error fetching reviews:", error);
@@ -573,7 +596,7 @@ function ContentViewModal({
               {reviews.map((review) => (
                 <div key={review.id} className="review-item">
                   <div className="review-header-item">
-                    <span className="review-author">{review.userId}</span>
+                    <span className="review-author">{users.find((user) => user.id === review.userId)?.firstName || "Nepoznat korisnik"}</span>
                     <span className="review-date">{review.date}</span>
                   </div>
                   <div className="review-rating">

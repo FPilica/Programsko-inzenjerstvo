@@ -17,6 +17,12 @@ function Content() {
   const videosRef = useRef<HTMLDivElement | null>(null);
   const articlesRef = useRef<HTMLDivElement | null>(null);
   const userRole = localStorage.getItem("userRole");
+  
+  // Search state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedType, setSelectedType] = useState<"all" | "video" | "article">("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [categories, setCategories] = useState<any[]>([]);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -32,11 +38,10 @@ function Content() {
     }
   };
 
-  // napravljeno za spajanje sa bazom, ali jos nije spojeno
   const getContentItems = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/content`, //treba dodati ostatl linka
+        `https://localhost:7070/api/content`, 
         {
           method: "GET",
           headers: {
@@ -58,56 +63,6 @@ function Content() {
       console.error("Error fetching content items:", error);
     }
   }
-
-  const getCategoryIdByName = async (contentCategory: string) => {
-    try {
-      const response = await fetch(
-        `https://localhost:7070/api/ContentCategory/${contentCategory}`,
-        {
-          method: "GET",
-          headers: {
-            "Accept": "text/plain",
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Something went wrong!");
-      }
-
-      const categoryData = await response.json();
-      setCategoryId(categoryData.id);
-    } catch (error) {
-      console.error("Error fetching category ID:", error);
-    }
-  };
-
-  const getAudioLanguageIdByName = async (language: string) => {
-    try {
-      const response = await fetch(
-        `https://localhost:7070/api/AudioLanguage/${language}`,
-        {
-          method: "GET",
-          headers: {
-            "Accept": "text/plain",
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Something went wrong!");
-      }
-
-      const languageData = await response.json();
-      setLanguageId(languageData.id);
-    } catch (error) {
-      console.error("Error fetching audio language ID:", error);
-    }
-  };
 
   // ovo nece ici u zavrsnu verziju, samo je za ubacivanje ovih pocetnih videa i clanaka u bazu
   const addContentItemToDatabase = async (item: ContentItem) => {
@@ -146,181 +101,143 @@ function Content() {
   };
 
   
-  const loadContent = async () => {
-    await getContentItems();
-    // await getCategoryIdByName("mindfulness");
-    const catId = JSON.parse(sessionStorage.getItem("categories") || "[]").find((cat: any) => cat.name === "mindfulness")?.id;
-    if (catId) {
-      setCategoryId(catId);
-    }
-    await getAudioLanguageIdByName("eng");
-    if (contentItems === null || contentItems.length === 0) {
-
-      const sampleContent: ContentItem[] = [
-        {
-          contentType: "video" as const,
-          title: "React Player Tutorial - Learn from Basics",
-          contentLink: "https://www.youtube.com/watch?v=tVBZq2fq-WA&t=23s",
-          thumbnailLink:
-            "https://img.youtube.com/vi/tVBZq2fq-WA/maxresdefault.jpg",
-          categoryId: categoryId ?? undefined,
-          description: "A comprehensive tutorial on React Player library.",
-          duration: "15",
-          audioLanguageId: languageId ?? undefined,
-        },
-        {
-          contentType: "video" as const,
-          title: "Top 5 Techniques for Web Animation",
-          contentLink: "https://www.youtube.com/watch?v=9eHEOAn2FOA",
-          thumbnailLink:
-            "https://img.youtube.com/vi/9eHEOAn2FOA/maxresdefault.jpg",
-          categoryId: categoryId ?? undefined,
-          description:
-            "Learn the top 5 techniques for creating stunning web animations.",
-          duration: "10",
-          audioLanguageId: languageId ?? undefined,
-        },
-        {
-          contentType: "video" as const,
-          title: "Mindfulness Meditation for Beginners",
-          contentLink: "https://www.youtube.com/watch?v=2OEL4P1Rz04",
-          thumbnailLink:
-            "https://img.youtube.com/vi/2OEL4P1Rz04/maxresdefault.jpg",
-          categoryId: categoryId ?? undefined,
-          description: "A guided mindfulness meditation session for beginners.",
-          duration: "20",
-          audioLanguageId: languageId ?? undefined,
-        },
-        {
-          contentType: "video" as const,
-          title: "10 Minute Morning Yoga Flow",
-          contentLink: "https://www.youtube.com/watch?v=VaoV1PrYft4",
-          thumbnailLink:
-            "https://img.youtube.com/vi/VaoV1PrYft4/maxresdefault.jpg",
-          categoryId: categoryId ?? undefined,
-          description:
-            "Start your day with this energizing 10 minute yoga flow.",
-          duration: "10",
-          audioLanguageId: languageId ?? undefined,
-        },
-        {
-          contentType: "video" as const,
-          title: "Breathing Exercises for Stress Relief",
-          contentLink: "https://www.youtube.com/watch?v=tybOi4hjZFQ",
-          thumbnailLink:
-            "https://img.youtube.com/vi/tybOi4hjZFQ/maxresdefault.jpg",
-          categoryId: categoryId ?? undefined,
-          description:
-            "Learn effective breathing exercises to help relieve stress.",
-          duration: "8",
-          audioLanguageId: languageId ?? undefined,
-        },
-        {
-          contentType: "video" as const,
-          title: "Deep Sleep Meditation - Guided Relaxation",
-          contentLink: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
-          thumbnailLink:
-            "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg",
-          categoryId: categoryId ?? undefined,
-          description:
-            "A guided meditation to help you achieve deep, restful sleep.",
-          duration: "30",
-          audioLanguageId: languageId ?? undefined,
-        },
-        {
-          contentType: "article" as const,
-          title: "The Science Behind Mindfulness",
-          description:
-            "Discover how mindfulness meditation affects your brain...",
-          categoryId: categoryId ?? undefined,
-          audioLanguageId: languageId ?? undefined,
-        },
-        {
-          contentType: "article" as const,
-          title: "10 Tips for Better Sleep Quality",
-          description:
-            "Learn practical techniques to improve your sleep tonight...",
-          thumbnailLink:
-            "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
-          categoryId: categoryId ?? undefined,
-          audioLanguageId: languageId ?? undefined,
-        },
-      ];
-
-      console.log("adding content to database");
-      for (const item of sampleContent) {
-        await addContentItemToDatabase(item);
-      }
-    }
-    await getContentItems();
-  };
-  
   useEffect(() => {
-    console.log("effect");
-    loadContent();
+    // console.log("effect");
+    // loadContent();
+    getContentItems();
+    fetchCategories();
   }, []);
 
-  const videos = contentItems?.filter((item: ContentItem) => item.contentType === "video");
-  const articles = contentItems?.filter((item: ContentItem) => item.contentType === "article");
+  const fetchCategories = async () => {
+    try {
+      const stored = sessionStorage.getItem("categories");
+      if (stored) {
+        setCategories(JSON.parse(stored));
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  // Filter function
+  const filterContent = (items: ContentItem[] | null) => {
+    if (!items) return [];
+    
+    return items.filter(item => {
+      const matchesSearch = item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ?? true;
+      const matchesType = selectedType === "all" || item.contentType === selectedType;
+      const matchesCategory = selectedCategory === "all" || item.categoryId === selectedCategory;
+      
+      return matchesSearch && matchesType && matchesCategory;
+    });
+  };
+
+  const filteredContent = filterContent(contentItems);
+  const videos = filteredContent?.filter((item: ContentItem) => item.contentType === "video");
+  const articles = filteredContent?.filter((item: ContentItem) => item.contentType === "article");
+  
+  // Check if search is active
+  const isSearchActive = searchTerm !== "" || selectedType !== "all" || selectedCategory !== "all";
 
   return (
     <>
       <div className="background">
         <div className="contentContainer">
           <Header userRole={userRole || ""} />
+          
+          {/* Search Section */}
+          <div className="searchSection">
+            <div className="searchContainer">
+              <input
+                type="text"
+                className="searchInput"
+                placeholder="Pretraži po nazivu..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              
+              <select
+                className="searchSelect"
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value as "all" | "video" | "article")}
+              >
+                <option value="all">Svi tipovi</option>
+                <option value="video">Video</option>
+                <option value="article">Članak</option>
+              </select>
+              
+              <select
+                className="searchSelect"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <option value="all">Sve kategorije</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          
           <div className="contentBody">
-            <div className="section">
-            <div className="sectionHeader">
-              <h2 className="sectionTitle">Video sadržaji</h2>
-              <div className="scrollButtons">
-                <button onClick={() => scroll(videosRef, 'left')} className="scrollBtn"><CaretLeftIcon size={20} /></button>
-                <button onClick={() => scroll(videosRef, 'right')} className="scrollBtn"><CaretRightIcon size={20} /></button>
-              </div>
-            </div>
-            <div className="contentList" ref={videosRef}>
-              {videos?.map((item : ContentItem) => (
-                <ContentCard
-                  key={item.id} 
-                  content={item}
-                  onClick={() => {
-                    setContent(item);
-                    setIsOpen(true);
-                  }}
-                  allowEdit={userRole === "admin"}
-                />
-              ))}
-            </div>
-            </div>
+            {!isSearchActive && (
+              <>
+                <div className="section">
+                <div className="sectionHeader">
+                  <h2 className="sectionTitle">Video sadržaji</h2>
+                  <div className="scrollButtons">
+                    <button onClick={() => scroll(videosRef, 'left')} className="scrollBtn"><CaretLeftIcon size={20} /></button>
+                    <button onClick={() => scroll(videosRef, 'right')} className="scrollBtn"><CaretRightIcon size={20} /></button>
+                  </div>
+                </div>
+                <div className="contentList" ref={videosRef}>
+                  {videos?.map((item : ContentItem) => (
+                    <ContentCard
+                      key={item.id} 
+                      content={item}
+                      onClick={() => {
+                        setContent(item);
+                        setIsOpen(true);
+                      }}
+                      allowEdit={userRole === "admin"}
+                    />
+                  ))}
+                </div>
+                </div>
 
-            <div className="section">
-            <div className="sectionHeader">
-              <h2 className="sectionTitle">Članci</h2>
-              <div className="scrollButtons">
-                <button onClick={() => scroll(articlesRef, 'left')} className="scrollBtn"><CaretLeftIcon size={20} /></button>
-                <button onClick={() => scroll(articlesRef, 'right')} className="scrollBtn"><CaretRightIcon size={20} /></button>
-              </div>
-            </div>
-            <div className="contentList" ref={articlesRef}>
-              {articles?.map((item : ContentItem) => (
-                <ContentCard
-                  key={item.id} 
-                  content={item}
-                  onClick={() => {
-                    setContent(item);
-                    setIsOpen(true);
-                  }}
-                  allowEdit={userRole === "admin"}
-                />
-              ))}
-            </div>
-            </div>
+                <div className="section">
+                <div className="sectionHeader">
+                  <h2 className="sectionTitle">Članci</h2>
+                  <div className="scrollButtons">
+                    <button onClick={() => scroll(articlesRef, 'left')} className="scrollBtn"><CaretLeftIcon size={20} /></button>
+                    <button onClick={() => scroll(articlesRef, 'right')} className="scrollBtn"><CaretRightIcon size={20} /></button>
+                  </div>
+                </div>
+                <div className="contentList" ref={articlesRef}>
+                  {articles?.map((item : ContentItem) => (
+                    <ContentCard
+                      key={item.id} 
+                      content={item}
+                      onClick={() => {
+                        setContent(item);
+                        setIsOpen(true);
+                      }}
+                      allowEdit={userRole === "admin"}
+                    />
+                  ))}
+                </div>
+                </div>
+              </>
+            )}
 
             <div className="section">
               <div className="sectionHeader">
-                <h2 className="sectionTitle">Sve</h2>
+                <h2 className="sectionTitle">{isSearchActive ? "Rezultati pretrage" : "Sve"}</h2>
               </div>
               <div className="contentGrid">
-                {contentItems?.map((item: ContentItem) => (
+                {filteredContent?.map((item: ContentItem) => (
                   <ContentCard
                     key={item.id} 
                     content={item}

@@ -2,7 +2,7 @@ import { PencilIcon } from "@phosphor-icons/react/dist/icons/Pencil";
 import { useNavigate } from "react-router-dom";
 import type {ContentItem} from "../types/ContentItem";
 import "./ContentCard.css";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ContentCardProps {
     content: ContentItem;
