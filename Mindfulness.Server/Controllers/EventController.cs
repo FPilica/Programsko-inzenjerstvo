@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mindfulness.Server.Dtos.Event;
@@ -12,7 +13,7 @@ namespace Mindfulness.Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-public class EventController(MindfulnessDbContext context, IMapper mapper) : ControllerBase
+public class EventController(MindfulnessDbContext context, IMapper mapper, UserManager<User> userManager) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetEvents()
@@ -112,21 +113,27 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
         
         var userGuid = Guid.Parse(userId);
         
+        var user = await context.Users.FindAsync(userGuid);
+
+        if (user is null)
+        {
+            return BadRequest("User not found");
+        }
+        
         var @event = await context.Events.FindAsync(id);
 
-        if (@event != null)
+        if (@event is null)
         {
-            if (@event.UserId != userGuid && !User.IsInRole("Admin"))
-            {
-                return Unauthorized();
-            }
-            context.Events.Remove(@event);
-            await context.SaveChangesAsync();
+            return NotFound();
         }
-        else
+        
+        if (@event.UserId != userGuid && !await userManager.IsInRoleAsync(user, "Admin"))
         {
-            return BadRequest("Event not found");
+            return Unauthorized();
         }
+        
+        context.Events.Remove(@event);
+        await context.SaveChangesAsync();
         
         return Ok();
     }

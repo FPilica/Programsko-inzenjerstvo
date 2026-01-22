@@ -1,9 +1,11 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mindfulness.Server.Dtos.Content;
+using Mindfulness.Server.Models;
 
 namespace Mindfulness.Server.Controllers;
 
@@ -14,11 +16,13 @@ public class ContentController : ControllerBase
 {
     private readonly MindfulnessDbContext _context;
     private readonly IMapper _mapper;
+    private readonly UserManager<User> _userManager;
 
-    public ContentController(MindfulnessDbContext context, IMapper mapper)
+    public ContentController(MindfulnessDbContext context, IMapper mapper, UserManager<User> userManager)
     {
         _context = context;
         _mapper = mapper;
+        _userManager = userManager;
     }
     
     [HttpGet]
@@ -82,6 +86,13 @@ public class ContentController : ControllerBase
         
         var userGuid = Guid.Parse(userId);
         
+        var user = await _context.Users.FindAsync(userGuid);
+
+        if (user is null)
+        {
+            return NotFound("User not found");
+        }
+        
         var content = await _context.Contents.FindAsync(contentId);
 
         if (content is null)
@@ -89,7 +100,7 @@ public class ContentController : ControllerBase
             return NotFound();
         }
 
-        if (content.UserId != userGuid && !User.IsInRole("Admin"))
+        if (content.UserId != userGuid && !await _userManager.IsInRoleAsync(user, "Admin"))
         {
             return Unauthorized();
         }
@@ -132,6 +143,13 @@ public class ContentController : ControllerBase
         
         var userGuid = Guid.Parse(userId);
         
+        var user = await _context.Users.FindAsync(userGuid);
+
+        if (user is null)
+        {
+            return BadRequest("User not found");
+        }
+        
         var content = await _context.Contents.FindAsync(contentId);
 
         if (content is null)
@@ -139,7 +157,7 @@ public class ContentController : ControllerBase
             return NotFound();
         }
 
-        if (content.UserId != userGuid && !User.IsInRole("Admin"))
+        if (content.UserId != userGuid && !await _userManager.IsInRoleAsync(user, "Admin"))
         {
             return Unauthorized();
         }
