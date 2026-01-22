@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +22,7 @@ public class DailyTasksController : ControllerBase
         _mapper = mapper;
     }
     [HttpPost("inputDailyData")]
-    public async Task<IActionResult> createCheckin([FromBody] DailyCheckInCreateDto dto)
+    public async Task<IActionResult> CreateCheckin([FromBody] DailyCheckInCreateDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId is null)
@@ -31,24 +31,22 @@ public class DailyTasksController : ControllerBase
         }
 
         var userGuid = Guid.Parse(userId);
-
-        if (await _context.Users.FirstOrDefaultAsync(u => u.Id == userGuid) is null)
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGuid);
+        if (user is null)
         {
             return NotFound("User does not exist");
         }
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGuid);
         var dailyCheckin = _mapper.Map<DailyCheckIn>(dto);
         dailyCheckin.UserId = userGuid;
-        dailyCheckin.Mood = dto.Mood;
-        dailyCheckin.Alcohol = dto.Alcohol;
-        dailyCheckin.Caffeine = dto.Caffeine;
-        dailyCheckin.SleepScore = dto.SleepScore;
-        dailyCheckin.PhysicalActivity = dto.PhysicalActivity;
-        return Ok();
+
+        _context.DailyCheckIns.Add(dailyCheckin);
+        await _context.SaveChangesAsync();
+
+        return Ok(_mapper.Map<DailyCheckInCreateDto>(dailyCheckin);
     }
 
     [HttpPost("endFocus")]
-    public async Task<IActionResult> finishFocus(UserUpdateDto dto)
+    public async Task<IActionResult> FinishFocus(UserUpdateDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId is null)
@@ -57,28 +55,46 @@ public class DailyTasksController : ControllerBase
         }
 
         var userGuid = Guid.Parse(userId);
-
-        if (await _context.Users.FirstOrDefaultAsync(u => u.Id == userGuid) is null)
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGuid);
+        if (user is null)     
         {
             return NotFound("User does not exist");
         }
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGuid);
 
         user = _mapper.Map<User>(dto);
 
-        DateTimeOffset first = DateTime.Now.ToUniversalTime();
-        DateTimeOffset second = user.LastFocus.ToUniversalTime();
+        DateTimeOffset first = DateTimeOffset.Now;
+        DateTimeOffset second = user.LastFocus;
         TimeSpan difference = first - second;
         if (difference.TotalDays < 1){ // 
             user.Streak += 1;
-            user.LastFocus = DateTime.Now;
+            user.LastFocus = DateTimeOffset.Now;
             return Ok("User's streak is continued");
         }
         else
         {
             user.Streak = 1;
-            user.LastFocus = DateTime.Now;
+            user.LastFocus = DateTimeOffset.Now;
             return Ok("User's streak is reset to 1");
         }
     }
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<DailyCheckInDetailsDto>> GetCheckinById(Guid id)
+    {
+        if (id == Guid.Empty)
+        {
+            return BadRequest("No checkin with this id.");
+        }
+
+
+        var checkIn = await _context.DailyCheckIns.FirstOrDefaultAsync(p => p.Id == id);
+
+        if (checkIn == null)
+        {
+            return NotFound("Not found checkin with this id");
+        }
+
+        return Ok(_mapper.Map<DailyCheckInDetailsDto>(checkIn));
+    }
 }
+
