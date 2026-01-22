@@ -16,27 +16,14 @@ function CalendarComponent() {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [selectInfo, setSelectInfo] = useState<any>(null);
 
-  // kad se bude moglo sa drugih stranica dodat da se moze ucitat samo ce svi localStorage ic na bazu
   useEffect(() => {
-    getEvents();  // otkomentiraj kad se spoji sa bazom
-
-    // zakomentiraj kad se spoji sa bazom
-    // const eventsData = localStorage.getItem("events");
-    // if (eventsData) {
-    //   try {
-    //     const newEvents = JSON.parse(eventsData);
-    //     setEvents(newEvents);
-    //   } catch (e) {
-    //     console.error("Greška pri parsiranju novih događaja:", e);
-    //   }
-    // }
+    getEvents();
   }, []);
 
   const getEvents = async () => {
-    // fetch events from backend
     try {
       const response = await fetch(
-        `https://localhost:7070/api/event`, //treba dodati ostatl linka
+        `https://localhost:7070/api/event`,
         {
           method: "GET",
           headers: {
@@ -72,26 +59,13 @@ function CalendarComponent() {
 
   const handleSelect = (selectInfo: any) => {
     setSelectInfo(selectInfo);
-    console.log(selectInfo);
     setIsOpenAdd(true);
   };
 
   const handleAddEvent = async () => {
-
-    // const eventsData = localStorage.getItem("events");
-    // if (eventsData) {
-    //   try {
-    //     const allEvents = JSON.parse(eventsData);
-    //     setEvents(allEvents);
-    //   } catch (e) {
-    //     console.error("Greška pri parsiranju događaja:", e);
-    //   }
-    // }
-
-
     setSelectInfo(null);
     setIsOpenAdd(false);
-    await getEvents(); // kad se doda na backend,  otkomentirat
+    await getEvents(); 
   };
 
   const handleEventClick = (clickInfo: any) => {
@@ -102,7 +76,7 @@ function CalendarComponent() {
   const handleDeleteEventDatabase = async (eventId: string) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/event/${eventId}`, //treba dodati ostatl linka, i dodaj id u req
+        `https://localhost:7070/api/event/${eventId}`,
         {
           method: "DELETE",
           headers: {
@@ -120,7 +94,7 @@ function CalendarComponent() {
     } catch (error) {
       console.error("Error deleting event:", error);
     }
-  }
+  };
 
   const handleDeleteEvent = async () => {
 
@@ -128,20 +102,11 @@ function CalendarComponent() {
       selectedEvent &&
       window.confirm("Jeste li sigurni da želite izbrisati ovaj događaj?")
     ) {
-      // otkomentiraj kad se spoji sa bazom
+      
       await handleDeleteEventDatabase(selectedEvent.id);
-
-      // zakomentiraj kad se spoji za bazom
-      // const updatedEvents = events.filter(
-      //   (event) => event.id !== selectedEvent.id
-      // );
-      // setEvents(updatedEvents);
-      // localStorage.setItem("events", JSON.stringify(updatedEvents));
-
-      // ostavi
       setIsOpenView(false);
       setSelectedEvent(null);
-      await getEvents(); // kad se doda na backend,  otkomentirat
+      await getEvents(); 
     }
   };
 

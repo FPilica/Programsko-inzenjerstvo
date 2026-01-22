@@ -51,7 +51,6 @@ function ContentViewModal({
   }, [content.id]);
 
   useEffect(() => {
-    // Pronađi recenziju trenutnog korisnika kad se user ili reviews promijene
     if (user?.id && reviews.length > 0) {
       const existingUserReview = reviews.find((r: Review) => r.userId === user.id);
       setUserReview(existingUserReview || null);
@@ -91,7 +90,6 @@ function ContentViewModal({
     }
   };
 
-  // kad bude baza
   const fetchReviews = async () => {
     try {
       const [reviewsResponse, usersResponse] = await Promise.all([
@@ -130,8 +128,6 @@ function ContentViewModal({
       
       setReviews(reviewsData);
       setUsers(usersData);
-      // Možete pohraniti usersData ako vam treba
-      console.log("Users data:", usersData);
 
     } catch (error) {
       console.error("Error fetching reviews:", error);
@@ -213,7 +209,7 @@ function ContentViewModal({
       // Dodaj novu recenziju
       await addReviewToDatabase(reviewData);
     }
-    
+
     setNewReview({ rating: 5, comment: "" });
     await fetchReviews();
   };
@@ -267,18 +263,17 @@ function ContentViewModal({
   };
 
   const handleDeleteContent = async () => {
-    // potvrdi brisanje
+   
     if (!window.confirm("Jeste li sigurni da želite izbrisati ovaj sadržaj?")) {
       return;
     }
-    // otkomentiraj za bazu
+    
     await deleteContentFromDatabase(content.id || "");
     onClose();
   };
 
   const deleteReviewFromDatabase = async (reviewId: string) => {
     try {
-      console.log("Deleting review with ID:", reviewId);
       const response = await fetch(
         `https://localhost:7070/api/review/${reviewId}`,
         {
@@ -320,7 +315,7 @@ function ContentViewModal({
   const addEventToDatabase = async (newEvent: any) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/event`, //treba dodati ostatl linka
+        `https://localhost:7070/api/event`,
         {
           method: "POST",
           headers: {
@@ -355,7 +350,6 @@ function ContentViewModal({
   const handleSaveEvent = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
     const newEvent = {
       title: content.title,
       startTime: eventData.start,
@@ -365,7 +359,6 @@ function ContentViewModal({
       contentId: content.id,
     };
 
-    // otkomentiraj za bazu
     await addEventToDatabase(newEvent);
     alert("Događaj uspješno dodan u kalendar!");
     handleCancelAddToCalendar();
@@ -467,8 +460,6 @@ function ContentViewModal({
           reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
         ).toFixed(1)
       : 0;
-
-  console.log("ContentView render:", { isOpen, content });
 
   if (!isOpen) return null;
 

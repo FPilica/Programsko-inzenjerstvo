@@ -19,16 +19,12 @@ function EditContent() {
 
   useEffect(() => {
     getContentItems();
-    // Učitaj sadržaj za uređivanje
-    // const storedContent = JSON.parse(
-    //   localStorage.getItem("contentItems") || "[]"
-    // );
   }, [id]);
 
   const getContentItems = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/content`, //treba dodati ostatl linka
+        `https://localhost:7070/api/content`,
         {
           method: "GET",
           headers: {
@@ -72,7 +68,7 @@ function EditContent() {
   const editContent = async (updatedContent: ContentItem) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/content/${id}`, //treba dodati ostatl linka
+        `https://localhost:7070/api/content/${id}`, 
         {
           method: "PUT",
           headers: {

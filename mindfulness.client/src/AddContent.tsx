@@ -8,7 +8,6 @@ import "./AddContent.css";
 
 function AddContent() {
 
-  // const [contentItems, setContentItems] = useState<any[]>([]);
   const [user, setUser] = useState<any | null>(null);
   const userRole = localStorage.getItem("userRole");
 
@@ -146,7 +145,7 @@ function AddContent() {
         throw new Error("Something went wrong!");
       }
 
-      // Dohvati sve content ponovno da dobijemo novi sadržaj s ID-em
+      // Dohvati cijeli content ponovno da dobijemo novi sadržaj s ID-em
       await fetchUserAndContent();
 
     } catch (error) {
@@ -175,10 +174,7 @@ function AddContent() {
       contentLink: contentType === "video" ? videoLink : undefined,
       thumbnailLink: thumbnailLink || undefined,
     };
-
-    console.log("New content item:", newContentItem);
-
-    // otkomentiraj za bazu
+    
     await addContentItemToDatabase(newContentItem);
 
     setShowForm(false);

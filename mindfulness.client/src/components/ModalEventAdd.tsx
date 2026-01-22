@@ -1,6 +1,5 @@
 import { createPortal } from "react-dom";
 import { useState } from "react";
-import type { Event } from "../types/Event";
 import "./ModalEvent.css";
 
 function ModalEventAdd({
@@ -31,11 +30,10 @@ function ModalEventAdd({
   const [allDay, setAllDay] = useState(selectInfo?.allDay ? selectInfo.allDay : false);
   const [description, setDescription] = useState("");
 
-  // koristit ce se za dodavanje na backend
   const addEventToDatabase = async (newEvent: any) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/event`, //treba dodati ostatl linka
+        `https://localhost:7070/api/event`,
         {
           method: "POST",
           headers: {
@@ -58,8 +56,7 @@ function ModalEventAdd({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
-    const newEvent = { // treba promijeniti posli
+    const newEvent = { 
       title: title,
       startTime: start,
       endTime: end,
@@ -67,10 +64,6 @@ function ModalEventAdd({
       description: description,
     };
 
-    // trenutno se spremaju u localStorage, posli na backend
-    // localStorage.setItem("events", JSON.stringify([...existingEvents, newEvent]));
-
-    // za backend dodavanje, otkomentirat
     await addEventToDatabase(newEvent);
     addEvent();
   };

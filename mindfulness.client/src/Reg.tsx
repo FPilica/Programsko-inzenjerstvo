@@ -1,8 +1,6 @@
 import "./App.css";
 import "./Auth.css";
 import logoPurple from "./assets/logo_boja 2.png";
-// auth
-// npx vite u cmd u folder
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";

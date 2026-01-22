@@ -29,8 +29,6 @@ function Dashboard() {
       }
 
       const userData = await response.json();
-      console.log("User data:", userData);
-      console.log("User role:", userData.role);
       setUser(userData);
       setUserRole(userData.role.toLowerCase() || null);
       localStorage.setItem("userRole", userData.role.toLowerCase() || "");
@@ -82,13 +80,7 @@ function Dashboard() {
     getUser();
     getCategories();
     getLanguages();
-    // if (!userRole) {
-    //   localStorage.setItem("userRole", "coach"); // (user, coach, admin) postavi ulogu za koju zelis da bude dok ne spojimo sa backendom
-    // }
-    // setUserRole(localStorage.getItem("userRole") || "");
   }, []);
-
-  console.log("Current userRole:", userRole);
 
   // Loading state
   if (!userRole) {

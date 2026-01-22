@@ -1,12 +1,7 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import { useState } from "react";
 import "./App.css";
 import "./Auth.css";
 import logoPurple from "./assets/logo_boja 2.png";
-// auth
-// npx vite u cmd u folder
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -17,7 +12,6 @@ function ForgotPass() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Email za reset lozinke:", email);
-    // logika
   };
 
   return (

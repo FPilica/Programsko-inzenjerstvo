@@ -12,8 +12,6 @@ function Content() {
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState<ContentItem | null>(null);
   const [contentItems, setContentItems] = useState<ContentItem[] | null>(null);
-  const [categoryId, setCategoryId] = useState<string | null>(null);
-  const [languageId, setLanguageId] = useState<string | null>(null);
   const videosRef = useRef<HTMLDivElement | null>(null);
   const articlesRef = useRef<HTMLDivElement | null>(null);
   const userRole = localStorage.getItem("userRole");
@@ -41,7 +39,7 @@ function Content() {
   const getContentItems = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/content`, 
+        `https://localhost:7070/api/content`,
         {
           method: "GET",
           headers: {
@@ -57,53 +55,14 @@ function Content() {
       }
 
       const contentItemsData = await response.json();
-      console.log("Fetched content items:", contentItemsData);
       setContentItems(contentItemsData);
     } catch (error) {
       console.error("Error fetching content items:", error);
-    }
-  }
-
-  // ovo nece ici u zavrsnu verziju, samo je za ubacivanje ovih pocetnih videa i clanaka u bazu
-  const addContentItemToDatabase = async (item: ContentItem) => {
-    try {
-      const response = await fetch(
-        `https://localhost:7070/api/content`, //treba dodati ostatl linka
-        {
-          method: "POST",
-          headers: {
-            "Accept": "text/plain",
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
-          },
-          body: JSON.stringify({
-            title: item.title,
-            description: item.description,
-            difficulty: "easy",
-            duration: item.duration ?? "0",
-            contentType: item.contentType,
-            contentLink: item.contentLink,
-            thumbnailLink: item.thumbnailLink,
-            categoryId: categoryId ?? "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-            audioLanguageId: languageId ?? "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          }),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Something went wrong!");
-      }
-
-      console.log("Content items added successfully.");
-    } catch (error) {
-      console.error("Error adding content items:", error);
     }
   };
 
   
   useEffect(() => {
-    // console.log("effect");
-    // loadContent();
     getContentItems();
     fetchCategories();
   }, []);
@@ -251,7 +210,7 @@ function Content() {
               </div>
 
             </div>
-         {isOpen && content && <ContentViewModal isOpen={isOpen} onClose={handleClose} content={content} allowEdit={userRole === "admin"} />}
+         {isOpen && content && <ContentViewModal isOpen={isOpen} onClose={() => { handleClose(); getContentItems(); }} content={content} allowEdit={userRole === "admin"} />}
         </div>
         </div>
       </div>

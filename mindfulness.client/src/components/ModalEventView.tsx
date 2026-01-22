@@ -24,29 +24,26 @@ function ModalEventView({
 
   const getContentItems = async () => {
     try {
-      const response = await fetch(
-        `https://localhost:7070/api/content`, //treba dodati ostatl linka
-        {
-          method: "GET",
-          headers: {
-            Accept: "text/plain",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-          },
+      const response = await fetch(`https://localhost:7070/api/content`, {
+        method: "GET",
+        headers: {
+          Accept: "text/plain",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
-      );
+      });
 
       if (!response.ok) {
         throw new Error("Something went wrong!");
       }
 
       const contentItemsData = await response.json();
-        console.log("Fetched content items:", contentItemsData);
+      console.log("Fetched content items:", contentItemsData);
       const dataContent =
         contentItemsData.find(
           (item: any) => item.id === event.extendedProps?.contentId,
-          ) || null;
-        console.log("contentitems:", dataContent)
+        ) || null;
+      console.log("contentitems:", dataContent);
       setEventContent(dataContent);
     } catch (error) {
       console.error("Error fetching content items:", error);
