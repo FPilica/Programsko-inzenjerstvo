@@ -102,7 +102,7 @@ public class ReviewController : ControllerBase
             return NotFound();
         }
 
-        if (review.UserId != Guid.Parse(userId))
+        if (review.UserId != Guid.Parse(userId) && !User.IsInRole("Admin"))
         {
             return Unauthorized();
         }

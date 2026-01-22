@@ -34,8 +34,22 @@ public class DataSeeder
             UserName = "admin@admin.com"
         };
         var result = await _userManager.CreateAsync(user, "admin1!A");
-
-        if (!result.Succeeded)
+        
+        var coach = new User
+        {
+            Id = Guid.NewGuid(),
+            FirstName = "Default",
+            LastName = "Coach",
+            Gender = Gender.Undefined,
+            DateOfBirth = DateTimeOffset.Now,
+            CreatedAt = DateTimeOffset.Now,
+            Email = "coach@coach.com",
+            UserName = "coach@coach.com"
+        };
+        
+        var resultCoach = await _userManager.CreateAsync(coach, "coach1!C");
+        
+        if (!result.Succeeded || !resultCoach.Succeeded)
         {
             throw new Exception("Error creating user");
         }
@@ -48,7 +62,9 @@ public class DataSeeder
         }
         
         await _userManager.AddToRoleAsync(createdUser, "Admin");
-
+        
+        await _userManager.AddToRoleAsync(coach, "Coach");
+        
         _dbContext.ContentCategories.Add(new ContentCategory
         {
             Id = Guid.NewGuid(),

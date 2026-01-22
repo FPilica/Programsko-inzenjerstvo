@@ -16,9 +16,26 @@ public class ChallengeController(MindfulnessDbContext context, IMapper mapper) :
     [HttpPost]
     public async Task<ActionResult<ChallengeDetailsDto>> CreateChallenge([FromBody] ChallengeCreateDto dto)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        if (userId is null)
+        {
+            return BadRequest("User not found");
+        }
+
+        var userGuid = Guid.Parse(userId);
+        
+        var user = await context.Users.FindAsync(userGuid);
+
+        if (user is null)
+        {
+            return BadRequest("User not found");
+        }
+        
         var newChallenge = mapper.Map<Challenge>(dto);
         newChallenge.Id = Guid.NewGuid();
         newChallenge.CreatedAt = DateTimeOffset.Now;
+        newChallenge.UserId = userGuid;
         
         context.Challenges.Add(newChallenge);
         
@@ -86,11 +103,25 @@ public class ChallengeController(MindfulnessDbContext context, IMapper mapper) :
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteChallenge(Guid id)
     {
-        var challenge = await context.Challenges.FindAsync(id);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return BadRequest("User not found");
+        }
         
+        var userGuid = Guid.Parse(userId);
+        
+        var challenge = await context.Challenges.FirstOrDefaultAsync(x => x.Id == id);
+
         if (challenge is null)
         {
             return NotFound();
+        }
+
+        if (challenge.UserId != Guid.Parse(userId) && !User.IsInRole("Admin"))
+        {
+            return Unauthorized();
         }
         
         context.Challenges.Remove(challenge);
