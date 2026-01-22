@@ -32,9 +32,9 @@ public class User : IdentityUser<Guid>
     
     public List<UserSetting> UserSettings { get; set; } = [];
         
-    public DateTimeOffset LastCheckin {  get; set; }
+    public DateTimeOffset LastCheckin { get; set; } = DateTimeOffset.Now;
 
-    public DateTimeOffset LastFocus { get; set; }
+    public DateTimeOffset LastFocus { get; set; } = DateTimeOffset.Now;
 
-    public int Streak { get; set; }
+    public int Streak { get; set; } = 1;
 }
