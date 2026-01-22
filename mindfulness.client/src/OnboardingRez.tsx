@@ -34,7 +34,6 @@ function OnboardingRez() {
 
       const data = await response.json();
       setAnswers(data);
-      console.log(data);
     } catch (error) {
       console.error("Greška: ", error);
     }

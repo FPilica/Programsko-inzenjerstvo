@@ -45,11 +45,15 @@
 .profileActions {
     display: flex;
     gap: 15px;
-    justify-content: space-evenly;
 }
 
 .setProfileButton, .onboardingRezButton {
     background-color: #7c3aed;
+    color: white;
+}
+
+.logoutButton {
+    background: red;
     color: white;
 }
 

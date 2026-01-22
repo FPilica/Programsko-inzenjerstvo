@@ -32,19 +32,26 @@ function Profile() {
     
       const user = await response.json();
       setUser(user);
-      console.log(user);
       if (user.dateOfBirth) {
         const date = new Date(user.dateOfBirth);
         user.dateOfBirth = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}.`;
         if(user.dateOfBirth === "1.1.1.")
           user.dateOfBirth = "01.01.2000."
       }
-      // slučaj kada nije dan gender, ne radi ATM
+
       if (user.gender === "Undefined"){ 
         user.gender = "O"
       }
     } catch (error) {
       console.error("Greška: ", error);
+    }
+  };
+
+  const handleLogout = () => {
+    if (window.confirm("Jeste li sigurni da se želite odjaviti?")) {
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("userRole");
+      navigate("/auth/login");
     }
   };
 
@@ -72,6 +79,9 @@ function Profile() {
               </button>
               <button className="myButton onboardingRezButton" onClick={() => navigate("/profile/onboardingrez")}>
                 Rezultati ankete
+              </button>
+              <button className="myButton logoutButton" onClick={handleLogout}>
+                Odjavi se
               </button>
             </div>
           </div>
