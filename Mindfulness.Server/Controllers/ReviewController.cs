@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mindfulness.Server.Dtos.Review;
@@ -15,11 +16,13 @@ public class ReviewController : ControllerBase
 {
     private readonly MindfulnessDbContext _context;
     private readonly IMapper _mapper;
-    
-    public ReviewController(MindfulnessDbContext context, IMapper mapper)
+    private readonly UserManager<User> _userManager;
+
+    public ReviewController(MindfulnessDbContext context, IMapper mapper, UserManager<User> userManager)
     {
         _context = context;
         _mapper = mapper;
+        _userManager = userManager;
     }
     
     [HttpPost]
@@ -95,14 +98,23 @@ public class ReviewController : ControllerBase
             return BadRequest("User not found");
         }
         
+        var userGuid = Guid.Parse(userId);
+        
+        var user = await _context.Users.FindAsync(userGuid);
+
+        if (user is null)
+        {
+            return BadRequest("User not found");
+        }
+        
         var review = await _context.Reviews.FirstOrDefaultAsync(x => x.Id == reviewId);
 
         if (review is null)
         {
             return NotFound();
         }
-
-        if (review.UserId != Guid.Parse(userId) && !User.IsInRole("Admin"))
+        
+        if (review.UserId != Guid.Parse(userId) && !await _userManager.IsInRoleAsync(user, "Admin"))
         {
             return Unauthorized();
         }

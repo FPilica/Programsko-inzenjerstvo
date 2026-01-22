@@ -114,7 +114,7 @@ public class UserProfileController : ControllerBase
             return NotFound("User not found");
         }
 
-        if (!User.IsInRole("Admin") && user.Id != id)
+        if (user.Id != id && !await _userManager.IsInRoleAsync(user, "Admin"))
         {
             return Unauthorized();
         }
