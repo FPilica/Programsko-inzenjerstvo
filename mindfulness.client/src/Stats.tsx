@@ -69,10 +69,10 @@ function Stats() {
           <div className="statsGrid">
             {/* Nizovi */}
             <div className="statCard">
-              <div className="cardHeader">
-                <h3 className="cardTitle">Nizovi korištenja</h3>
+              <div className="statCardHeader">
+                <h3 className="statCardTitle">Nizovi korištenja</h3>
               </div>
-              <div className="cardContent">
+              <div className="statCardContent">
                 <div className="streakStats">
                   <div className="streakItem">
                     <p className="streakLabel">Trenutni niz</p>
@@ -91,10 +91,10 @@ function Stats() {
 
             {/* Izazovi */}
             <div className="statCard">
-              <div className="cardHeader">
-                <h3 className="cardTitle">Izazovi</h3>
+              <div className="statCardHeader">
+                <h3 className="statCardTitle">Izazovi</h3>
               </div>
-              <div className="cardContent">
+              <div className="statCardContent">
                 <div className="challengeStats">
                   <div className="progressRing">
                     <svg viewBox="0 0 100 100" className="ringChart">
@@ -147,15 +147,15 @@ function Stats() {
 
           {/* Trend raspoloženja */}
           <div className="statCard fullWidth">
-            <div className="cardHeader moodHeader">
-              <h3 className="cardTitle">Trend raspoloženja</h3>
+            <div className="statcardHeader moodHeader">
+              <h3 className="statCardTitle">Trend raspoloženja</h3>
               <div className="averageMoodBadge">
                 <p className="averageMoodLabel">Prosječno raspoloženje</p>
                 <p className="averageMoodValue">{averageMood}</p>
               </div>
             </div>
             {/* Ocrtavanje grafa */}
-            <div className="cardContent chartContent">
+            <div className="statCardContent chartContent">
               <div className="chartContainer">
                 <svg className="moodChart" viewBox="0 0 700 300" preserveAspectRatio="xMidYMid meet">
                   <line x1="50" y1="30" x2="50" y2="250" stroke="#999" strokeWidth="1" />
@@ -235,10 +235,10 @@ function Stats() {
           <div className="activityChartsWrapper">
             {/* Graf broja otvaranja po danu */}
             <div className="statCard">
-              <div className="cardHeader">
-                <h3 className="cardTitle">Broj otvaranja po danu</h3>
+              <div className="statCardHeader">
+                <h3 className="statCardTitle">Broj otvaranja po danu</h3>
               </div>
-              <div className="cardContent chartContent">
+              <div className="statCardContent chartContent">
                 <div className="activityChartContainer">
                   <div className="activityBarsContainer">
                     {weeklyActivity.map((day) => {
@@ -267,10 +267,10 @@ function Stats() {
 
             {/* Graf dnevne aktivnosti */}
             <div className="statCard">
-              <div className="cardHeader">
-                <h3 className="cardTitle">Dnevna aktivnost</h3>
+              <div className="statCardHeader">
+                <h3 className="statCardTitle">Dnevna aktivnost</h3>
               </div>
-              <div className="cardContent chartContent">
+              <div className="statCardContent chartContent">
                 <div className="activityChartContainer">
                   <div className="activityBarsContainer">
                     {weeklyActivity.map((day) => {
@@ -299,7 +299,7 @@ function Stats() {
 
             {/* Tjedni sažetak */}
             <div className="statCard">
-              <h3 className="cardTitle">Ovaj tjedan</h3>
+              <h3 className="statCardTitle">Ovaj tjedan</h3>
               <div className="summaryContentVertical">
                 <div className="summaryItemVertical">
                   <p className="summaryLabel">Ukupno otvaranja</p>
