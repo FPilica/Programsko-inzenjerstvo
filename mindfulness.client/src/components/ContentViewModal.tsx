@@ -4,9 +4,7 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import type { Review } from "../types/Review";
 import type { ContentItem } from "../types/ContentItem";
-import type { Event } from "../types/Event";
 import "./ContentViewModal.css";
-import { TextUnderlineIcon } from "@phosphor-icons/react";
 
 interface ContentViewProps {
   content: ContentItem;
@@ -23,6 +21,8 @@ function ContentViewModal({
 }: ContentViewProps) {
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [userReview, setUserReview] = useState<Review | null>(null);
+  const [isEditingReview, setIsEditingReview] = useState(false);
   const [showAddToCalendarForm, setShowAddToCalendarForm] = useState(false);
   const [eventData, setEventData] = useState({
     title: content.title,
@@ -32,17 +32,69 @@ function ContentViewModal({
     description: "",
     contentId: content.id,
   });
+  const [user, setUser] = useState<any | null>(null);
+  const userRole = localStorage.getItem("userRole");
+
+  const canDeleteReview = (review: Review) => {
+    // Admin može brisati sve
+    if (userRole === "admin") return true;
+    // Trener može brisati na svojim objavama
+    if (userRole === "coach" && allowEdit) return true;
+    // Obični korisnik NE vidi gumb ovdje (ima svoj gore kod forme)
+    return false;
+  };
 
   useEffect(() => {
-    fetchReviews(); // za bazu
-    // loadReviews();
+    getUser();
+    fetchReviews();
   }, [content.id]);
+
+  useEffect(() => {
+    // Pronađi recenziju trenutnog korisnika kad se user ili reviews promijene
+    if (user?.id && reviews.length > 0) {
+      const existingUserReview = reviews.find((r: Review) => r.userId === user.id);
+      setUserReview(existingUserReview || null);
+      if (existingUserReview) {
+        setNewReview({
+          rating: existingUserReview.rating,
+          comment: existingUserReview.comment || "",
+        });
+      } else {
+        setNewReview({ rating: 5, comment: "" });
+      }
+    }
+  }, [user, reviews]);
+
+  const getUser = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/UserProfile/getprofile`,
+        {
+          method: "GET",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      const userData = await response.json();
+      setUser(userData);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   // kad bude baza
   const fetchReviews = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/review/by-content-id/${content.id}`, //treba dodati ostatl linka
+        `https://localhost:7070/api/review/by-content-id/${content.id}`,
         {
           method: "GET",
           headers: {
@@ -56,7 +108,7 @@ function ContentViewModal({
       }
       
       const data = await response.json();
-      setReviews(data)
+      setReviews(data);
 
     } catch (error) {
       console.error("Error fetching reviews:", error);
@@ -71,7 +123,7 @@ function ContentViewModal({
   const addReviewToDatabase = async (review: Review) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/review`, //treba dodati ostatl linka
+        `https://localhost:7070/api/review`, 
         {
           method: "POST",
           headers: {
@@ -95,33 +147,84 @@ function ContentViewModal({
     }
   };
 
+  const updateReviewInDatabase = async (reviewId: string, review: Review) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/review/${reviewId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+          body: JSON.stringify({
+            rating: review.rating,
+            comment: review.comment,
+            contentId: review.contentId,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+    } catch (error) {
+      console.error("Error updating review:", error);
+    }
+  };
+
   const handleAddReview = async () => {
-    const reviewToAdd: Review = {
+    const reviewData: Review = {
       rating: newReview.rating,
       comment: newReview.comment,
       contentId: content.id,
     };
 
-    // otkomentiraj za bazu
-    await addReviewToDatabase(reviewToAdd);
+    if (userReview?.id) {
+      // Ažuriraj postojeću recenziju
+      await updateReviewInDatabase(userReview.id, reviewData);
+      setUserReview(reviewData)
+      setIsEditingReview(false);
+    } else {
+      // Dodaj novu recenziju
+      await addReviewToDatabase(reviewData);
+    }
+    
     setNewReview({ rating: 5, comment: "" });
+    await fetchReviews();
+  };
 
-    // zakomentiraj za bazu
-    // const existingReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-    // localStorage.setItem(
-    //   "reviews",
-    //   JSON.stringify([reviewToAdd, ...existingReviews])
-    // );
-    // loadReviews();
+  const handleCancelEdit = () => {
+    setIsEditingReview(false);
+    if (userReview) {
+      setNewReview({
+        rating: userReview.rating,
+        comment: userReview.comment || "",
+      });
+    } else {
+      setNewReview({ rating: 5, comment: "" });
+    }
+  };
 
-    // setNewReview({ userId: "user123", comment: "", rating: 5 });
+  const handleDeleteUserReview = async () => {
+    if (!userReview?.id) return;
+    
+    if (!window.confirm("Jeste li sigurni da želite izbrisati svoju recenziju?")) {
+      return;
+    }
+
+    await deleteReviewFromDatabase(userReview.id);
+    setUserReview(null);
+    setIsEditingReview(false);
+    setNewReview({ rating: 5, comment: "" });
     await fetchReviews();
   };
 
   const deleteContentFromDatabase = async (contentId: string) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/content/${contentId}`, //treba dodati ostatl linka
+        `https://localhost:7070/api/content/${contentId}`, 
         {
           method: "DELETE",
           headers: {
@@ -140,30 +243,21 @@ function ContentViewModal({
     }
   };
 
-  const handleDeleteContent = () => {
+  const handleDeleteContent = async () => {
     // potvrdi brisanje
     if (!window.confirm("Jeste li sigurni da želite izbrisati ovaj sadržaj?")) {
       return;
     }
-
     // otkomentiraj za bazu
-    deleteContentFromDatabase(content.id || "");
-
-    // Izbriši iz localStorage // zakomentiraj za bazu
-    // const existingContent: ContentItem[] = JSON.parse(
-    //   localStorage.getItem("contentItems") || "[]"
-    // );
-    // const updatedContent = existingContent.filter(
-    //   (item: ContentItem) => item.id !== content.id
-    // );
-    // localStorage.setItem("contentItems", JSON.stringify(updatedContent));
+    await deleteContentFromDatabase(content.id || "");
     onClose();
   };
 
   const deleteReviewFromDatabase = async (reviewId: string) => {
     try {
+      console.log("Deleting review with ID:", reviewId);
       const response = await fetch(
-        `https://localhost:7070/api/review/${reviewId}`, //treba dodati ostatl linka
+        `https://localhost:7070/api/review/${reviewId}`,
         {
           method: "DELETE",
           headers: {
@@ -174,17 +268,24 @@ function ContentViewModal({
         }
       );
 
+      console.log("Delete response status:", response.status);
       if (!response.ok) {
-        throw new Error("Something went wrong!");
+        const errorText = await response.text();
+        console.error("Delete failed:", errorText);
+        throw new Error(`Delete failed: ${response.status} - ${errorText}`);
       }
+      console.log("Review deleted successfully");
 
     } catch (error) {
       console.error("Error deleting review:", error);
+      alert("Greška pri brisanju recenzije. Provjerite konzolu za detalje.");
     }
   };
 
   const handleDeleteReview = async (reviewId: string) => {
-    // otkomentiraj za bazu
+    if (!window.confirm("Jeste li sigurni da želite izbrisati ovu recenziju?")) {
+      return;
+    }
     await deleteReviewFromDatabase(reviewId);
     await fetchReviews();
   };
@@ -401,7 +502,7 @@ function ContentViewModal({
 
             {!allowEdit && (
               <div className="review-form">
-                <h3>Ostavi recenziju</h3>
+                <h3>{userReview ? (isEditingReview ? "Uredi recenziju" : "Tvoja recenzija") : "Ostavi recenziju"}</h3>
                 <div className="rating-input">
                   <label>Ocjena:</label>
                   <select
@@ -413,6 +514,7 @@ function ContentViewModal({
                         rating: parseInt(e.target.value),
                       })
                     }
+                    disabled={!!userReview && !isEditingReview}
                   >
                     <option value="5">5 ⭐</option>
                     <option value="4">4 ⭐</option>
@@ -429,13 +531,41 @@ function ContentViewModal({
                     setNewReview({ ...newReview, comment: e.target.value })
                   }
                   rows={4}
+                  disabled={!!userReview && !isEditingReview}
                 />
-                <button
-                  onClick={handleAddReview}
-                  className="myButton review-submit"
-                >
-                  Objavi
-                </button>
+                {userReview && !isEditingReview ? (
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                      onClick={() => setIsEditingReview(true)}
+                      className="myButton review-submit"
+                    >
+                      Uredi
+                    </button>
+                    <button
+                      onClick={handleDeleteUserReview}
+                      className="myButton deleteMyReviewButton"
+                    >
+                      Izbriši
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <button
+                      onClick={handleAddReview}
+                      className="myButton review-submit"
+                    >
+                      {userReview ? "Spremi" : "Objavi"}
+                    </button>
+                    {isEditingReview && (
+                      <button
+                        onClick={handleCancelEdit}
+                        className="myButton cancelEventButton"
+                      >
+                        Odustani
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
@@ -450,7 +580,7 @@ function ContentViewModal({
                     {"⭐".repeat(review.rating)}
                   </div>
                   <p className="review-text">{review.comment}</p>
-                  {allowEdit && (
+                  {canDeleteReview(review) && (
                     <button
                       className="myButton deleteReviewButton"
                       onClick={() => handleDeleteReview(review.id || "")}

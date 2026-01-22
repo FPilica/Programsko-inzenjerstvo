@@ -145,6 +145,121 @@ function Content() {
     }
   };
 
+  
+  const loadContent = async () => {
+    await getContentItems();
+    // await getCategoryIdByName("mindfulness");
+    const catId = JSON.parse(sessionStorage.getItem("categories") || "[]").find((cat: any) => cat.name === "mindfulness")?.id;
+    if (catId) {
+      setCategoryId(catId);
+    }
+    await getAudioLanguageIdByName("eng");
+    if (contentItems === null || contentItems.length === 0) {
+
+      const sampleContent: ContentItem[] = [
+        {
+          contentType: "video" as const,
+          title: "React Player Tutorial - Learn from Basics",
+          contentLink: "https://www.youtube.com/watch?v=tVBZq2fq-WA&t=23s",
+          thumbnailLink:
+            "https://img.youtube.com/vi/tVBZq2fq-WA/maxresdefault.jpg",
+          categoryId: categoryId ?? undefined,
+          description: "A comprehensive tutorial on React Player library.",
+          duration: "15",
+          audioLanguageId: languageId ?? undefined,
+        },
+        {
+          contentType: "video" as const,
+          title: "Top 5 Techniques for Web Animation",
+          contentLink: "https://www.youtube.com/watch?v=9eHEOAn2FOA",
+          thumbnailLink:
+            "https://img.youtube.com/vi/9eHEOAn2FOA/maxresdefault.jpg",
+          categoryId: categoryId ?? undefined,
+          description:
+            "Learn the top 5 techniques for creating stunning web animations.",
+          duration: "10",
+          audioLanguageId: languageId ?? undefined,
+        },
+        {
+          contentType: "video" as const,
+          title: "Mindfulness Meditation for Beginners",
+          contentLink: "https://www.youtube.com/watch?v=2OEL4P1Rz04",
+          thumbnailLink:
+            "https://img.youtube.com/vi/2OEL4P1Rz04/maxresdefault.jpg",
+          categoryId: categoryId ?? undefined,
+          description: "A guided mindfulness meditation session for beginners.",
+          duration: "20",
+          audioLanguageId: languageId ?? undefined,
+        },
+        {
+          contentType: "video" as const,
+          title: "10 Minute Morning Yoga Flow",
+          contentLink: "https://www.youtube.com/watch?v=VaoV1PrYft4",
+          thumbnailLink:
+            "https://img.youtube.com/vi/VaoV1PrYft4/maxresdefault.jpg",
+          categoryId: categoryId ?? undefined,
+          description:
+            "Start your day with this energizing 10 minute yoga flow.",
+          duration: "10",
+          audioLanguageId: languageId ?? undefined,
+        },
+        {
+          contentType: "video" as const,
+          title: "Breathing Exercises for Stress Relief",
+          contentLink: "https://www.youtube.com/watch?v=tybOi4hjZFQ",
+          thumbnailLink:
+            "https://img.youtube.com/vi/tybOi4hjZFQ/maxresdefault.jpg",
+          categoryId: categoryId ?? undefined,
+          description:
+            "Learn effective breathing exercises to help relieve stress.",
+          duration: "8",
+          audioLanguageId: languageId ?? undefined,
+        },
+        {
+          contentType: "video" as const,
+          title: "Deep Sleep Meditation - Guided Relaxation",
+          contentLink: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
+          thumbnailLink:
+            "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg",
+          categoryId: categoryId ?? undefined,
+          description:
+            "A guided meditation to help you achieve deep, restful sleep.",
+          duration: "30",
+          audioLanguageId: languageId ?? undefined,
+        },
+        {
+          contentType: "article" as const,
+          title: "The Science Behind Mindfulness",
+          description:
+            "Discover how mindfulness meditation affects your brain...",
+          categoryId: categoryId ?? undefined,
+          audioLanguageId: languageId ?? undefined,
+        },
+        {
+          contentType: "article" as const,
+          title: "10 Tips for Better Sleep Quality",
+          description:
+            "Learn practical techniques to improve your sleep tonight...",
+          thumbnailLink:
+            "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
+          categoryId: categoryId ?? undefined,
+          audioLanguageId: languageId ?? undefined,
+        },
+      ];
+
+      console.log("adding content to database");
+      for (const item of sampleContent) {
+        await addContentItemToDatabase(item);
+      }
+    }
+    await getContentItems();
+  };
+  
+  useEffect(() => {
+    console.log("effect");
+    loadContent();
+  }, []);
+  
   const sampleContent : ContentItem[] = [
     {
       contentType: "video" as const,
@@ -222,27 +337,6 @@ function Content() {
       audioLanguageId: languageId ?? undefined
     },
   ];
-
-  const loadContent = async () => {
-    await getContentItems();
-    // await getCategoryIdByName("mindfulness");
-    setCategoryId(JSON.parse(sessionStorage.getItem("categories") || "[]").find((cat: any) => cat.name === "mindfulness").id || null);
-    await getAudioLanguageIdByName("eng");
-    if (contentItems === null || contentItems.length === 0) {
-      // setContentItems(sampleContent);
-      console.log("adding content to database");
-      for (const item of sampleContent) {
-        await addContentItemToDatabase(item);
-      }
-    }
-    await getContentItems();
-  };
-
-  useEffect(() => {
-    console.log("effect");
-    loadContent();
-  }, []);
-
 
   const videos = contentItems?.filter((item: ContentItem) => item.contentType === "video");
   const articles = contentItems?.filter((item: ContentItem) => item.contentType === "article");

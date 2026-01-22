@@ -12,9 +12,6 @@ function AddContent() {
   const [user, setUser] = useState<any | null>(null);
   const userRole = localStorage.getItem("userRole");
 
-  const [categoryId, setCategoryId] = useState<string>("");
-  const [languageId, setLanguageId] = useState<string>("");
-
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState<ContentItem | null>(null);
 
@@ -30,113 +27,94 @@ function AddContent() {
   const [articleText, setArticleText] = useState("");
 
   useEffect(() => {
-    getUser();
-    fetchMyContent();
-    // loadContent();
+    fetchUserAndContent();
+    ensureDataLoaded();
   }, []);
 
-  const loadContent = () => {
-    let storedContent : ContentItem[] = JSON.parse(localStorage.getItem("contentItems") || "[]");
-    storedContent = storedContent.filter((item: ContentItem) => item.userId === user.userId);
-    setMyContent(storedContent);
-  }
-    
-  const fetchMyContent = async () => {
+  const fetchUserAndContent = async () => {
     try {
-      const response = await fetch(
-        "https://localhost:7070/api/content", 
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
-          },
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setMyContent(data);
-      }
-    } catch (error) {
-      console.error("Error fetching content:", error);
-    }
-  };
-
-  const getUser = async () => {
-    try {
-      const response = await fetch(
-        `https://localhost:7070/api/userprofile/getprofile`,
-        {
+      const [userRes, contentRes] = await Promise.all([
+        fetch("https://localhost:7070/api/userprofile/getprofile", {
           method: "GET",
           headers: {
             "accept": "text/plain",
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
           },
+        }),
+        fetch("https://localhost:7070/api/content", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }),
+      ]);
+
+      if (userRes.ok && contentRes.ok) {
+        const userData = await userRes.json();
+        const contentData = await contentRes.json();
+        
+        setUser(userData);
+        
+        // Filtriraj content po user ID-u
+        const filteredData = contentData.filter((item: ContentItem) => item.userId === userData.id);
+        setMyContent(filteredData);
+      }
+    } catch (error) {
+      console.error("Error fetching user and content:", error);
+    }
+  };
+
+  const ensureDataLoaded = async () => {
+    // Ako Dashboard još nije učitao kategorije, učitaj ih
+    if (!sessionStorage.getItem("categories") || !sessionStorage.getItem("languages")) {
+      try {
+        const [categoriesRes, languagesRes] = await Promise.all([
+          fetch("https://localhost:7070/api/contentcategory", {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+            },
+          }),
+          fetch("https://localhost:7070/api/audiolanguage", {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+            },
+          }),
+        ]);
+
+        if (categoriesRes.ok) {
+          const categories = await categoriesRes.json();
+          sessionStorage.setItem("categories", JSON.stringify(categories));
         }
-      );
-
-      if (!response.ok) {
-        throw new Error("Something went wrong!");
+        if (languagesRes.ok) {
+          const languages = await languagesRes.json();
+          sessionStorage.setItem("languages", JSON.stringify(languages));
+        }
+      } catch (error) {
+        console.error("Error loading categories/languages:", error);
       }
-
-      const userData = await response.json();
-      setUser(userData);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
     }
   };
 
-  const getCategoryIdByName = async (contentCategory: string) => {
-    try {
-      const response = await fetch(
-        `https://localhost:7070/api/ContentCategory/${contentCategory}`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "text/plain",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-          },
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Something went wrong!");
-      }
-
-      const categoryData = await response.json();
-      console.log("m " + categoryData.id);
-      setCategoryId(categoryData.id);
-      console.log("m " + categoryId);
-    } catch (error) {
-      console.error("Error fetching category ID:", error);
+  const getCategoryIdByName = (contentCategory: string): string => {
+    const categories = JSON.parse(sessionStorage.getItem("categories") || "[]");
+    const category = categories.find((cat: any) => cat.name.toLowerCase() === contentCategory.toLowerCase());
+    if (!category) {
+      console.error(`Category "${contentCategory}" not found in sessionStorage`);
     }
+    return category?.id || "";
   };
 
-  const getAudioLanguageIdByName = async (language: string) => {
-    try {
-      const response = await fetch(
-        `https://localhost:7070/api/AudioLanguage/${language}`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "text/plain",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-          },
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Something went wrong!");
-      }
-
-      const languageData = await response.json();
-      setLanguageId(languageData.id);
-    } catch (error) {
-      console.error("Error fetching audio language ID:", error);
+  const getAudioLanguageIdByName = (language: string): string => {
+    const languages = JSON.parse(sessionStorage.getItem("languages") || "[]");
+    const lang = languages.find((l: any) => l.name.toLowerCase() === language.toLowerCase());
+    if (!lang) {
+      console.error(`Language "${language}" not found in sessionStorage`);
     }
+    return lang?.id || "";
   };
 
   const addContentItemToDatabase = async (item: ContentItem) => {
@@ -168,7 +146,8 @@ function AddContent() {
         throw new Error("Something went wrong!");
       }
 
-      setMyContent([...myContent, item]);
+      // Dohvati sve content ponovno da dobijemo novi sadržaj s ID-em
+      await fetchUserAndContent();
 
     } catch (error) {
       console.error("Error adding content item:", error);
@@ -178,29 +157,29 @@ function AddContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await getCategoryIdByName(category || "mindfulness");
-    await getAudioLanguageIdByName("eng");
+    const categoryId = getCategoryIdByName(category || "mindfulness");
+    const languageId = getAudioLanguageIdByName("eng");
+
+    if (!categoryId) {
+      alert("Kategorija nije pronađena. Provjerite da li su kategorije učitane.");
+      return;
+    }
 
     const newContentItem: ContentItem = {
       title,
       description: contentType === "article" ? articleText : description,
       contentType: contentType as "video" | "article",
       categoryId: categoryId,
-      audioLanguageId: languageId,
+      audioLanguageId: languageId || undefined,
       duration: contentType === "video" ? duration : "0",
       contentLink: contentType === "video" ? videoLink : undefined,
       thumbnailLink: thumbnailLink || undefined,
     };
 
-    console.log("t " + newContentItem.categoryId);
+    console.log("New content item:", newContentItem);
 
     // otkomentiraj za bazu
-    addContentItemToDatabase(newContentItem);
-
-    // trenutno se spremaju u localStorage, posli na backend
-    // setMyContent([...myContent, newContentItem]);
-    // const storedContent = JSON.parse(localStorage.getItem("contentItems") || "[]");
-    // localStorage.setItem("contentItems", JSON.stringify([...storedContent, newContentItem]));
+    await addContentItemToDatabase(newContentItem);
 
     setShowForm(false);
     setTitle("");
@@ -216,7 +195,7 @@ function AddContent() {
   const handleClose = async () => {
     setIsOpen(false);
     setContent(null);
-    await fetchMyContent();
+    await fetchUserAndContent();
   };
 
   return (
@@ -334,10 +313,15 @@ function AddContent() {
                           placeholder="https://www.youtube.com/watch?v=..."
                           value={videoLink}
                           onChange={(e) => {
-                            setVideoLink(e.target.value); 
-                            const videoId = e.target.value.split("v=")[1]?.split("&")[0];
-                            if (videoId) {
-                              setThumbnailLink(`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`);
+                            setVideoLink(e.target.value);
+                            try {
+                              const url = new URL(e.target.value);
+                              const videoId = url.searchParams.get("v");
+                              if (videoId) {
+                                setThumbnailLink(`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`);
+                              }
+                            } catch (error) {
+                              setThumbnailLink("");
                             }
                           }}
                           required
