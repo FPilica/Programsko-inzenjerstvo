@@ -31,4 +31,10 @@ public class User : IdentityUser<Guid>
     public List<Challenge> Challenges { get; set; } = [];
     
     public List<UserSetting> UserSettings { get; set; } = [];
+    
+    public DateTimeOffset LastCheckin { get; set; } = DateTimeOffset.Now;
+
+    public DateTimeOffset LastFocus { get; set; } = DateTimeOffset.Now;
+
+    public int Streak { get; set; } = 1;
 }
