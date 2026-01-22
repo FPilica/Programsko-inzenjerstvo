@@ -86,4 +86,42 @@ public class UserProfileController : ControllerBase
 
         return Ok(userDetails);
     }
+
+    [HttpGet("getallusers")]
+    public async Task<ActionResult<UserDetailsDto>> GetAllUsers()
+    {
+        var users = await _context.Users.ToListAsync();
+        
+        return Ok(_mapper.Map<List<UserDetailsDto>>(users));
+    }
+    
+    [HttpGet("deleteprofile{id:guid}")]
+    public async Task<ActionResult<UserDetailsDto>> DeleteUser(Guid id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return BadRequest("User not found");
+        }
+
+        var userGuid = Guid.Parse(userId);
+
+        var user = await _context.Users.FindAsync(userGuid);
+
+        if (user is null)
+        {
+            return NotFound("User not found");
+        }
+
+        if (!User.IsInRole("Admin") || user.Id != id)
+        {
+            return Unauthorized();
+        }
+        
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
 }

@@ -114,8 +114,12 @@ public class EventController(MindfulnessDbContext context, IMapper mapper) : Con
         
         var @event = await context.Events.FindAsync(id);
 
-        if (@event != null && @event.UserId == userGuid)
+        if (@event != null)
         {
+            if (@event.UserId != userGuid || !User.IsInRole("Admin"))
+            {
+                return Unauthorized();
+            }
             context.Events.Remove(@event);
             await context.SaveChangesAsync();
         }

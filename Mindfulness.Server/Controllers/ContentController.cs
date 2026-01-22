@@ -89,7 +89,7 @@ public class ContentController : ControllerBase
             return NotFound();
         }
 
-        if (content.UserId != userGuid)
+        if (content.UserId != userGuid || !User.IsInRole("Admin"))
         {
             return Unauthorized();
         }
@@ -139,7 +139,7 @@ public class ContentController : ControllerBase
             return NotFound();
         }
 
-        if (content.UserId != userGuid)
+        if (content.UserId != userGuid && !User.IsInRole("Admin"))
         {
             return Unauthorized();
         }
