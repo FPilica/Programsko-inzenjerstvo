@@ -4,7 +4,7 @@ namespace Mindfulness.Server.Dtos.Content;
 
 public class ContentUpdateDto
 {
-    public required string Title { get; set; }
+    public string? Title { get; set; }
     
     public string? Description { get; set; }
     
@@ -12,7 +12,13 @@ public class ContentUpdateDto
     
     public TimeSpan? Duration { get; set; }
     
-    public Guid CategoryId { get; set; }
+    public string? ContentType { get; set; }
+    
+    public string? ContentLink { get; set; }
+
+    public string? ThumbnailLink { get; set; }
+    
+    public Guid? CategoryId { get; set; }
 
     public Guid? AudioLanguageId { get; set; }
 }

@@ -1,35 +1,217 @@
+/* profil main */
+.title {
+    text-decoration: none;
+    color: #7c3aed;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+}
 
 .profileContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height:100vh;
+    min-height: 100vh;
+    padding: 40px 20px;
 }
 
 .containerProfile {
-    padding: 30px;
+    padding: 40px;
     background-color: white;
-    width: 532px;
-    height: auto;
+    width: 100%;
+    max-width: 600px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    color: black;
-    border-radius: 20px;
+    gap: 20px;
+    color: #333;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .containerList {
     display: grid;
-    grid-template-columns: 125px auto;
+    grid-template-columns: 140px auto;
+    gap: 15px;
+}
+
+.containerList:last-child {
+    border-bottom: none;
 }
 
 .userInput {
-    font-weight: bold;
+    font-weight: 600;
+}
+
+.profileActions {
+    display: flex;
+    gap: 15px;
+}
+
+.setProfileButton, .onboardingRezButton {
+    background-color: #7c3aed;
+    color: white;
+}
+
+.logoutButton {
+    background: red;
+    color: white;
 }
 
 .fp {
     align-self: flex-end;
     text-decoration: none;
-    color: rgba(0, 0, 0);
-    bottom: 22px;
+    color: #7c3aed;
+    font-size: 14px;
+    transition: opacity 0.3s;
+}
+
+.fp:hover {
+    opacity: 0.7;
+}
+
+/* anketa rezultati */
+.res {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.question {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.answer {
+    font-size: 16px;
+    color: #666;
+}
+
+.onboardingRezBackButton {
+    background-color: #7c3aed;
+    color: white;
+    align-self: center;
+}
+
+.containerAnketa {
+    padding: 40px;
+    background-color: white;
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    color: #333;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.containerListQ {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.containerQuestions {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    gap: 20px;
+}
+
+.odgovori {
+    display: flex;
+    gap: 15px;
+}
+
+/* uredi profil */
+
+.setFrom > div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.setFrom > div > label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.setFrom > div > input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    background-color: white;
+    color: #333;
+    transition: border-color 0.3s;
+    color-scheme: gray;
+}
+
+.setFrom > div > input:focus {
+    outline: none;
+    border-color: #7c3aed;
+}
+
+.setFrom > a {
+    align-self: flex-end;
+    text-decoration: none;
+    font-size: 14px;
+    color: #7c3aed;
+    transition: opacity 0.3s;
+}
+
+.setFrom > a:hover {
+    opacity: 0.7;
+}
+
+/* samo reg */
+.genderOptions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.genderOptions > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.genderOptions > div > input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    accent-color: #7c3aed;
+}
+    
+.genderOptions > div > input[type="radio"]:hover {
+    transform: scale(1.2);
+}
+
+.submitChange {
+    background-color: #7c3aed !important;
+    color: white;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+.submitChange:hover {
+    background-color: #6d28d9 !important;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+    transform: translateY(-2px);
 }

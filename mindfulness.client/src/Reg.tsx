@@ -1,11 +1,6 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import "./App.css";
 import "./Auth.css";
 import logoPurple from "./assets/logo_boja 2.png";
-// auth
-// npx vite u cmd u folder
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -103,9 +98,9 @@ function Reg() {
         throw new Error(`Neupsjela registracija: ${response.status} ${responseData}`);
       }
 
-      // Na upitnik nakon registracije
-      console.log('Registracija uspjesna');
-      navigate("/auth/onboarding");
+      // Na login nakon registracije
+      console.log("Registracija uspjesna");
+      navigate("/auth/login");
     } catch (error) {
       console.error('Neupsjela registracija:', error);
       alert('Neupsjela registracija: ' + (error as Error).message);

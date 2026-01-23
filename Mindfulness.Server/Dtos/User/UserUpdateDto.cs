@@ -1,21 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
-using Mindfulness.Server.Enums;
-using Mindfulness.Server.Models;
+﻿using Mindfulness.Server.Enums;
 
 namespace Mindfulness.Server.Dtos.User;
 
 public class UserUpdateDto
 {
-    public required string FirstName { get; set; }
+    public string? FirstName { get; set; }
 
-    public required string LastName { get; set; }
+    public string? LastName { get; set; }
     
-    public Gender Gender { get; set; }
+    public string? Role { get; set; }
     
-    public DateTimeOffset DateOfBirth { get; set; }
+    public Gender? Gender { get; set; }
     
-    public required string Email { get; set; }
+    public DateTimeOffset? DateOfBirth { get; set; }
     
-    public required string Password { get; set; }
+    public string? Email { get; set; }
 }

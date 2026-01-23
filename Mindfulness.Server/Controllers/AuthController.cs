@@ -60,7 +60,12 @@ public sealed class AuthController : ControllerBase
             return BadRequest(result.Errors);
         }
         
-        _ = await _userManager.AddToRoleAsync(user, "User");
+        result = await _userManager.AddToRoleAsync(user, "User");
+        
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
         
         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -165,10 +170,10 @@ public sealed class AuthController : ControllerBase
                 : $"https://localhost:60665/auth/callback?token={jwtToken}");
         }
         
-        var user = new User
+        var user = existingUser ?? new User
         {
             Id = Guid.NewGuid(),
-            FirstName = info.Principal.FindFirstValue(ClaimTypes.Name) ?? "John",
+            FirstName = info.Principal.FindFirstValue(ClaimTypes.Name.Split(' ')[0]) ?? "John",
             LastName = info.Principal.FindFirstValue(ClaimTypes.Surname) ?? "Doe",
             Email = info.Principal.FindFirstValue(ClaimTypes.Email),
             UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
@@ -183,9 +188,15 @@ public sealed class AuthController : ControllerBase
         {
             return BadRequest(result.Errors);
         }
+        
+        result = await _userManager.AddToRoleAsync(user, "User");
+        
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
 
         _ = await _userManager.AddLoginAsync(user, info);
-        _ = await _userManager.AddToRoleAsync(user, "User");
 
         var token = GenerateJwtToken(user);
  

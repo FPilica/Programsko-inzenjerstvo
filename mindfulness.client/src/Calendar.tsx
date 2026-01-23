@@ -1,22 +1,22 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import "./App.css";
-// auth
-// npx vite u cmd u folder
 import Header from "./components/Header";
+import CalendarComponent from "./components/CalendarComponent";
 
-function App() {
+function Calendar() {
+  const userRole = localStorage.getItem("userRole");
+
   return (
     <>
       <div className="background">
         <div className="calendarContainer">
-          <Header />
-          <h1>Kalendar</h1>
+          <Header userRole={userRole || ""}/>
+          <div className="calendarContent">
+            <CalendarComponent />
+          </div>
         </div>
       </div>
     </>
   );
 }
 
-export default App;
+export default Calendar;

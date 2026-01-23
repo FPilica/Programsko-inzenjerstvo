@@ -1,18 +1,143 @@
 import "./App.css";
 import "./Dashboard.css";
 import Header from "./components/Header.tsx";
+import { CaretRightIcon } from "@phosphor-icons/react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import AdminDash from "./AdminDash.tsx";
 
 function Dashboard() {
-  return (
-    <>
+  const [user, setUser] = useState<any | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  // dohvacanje user podataka sa backenda
+  const getUser = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/UserProfile/getprofile`,
+        {
+          method: "GET",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      const userData = await response.json();
+      setUser(userData);
+      setUserRole(userData.role.toLowerCase() || null);
+      localStorage.setItem("userRole", userData.role.toLowerCase() || "");
+
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const getCategories = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/contentcategory`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        },
+      );
+      const categories = await response.json();
+      sessionStorage.setItem("categories", JSON.stringify(categories));
+    } catch (error) {
+      console.error("Error fetching category name:", error);
+    }
+  };
+
+  const getLanguages = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/audiolanguage`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        },
+      );
+      const languages = await response.json();
+      sessionStorage.setItem("languages", JSON.stringify(languages));
+    } catch (error) {
+      console.error("Error fetching languages:", error);
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+    getCategories();
+    getLanguages();
+  }, []);
+
+  // Loading state
+  if (!userRole) {
+    return (
       <div className="background">
         <div className="dashboardContainer">
-          <Header />
-          <h1>Dashboard</h1>
+          <p>Učitavanje...</p>
         </div>
       </div>
-    </>
-  );
+    );
+  }
+
+  // admin ima svoj dashboard, coach i user imaju isti jer je coach user koji moze dodavati sadrzaj
+  if (userRole === "admin") {
+
+    return (
+      <>
+        <AdminDash />
+      </>
+    )
+
+  } else if (userRole === "coach" || userRole === "user") {
+
+    // logika za preporuceni plan i sadrzaj nije jos napravljena
+    return (
+      <>
+        <div className="background">
+          <div className="dashboardContainer">
+            <Header userRole={userRole || ""} />
+            <p className="dashGreeting">Pozdrav {user?.firstName}</p>
+            <div className="cardsContainer">
+              <div className="dashCard dailyFocusCard">
+                <CaretRightIcon className="cardArrow" size={16} color="gray" />
+                <p>Dnevni</p>
+                <p>fokus</p>
+              </div>
+              <div className="dashCard streakCard">
+                <p>Dan</p>
+                <p>8</p>
+                <p>Čestitamo</p>
+              </div>
+              <div className="dashCard dailyCheckCard" onClick={() => navigate("/daily")}>
+                <CaretRightIcon className="cardArrow" size={16} color="gray" />
+                <p>Dnevni</p>
+                <p>check-in</p>
+              </div>
+            </div>
+            <div className="recommendedPlan">Preporučeni plan</div>
+            <div className="recommendedContent">Preporučeni sadržaj</div>
+          </div>
+        </div>
+      </>
+    );
+
+  }
 }
 
-export default Dashboard;
+export default Dashboard; 

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
 import OAuthContainer from "./components/OAuthContainer";
+import * as React from "react";
 
 function Login() {
   const navigate = useNavigate();
@@ -34,9 +35,33 @@ function Login() {
       }
 
       const data = JSON.parse(responseData);
-      console.log('Prijava uspjesna, token primljen');
-      localStorage.setItem('access_token', data.token);
-      navigate("/dashboard");
+      console.log("Prijava uspjesna, token primljen");
+      const token = data.token;
+      localStorage.setItem("auth_token", token);
+
+      try {
+        const response = await fetch(
+            "https://localhost:7070/api/startquestionnaire",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+              },
+            }
+        );
+
+        if (!response.ok) {
+          throw new Error("Korisnik nije rješio početni upitnik...");
+        }
+
+        console.log("Korisnik rješio upitnik, /dash");
+        navigate("/dashboard");
+      } catch (error) {
+        console.log(": ", error);
+        navigate("/auth/onboarding");
+      }
+
     } catch (error) {
       console.error('Neuspjesna prijava:', error);
       alert('Neuspješna prijava: ' + (error as Error).message);

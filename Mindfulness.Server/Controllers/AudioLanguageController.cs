@@ -1,35 +1,100 @@
-﻿//using AutoMapper;
-//using Microsoft.AspNetCore.Mvc;
-//using Mindfulness.Server.Dtos.AudioLanguage;
-//using Mindfulness.Server.Models;
-//
-//namespace Mindfulness.Server.Controllers
-//{
-//    [ApiController]
-//    [Route("[controller]")]
-//    public class AudioLanguageController : ControllerBase
-//    {
-//        private readonly IMapper _mapper;
-//
-//        public AudioLanguageController(IMapper mapper)
-//        {
-//            _mapper = mapper;
-//        }
-//        [HttpGet("{id}")]
-//        public async Task<IActionResult> GetAudioLanguage(int id)
-//        {
-//            return null;
-//        }
-//        [HttpPost]
-//        public async Task<IActionResult> CreateAudioLanguage(AudioLanguageCreateDto dto)
-//        {
-//            return null;
-//        }
-//        [HttpPost]
-//        public async Task<IActionResult> UpdateAudioLanguage(AudioLanguageUpdateDto dto)
-//        {
-//            return null;
-//        }
-//    }
-//}
-// najiskrenije ne kuzin kako funkcioniraju context i mapper, mfw automapper
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Mindfulness.Server.Dtos.AudioLanguage;
+using Mindfulness.Server.Models;
+
+namespace Mindfulness.Server.Controllers;
+
+[Authorize]
+[ApiController]
+[Route("api/[controller]")]
+public class AudioLanguageController(MindfulnessDbContext context, IMapper mapper) : ControllerBase
+{
+    [HttpPost]
+    public async Task<ActionResult<AudioLanguageDetailsDto>> CreateAudioLanguage([FromBody] AudioLanguageCreateDto dto)
+    {
+        
+        var contentExists = await context.AudioLanguages.AnyAsync(x => x.Name.Equals(dto.Name));
+
+        if (contentExists)
+        {
+            return BadRequest("Language already exists");
+        }
+        
+        var newAudioLanguage = mapper.Map<AudioLanguage>(dto);
+        newAudioLanguage.Name = dto.Name;
+        newAudioLanguage.Id = Guid.NewGuid();
+        
+        context.AudioLanguages.Add(newAudioLanguage);
+        
+        await context.SaveChangesAsync();
+        
+        return Ok(mapper.Map<AudioLanguageDetailsDto>(newAudioLanguage));
+    }
+
+    [HttpPut("{Id:guid}")]
+    public async Task<ActionResult<AudioLanguageDetailsDto>> UpdateAudioLanguage(Guid Id, [FromBody] AudioLanguageUpdateDto dto)
+    {
+        
+        var audioLanguage = await context.AudioLanguages.FindAsync(Id);
+
+        if (audioLanguage is null)
+        {
+            return NotFound();
+        }
+
+        var newNameExists = await context.AudioLanguages.AnyAsync(x => x.Name.Equals(dto.Name) && x.Id != audioLanguage.Id);
+
+        if (newNameExists)
+        {
+            return BadRequest("Language already exists");
+        }
+            
+        audioLanguage.Name = dto.Name;
+        
+        
+        context.AudioLanguages.Update(audioLanguage);
+        await context.SaveChangesAsync();
+        
+        return Ok(mapper.Map<AudioLanguageDetailsDto>(audioLanguage));
+    }
+
+    [HttpDelete("{Id:guid}")]
+    public async Task<IActionResult> DeleteAudioLanguage(Guid Id)
+    {
+        var audioLanguage = await context.AudioLanguages.FindAsync(Id);
+        if (audioLanguage is null)
+        {
+            return NotFound();
+        }
+        
+        context.AudioLanguages.Remove(audioLanguage);
+        await context.SaveChangesAsync();
+        
+
+        return Ok();
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<AudioLanguageDetailsDto>>> GetLanguages()
+    {
+        var languages = await context.AudioLanguages.ToListAsync();
+        
+        return Ok(mapper.Map<List<AudioLanguageDetailsDto>>(languages));
+    }
+    
+    [HttpGet("{languageName}")]
+    public async Task<ActionResult<List<AudioLanguageDetailsDto>>> GetLanguages(string languageName)
+    {
+        var languages = await context.AudioLanguages.FirstOrDefaultAsync(al => al.Name == languageName);
+
+        if (languages is null)
+        {
+            return NotFound();
+        }
+        
+        return Ok(mapper.Map<AudioLanguageDetailsDto>(languages));
+    }
+}

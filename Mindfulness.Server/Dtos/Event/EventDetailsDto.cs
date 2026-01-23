@@ -11,6 +11,8 @@ public class EventDetailsDto
     public DateTimeOffset StartTime { get; set; }
     
     public DateTimeOffset EndTime { get; set; }
-
-    public required Models.User User { get; set; }
+    
+    public bool AllDay { get; set; }
+    
+    public Guid? ContentId { get; set; }
 }

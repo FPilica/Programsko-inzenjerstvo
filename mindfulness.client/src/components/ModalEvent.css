@@ -1,0 +1,160 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    position: relative;
+    color: #333;
+}
+
+.modalContent h2 {
+    margin: 0 0 25px 0;
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+}
+
+.modalContent p {
+    margin: 0 0 15px 0;
+    font-size: 15px;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.modalContent p b {
+    color: #957CFE;
+    font-weight: 600;
+}
+
+.modalCloseButton {
+    height: 30px;
+    width: 30px;
+    background-color: #957CFE;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.modalDeleteButton {
+    display: block;
+    margin: 20px auto 0;
+    width: 50%;
+    padding: 12px 32px;
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.eventDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.eventDetails p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    margin: 0;
+}
+
+.eventDetails p span:first-child {
+    font-weight: 600;
+    color: #666;
+}
+
+.eventDetails p b,
+.eventDetails p span:last-child {
+    color: #333;
+    text-align: right;
+}
+
+.addEventForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.addEventForm > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.addEventForm > div > label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+}
+
+.addEventForm > div > input,
+.addEventForm > div > textarea {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.3s;
+    background-color: white;
+    color: #333;
+}
+
+.addEventForm > div > input:focus,
+.addEventForm > div > textarea:focus {
+    outline: none;
+    border-color: #957CFE
+}
+
+.addEventForm > div > textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.addEventForm > div > input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #957CFE;
+}
+
+.addEventForm > div > input{
+    color-scheme: gray;
+}
+
+.modalAddButton {
+    align-self: center;
+    background-color: #957CFE;
+    color: white;
+    margin-top: 10px;
+}
+
+.clickableContentTitle {
+    cursor: pointer;
+    color: #957CFE;
+    text-decoration: underline;
+}

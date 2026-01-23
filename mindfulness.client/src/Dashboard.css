@@ -1,19 +1,133 @@
 .background {
     position: relative;
-    background-color:white;
+    background-color: white;
     background-image: url('./assets/pozadina_dash.png');
     background-repeat: no-repeat;
-    background-size:cover;
+    background-size: cover;
     background-position: center center;
     z-index: 0;
     color: black;
-    
+
 }
 
-.background > :first-child {
-    position:relative;
+.background> :first-child {
+    position: relative;
     z-index: 1;
-    padding: 110px 30px 30px 30px;
+    padding: 130px 30px 30px 30px;
 }
 
 /* ne diraj ovo gori */
+/* dashboard styles */
+
+.dashboardContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 30px;
+    align-items: center;
+}
+
+.dashGreeting {
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 0;
+    color: white;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.cardsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 0;
+}
+
+.dashCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    width: 150px;
+    height: 150px;
+    font-weight: 600;
+    background-color: white;
+    border-radius: 12px;
+    margin: 0;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    transition: box-shadow 150ms ease, transform 150ms ease;
+}
+
+.dashCard:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+    transform: translateY(-2px);
+}
+
+.cardArrow {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.dashCard p {
+    margin: 0;
+    font-size: 25px;
+}
+
+.dailyFocusCard> :nth-child(3) {
+    color: #7636BB;
+}
+
+.streakCard {
+    cursor: default;
+}
+
+.streakCard> :nth-child(2) {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.streakCard> :nth-child(2) {
+    color: #7636BB;
+    font-size: 40px;
+}
+
+.streakCard> :nth-child(3) {
+    font-size: 18px;
+    /* font-weight: bold; */
+}
+
+.dailyCheckCard> :nth-child(3) {
+    color: #7636BB;
+}
+
+.recommendedPlan {
+    margin-top: 40px;
+    width: 100%;
+    /* za sad da postoji */
+    height: 200px;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    margin: 0;
+    font-size: 50px;
+    color: white;
+    text-align: center;
+    align-content: center;
+}
+
+.recommendedContent {
+    margin-top: 30px;
+    width: 100%;
+    /* za sad da postoji */
+    height: 400px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    margin: 0;
+    font-size: 50px;
+    text-align: center;
+    align-content: center;
+}

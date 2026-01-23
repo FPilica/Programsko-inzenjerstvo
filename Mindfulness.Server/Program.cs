@@ -47,7 +47,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "https://localhost:7070", "https://localhost:60665/");
+        policy.WithOrigins("http://localhost:5173", "https://localhost:7070", "https://localhost:60665").AllowAnyHeader().AllowAnyMethod();
     });
 });
 
@@ -133,5 +133,13 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
+
+using var scope = app.Services.CreateScope();
+var dbContext = scope.ServiceProvider.GetService<MindfulnessDbContext>();
+var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole<Guid>>>();
+var userManager = scope.ServiceProvider.GetService<UserManager<User>>();
+var dbSeeder = new DataSeeder(dbContext ?? throw new NullReferenceException(),
+    roleManager ?? throw new NullReferenceException(), userManager ?? throw new NullReferenceException());
+await dbSeeder.SeedDataAsync();
 
 app.Run();

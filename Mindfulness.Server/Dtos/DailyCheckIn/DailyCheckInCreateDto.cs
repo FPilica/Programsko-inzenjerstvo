@@ -13,6 +13,4 @@ public class DailyCheckInCreateDto
     public int? Alcohol { get; set; }
     
     public string? DailyNotes { get; set; }
-    
-    public Guid UserId { get; set; }
 }
