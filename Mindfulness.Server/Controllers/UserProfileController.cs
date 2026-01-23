@@ -95,7 +95,7 @@ public class UserProfileController : ControllerBase
         return Ok(_mapper.Map<List<UserDetailsDto>>(users));
     }
     
-    [HttpGet("deleteprofile{id:guid}")]
+    [HttpDelete("deleteprofile/{id:guid}")]
     public async Task<ActionResult<UserDetailsDto>> DeleteUser(Guid id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -119,7 +119,13 @@ public class UserProfileController : ControllerBase
             return Unauthorized();
         }
         
-        _context.Users.Remove(user);
+        var userToDelete = await _context.Users.FindAsync(id);
+        if (userToDelete is null)
+        {
+            return NotFound("User to delete not found");
+        }
+        
+        _context.Users.Remove(userToDelete);
         await _context.SaveChangesAsync();
 
         return Ok();
