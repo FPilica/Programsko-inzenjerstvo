@@ -15,7 +15,7 @@ function Dashboard() {
   const getUser = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/UserProfile/getprofile`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/UserProfile/getprofile`,
         {
           method: "GET",
           headers: {
@@ -43,7 +43,7 @@ function Dashboard() {
   const getCategories = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/contentcategory`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/contentcategory`,
         {
           method: "GET",
           headers: {
@@ -62,7 +62,7 @@ function Dashboard() {
   const getLanguages = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/audiolanguage`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/audiolanguage`,
         {
           method: "GET",
           headers: {

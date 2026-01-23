@@ -8,7 +8,7 @@ import "./AddContent.css";
 
 function AddContent() {
 
-  const [user, setUser] = useState<any | null>(null);
+  const [_, setUser] = useState<any | null>(null);
   const userRole = localStorage.getItem("userRole");
 
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +33,7 @@ function AddContent() {
   const fetchUserAndContent = async () => {
     try {
       const [userRes, contentRes] = await Promise.all([
-        fetch("https://localhost:7070/api/userprofile/getprofile", {
+        fetch("https://programsko-inzenjerstvo-x2fd.onrender.com/api/userprofile/getprofile", {
           method: "GET",
           headers: {
             "accept": "text/plain",
@@ -41,7 +41,7 @@ function AddContent() {
             "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
           },
         }),
-        fetch("https://localhost:7070/api/content", {
+        fetch("https://programsko-inzenjerstvo-x2fd.onrender.com/api/content", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -70,13 +70,13 @@ function AddContent() {
     if (!sessionStorage.getItem("categories") || !sessionStorage.getItem("languages")) {
       try {
         const [categoriesRes, languagesRes] = await Promise.all([
-          fetch("https://localhost:7070/api/contentcategory", {
+          fetch("https://programsko-inzenjerstvo-x2fd.onrender.com/api/contentcategory", {
             headers: {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
             },
           }),
-          fetch("https://localhost:7070/api/audiolanguage", {
+          fetch("https://programsko-inzenjerstvo-x2fd.onrender.com/api/audiolanguage", {
             headers: {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
@@ -119,7 +119,7 @@ function AddContent() {
   const addContentItemToDatabase = async (item: ContentItem) => {
     try {  
       const response = await fetch(
-        `https://localhost:7070/api/content`, 
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/content`,
         {
           method: "POST",
           headers: {

@@ -8,7 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 const DailyCheckIn = () => {
     const navigate = useNavigate();  
     
-    const [userD, setUser] = useState<{ [key: string]: any }>({});
+    const [_, setUser] = useState<{ [key: string]: any }>({});
     let [streak, setStreak] = useState(0);
     const [mood, setMood] = useState("");
     const [active, setPhysicalActivity] = useState("");
@@ -28,7 +28,7 @@ const DailyCheckIn = () => {
 
       // ovdje treba biti funkcija za promjenit ig
       const response = await fetch(
-        "https://localhost:7070/api/dailytasks",
+        "https://programsko-inzenjerstvo-x2fd.onrender.com/api/dailytasks",
         {
           method: "POST",
           headers: {
@@ -69,7 +69,7 @@ const DailyCheckIn = () => {
     const streakUp = async (newStreak: number) =>{
     
       try {
-        const response = await fetch('https://localhost:7070/api/userprofile/setprofile', {
+        const response = await fetch('https://programsko-inzenjerstvo-x2fd.onrender.com/api/userprofile/setprofile', {
           method: 'POST',
           headers: {
             accept: "text/plain",
@@ -102,7 +102,7 @@ const DailyCheckIn = () => {
       // dohvaća daily data za user
         try {
           const response = await fetch(
-              `https://localhost:7070/api/userprofile/getprofile`,
+              `https://programsko-inzenjerstvo-x2fd.onrender.com/api/userprofile/getprofile`,
               {
               method: "GET",
               headers: {

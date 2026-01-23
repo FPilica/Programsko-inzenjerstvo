@@ -24,7 +24,7 @@ function EditContent() {
   const getContentItems = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/content`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/content`,
         {
           method: "GET",
           headers: {
@@ -68,7 +68,7 @@ function EditContent() {
   const editContent = async (updatedContent: ContentItem) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/content/${id}`, 
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/content/${id}`,
         {
           method: "PUT",
           headers: {
@@ -118,7 +118,7 @@ function EditContent() {
       
       try {
         const response = await fetch(
-          `https://localhost:7070/api/content/${id}`,
+          `https://programsko-inzenjerstvo-x2fd.onrender.com/api/content/${id}`,
           {
             method: "DELETE",
             headers: {

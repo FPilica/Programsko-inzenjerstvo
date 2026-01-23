@@ -39,7 +39,7 @@ function Content() {
   const getContentItems = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/content`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/content`,
         {
           method: "GET",
           headers: {

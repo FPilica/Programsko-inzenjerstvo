@@ -2,7 +2,6 @@ import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
 import ContentViewModal from "./ContentViewModal";
 import "./ModalEvent.css";
-import { data } from "react-router-dom";
 
 function ModalEventView({
   isOpen,
@@ -24,7 +23,7 @@ function ModalEventView({
 
   const getContentItems = async () => {
     try {
-      const response = await fetch(`https://localhost:7070/api/content`, {
+      const response = await fetch(`https://programsko-inzenjerstvo-x2fd.onrender.com/api/content`, {
         method: "GET",
         headers: {
           Accept: "text/plain",

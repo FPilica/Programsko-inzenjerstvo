@@ -23,7 +23,7 @@ function CalendarComponent() {
   const getEvents = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/event`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/event`,
         {
           method: "GET",
           headers: {
@@ -76,7 +76,7 @@ function CalendarComponent() {
   const handleDeleteEventDatabase = async (eventId: string) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/event/${eventId}`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/event/${eventId}`,
         {
           method: "DELETE",
           headers: {

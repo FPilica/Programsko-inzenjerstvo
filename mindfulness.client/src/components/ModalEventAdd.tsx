@@ -6,8 +6,7 @@ function ModalEventAdd({
   isOpen,
   onClose,
   selectInfo,
-  addEvent,
-  contentId
+  addEvent
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -33,7 +32,7 @@ function ModalEventAdd({
   const addEventToDatabase = async (newEvent: any) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/event`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/event`,
         {
           method: "POST",
           headers: {

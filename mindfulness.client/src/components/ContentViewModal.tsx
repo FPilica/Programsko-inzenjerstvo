@@ -36,7 +36,7 @@ function ContentViewModal({
   const [user, setUser] = useState<any | null>(null);
   const userRole = localStorage.getItem("userRole");
 
-  const canDeleteReview = (review: Review) => {
+  const canDeleteReview = () => {
     // Admin može brisati sve
     if (userRole === "admin") return true;
     // Trener može brisati na svojim objavama
@@ -68,7 +68,7 @@ function ContentViewModal({
   const getUser = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/UserProfile/getprofile`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/UserProfile/getprofile`,
         {
           method: "GET",
           headers: {
@@ -94,7 +94,7 @@ function ContentViewModal({
     try {
       const [reviewsResponse, usersResponse] = await Promise.all([
         fetch(
-          `https://localhost:7070/api/review/by-content-id/${content.id}`,
+          `https://programsko-inzenjerstvo-x2fd.onrender.com/api/review/by-content-id/${content.id}`,
           {
             method: "GET",
             headers: {
@@ -104,7 +104,7 @@ function ContentViewModal({
           }
         ),
         fetch(
-          `https://localhost:7070/api/UserProfile/getallusers`,
+          `https://programsko-inzenjerstvo-x2fd.onrender.com/api/UserProfile/getallusers`,
           {
             method: "GET",
             headers: {
@@ -142,7 +142,7 @@ function ContentViewModal({
   const addReviewToDatabase = async (review: Review) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/review`, 
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/review`,
         {
           method: "POST",
           headers: {
@@ -169,7 +169,7 @@ function ContentViewModal({
   const updateReviewInDatabase = async (reviewId: string, review: Review) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/review/${reviewId}`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/review/${reviewId}`,
         {
           method: "PUT",
           headers: {
@@ -243,7 +243,7 @@ function ContentViewModal({
   const deleteContentFromDatabase = async (contentId: string) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/content/${contentId}`, 
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/content/${contentId}`,
         {
           method: "DELETE",
           headers: {
@@ -275,7 +275,7 @@ function ContentViewModal({
   const deleteReviewFromDatabase = async (reviewId: string) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/review/${reviewId}`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/review/${reviewId}`,
         {
           method: "DELETE",
           headers: {
@@ -315,7 +315,7 @@ function ContentViewModal({
   const addEventToDatabase = async (newEvent: any) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/event`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/event`,
         {
           method: "POST",
           headers: {
@@ -594,7 +594,7 @@ function ContentViewModal({
                     {"⭐".repeat(review.rating)}
                   </div>
                   <p className="review-text">{review.comment}</p>
-                  {canDeleteReview(review) && (
+                  {canDeleteReview() && (
                     <button
                       className="myButton deleteReviewButton"
                       onClick={() => handleDeleteReview(review.id || "")}

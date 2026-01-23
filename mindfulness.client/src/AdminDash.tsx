@@ -16,7 +16,7 @@ function AdminDash() {
   const fetchUsers = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/UserProfile/getallusers`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/UserProfile/getallusers`,
         {
           method: "GET",
           headers: {
@@ -57,7 +57,7 @@ function AdminDash() {
   const deleteUser = async (userId: string) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/UserProfile/deleteprofile/${userId}`,
+        `https://programsko-inzenjerstvo-x2fd.onrender.com/api/UserProfile/deleteprofile/${userId}`,
         {
           method: "DELETE",
           headers: {
