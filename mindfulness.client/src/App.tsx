@@ -1,6 +1,5 @@
 import "./App.css";
 import PrivateRoutes from "./components/PrivateRoutes"
-// npx vite u cmd u folder
 
 import {
   BrowserRouter as Router,
@@ -25,7 +24,8 @@ import Stats from "./Stats";
 import Onboarding from "./Onboarding.tsx";
 import AddContent from "./AddContent.tsx";
 import EditContent from "./EditContent.tsx";
-// nezz kako dash i stats ?
+import Daily from "./Daily.tsx";
+
 
 function App() {
   // app sada radi kao server.js odnosno sadrži rute na druge stranice
@@ -54,6 +54,7 @@ function App() {
             <Route path="/stats" element={<Stats />} />
             <Route path="/addcontent" element={<AddContent />} />
             <Route path="/editcontent/:id" element={<EditContent />} />
+            <Route path="/daily" element={<Daily />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" />} />

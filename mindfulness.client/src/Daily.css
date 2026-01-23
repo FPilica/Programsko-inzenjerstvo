@@ -1,0 +1,93 @@
+.onboardingContainer {
+    padding: 30px;
+    background-color: white;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: black;
+    border-radius: 20px;
+}
+
+.onboardingContainer > form > div > label {
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-weight: bold;
+    text-align: center;
+    margin: 0px;
+    padding:15px;
+    width:100%;
+    border-bottom: 2px solid #7636BB;
+}
+
+.streak {
+  display: flex;
+  flex-direction: column;
+}
+
+.streak > p{
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-weight: bold;
+  text-align: center;
+  margin: 0px;
+  width:100%;
+  color: #7636BB;
+}
+
+.streak p:nth-child(3) {
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #7636BB;
+}
+
+.formContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    padding: 10px;
+    position: relative;
+}
+
+.formContainer > div {
+    width:100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.formContainer > div > label {
+    font-size: 1rem;
+    font-weight: bold;
+    align-self: flex-start;
+}
+
+.formContainer > div > input {
+    width: 100%;
+    height: 45px;
+    border-radius: 12px;
+    border: gray 1.5px solid;
+    padding: 10px;
+    font-size: 1rem;
+    background-color: white;
+    color: black;
+    color-scheme: gray;
+}
+
+.formContainer > div > textarea {
+  width: 100%;
+  border-radius: 12px;
+  border: gray 1.5px solid;
+  padding: 10px;
+  font-size: 1rem;
+  background-color: white;
+  color: black;
+  color-scheme: gray;
+}
