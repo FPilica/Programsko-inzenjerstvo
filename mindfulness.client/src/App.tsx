@@ -23,6 +23,8 @@ import Stats from "./Stats";
 import Onboarding from "./Onboarding.tsx";
 import AddContent from "./AddContent.tsx";
 import EditContent from "./EditContent.tsx";
+import Daily from "./Daily.tsx";
+
 
 function App() {
   return (
@@ -49,6 +51,7 @@ function App() {
             <Route path="/stats" element={<Stats />} />
             <Route path="/addcontent" element={<AddContent />} />
             <Route path="/editcontent/:id" element={<EditContent />} />
+            <Route path="/daily" element={<Daily />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" />} />

@@ -3,11 +3,13 @@ import "./Dashboard.css";
 import Header from "./components/Header.tsx";
 import { CaretRightIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AdminDash from "./AdminDash.tsx";
 
 function Dashboard() {
   const [user, setUser] = useState<any | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   // dohvacanje user podataka sa backenda
   const getUser = async () => {
@@ -122,7 +124,7 @@ function Dashboard() {
                 <p>8</p>
                 <p>Čestitamo</p>
               </div>
-              <div className="dashCard dailyCheckCard">
+              <div className="dashCard dailyCheckCard" onClick={() => navigate("/daily")}>
                 <CaretRightIcon className="cardArrow" size={16} color="gray" />
                 <p>Dnevni</p>
                 <p>check-in</p>
