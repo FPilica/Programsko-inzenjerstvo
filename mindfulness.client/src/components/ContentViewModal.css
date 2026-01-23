@@ -268,6 +268,14 @@
     cursor: pointer;
 }
 
+.deleteMyReviewButton {
+    display: block;
+    padding: 6px 12px;
+    width: 30%;
+    background-color: #ef4444;
+    color: white;
+}
+
 /* Event Form */
 .addToCalendarFormContainer h2 {
   color: black;

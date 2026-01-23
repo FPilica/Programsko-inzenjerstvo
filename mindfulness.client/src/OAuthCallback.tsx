@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode} from "jwt-decode";
 
 function OAuthCallback() {
     const navigate = useNavigate();
@@ -13,14 +12,6 @@ function OAuthCallback() {
 
         if (token) {
             localStorage.setItem("auth_token", token);
-
-            const tokenDecoded = jwtDecode(token);
-            const userId = tokenDecoded.sub;
-            console.log(userId);
-
-            // if (userId) {
-            //     localStorage.setItem("userId", userId);
-            // }
 
             const fetchOnboarding = async () => {
 

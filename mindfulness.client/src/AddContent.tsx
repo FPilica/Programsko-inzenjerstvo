@@ -2,25 +2,13 @@ import Header from "./components/Header";
 import { useState, useEffect } from "react";
 import ContentViewModal from "./components/ContentViewModal";
 import ContentCard from "./components/ContentCard";
+import type {ContentItem} from "./types/ContentItem";
 import "./AddContent.css";
 
 
-interface ContentItem {
-  contentId: number;
-  title: string;
-  description: string;
-  videoLink?: string;
-  articleLink?: string;
-  text?: string;
-  posterLink?: string;
-  type: "video" | "article";
-  authorId: string;
-  category: string;
-  duration: string;
-}
-
 function AddContent() {
 
+  const [user, setUser] = useState<any | null>(null);
   const userRole = localStorage.getItem("userRole");
 
   const [isOpen, setIsOpen] = useState(false);
@@ -38,55 +26,156 @@ function AddContent() {
   const [articleText, setArticleText] = useState("");
 
   useEffect(() => {
-    // fetchMyContent();
-    loadContent();
+    fetchUserAndContent();
+    ensureDataLoaded();
   }, []);
 
-  const loadContent = () => {
-    let storedContent : ContentItem[] = JSON.parse(localStorage.getItem("contentItems") || "[]");
-    storedContent = storedContent.filter((item: ContentItem) => item.authorId === "author1");
-    setMyContent(storedContent);
-  }
-    
-  const fetchMyContent = async () => {
+  const fetchUserAndContent = async () => {
     try {
-      const response = await fetch(
-        "https://localhost:7070/api/content/mycontent",
-        {
+      const [userRes, contentRes] = await Promise.all([
+        fetch("https://localhost:7070/api/userprofile/getprofile", {
+          method: "GET",
+          headers: {
+            "accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }),
+        fetch("https://localhost:7070/api/content", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
           },
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setMyContent(data);
+        }),
+      ]);
+
+      if (userRes.ok && contentRes.ok) {
+        const userData = await userRes.json();
+        const contentData = await contentRes.json();
+        
+        setUser(userData);
+        
+        // Filtriraj content po user ID-u
+        const filteredData = contentData.filter((item: ContentItem) => item.userId === userData.id);
+        setMyContent(filteredData);
       }
     } catch (error) {
-      console.error("Error fetching content:", error);
+      console.error("Error fetching user and content:", error);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const ensureDataLoaded = async () => {
+    // Ako Dashboard još nije učitao kategorije, učitaj ih
+    if (!sessionStorage.getItem("categories") || !sessionStorage.getItem("languages")) {
+      try {
+        const [categoriesRes, languagesRes] = await Promise.all([
+          fetch("https://localhost:7070/api/contentcategory", {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+            },
+          }),
+          fetch("https://localhost:7070/api/audiolanguage", {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+            },
+          }),
+        ]);
+
+        if (categoriesRes.ok) {
+          const categories = await categoriesRes.json();
+          sessionStorage.setItem("categories", JSON.stringify(categories));
+        }
+        if (languagesRes.ok) {
+          const languages = await languagesRes.json();
+          sessionStorage.setItem("languages", JSON.stringify(languages));
+        }
+      } catch (error) {
+        console.error("Error loading categories/languages:", error);
+      }
+    }
+  };
+
+  const getCategoryIdByName = (contentCategory: string): string => {
+    const categories = JSON.parse(sessionStorage.getItem("categories") || "[]");
+    const category = categories.find((cat: any) => cat.name.toLowerCase() === contentCategory.toLowerCase());
+    if (!category) {
+      console.error(`Category "${contentCategory}" not found in sessionStorage`);
+    }
+    return category?.id || "";
+  };
+
+  const getAudioLanguageIdByName = (language: string): string => {
+    const languages = JSON.parse(sessionStorage.getItem("languages") || "[]");
+    const lang = languages.find((l: any) => l.name.toLowerCase() === language.toLowerCase());
+    if (!lang) {
+      console.error(`Language "${language}" not found in sessionStorage`);
+    }
+    return lang?.id || "";
+  };
+
+  const addContentItemToDatabase = async (item: ContentItem) => {
+    try {  
+      const response = await fetch(
+        `https://localhost:7070/api/content`, 
+        {
+          method: "POST",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+          body: JSON.stringify({
+            title: item.title,
+            description: item.description,
+            difficulty: "easy",
+            duration: item.duration,
+            contentType: item.contentType,
+            contentLink: item.contentLink,
+            thumbnailLink: item.thumbnailLink,
+            categoryId: item.categoryId,
+            audioLanguageId: item.audioLanguageId,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      // Dohvati cijeli content ponovno da dobijemo novi sadržaj s ID-em
+      await fetchUserAndContent();
+
+    } catch (error) {
+      console.error("Error adding content item:", error);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const categoryId = getCategoryIdByName(category || "mindfulness");
+    const languageId = getAudioLanguageIdByName("eng");
+
+    if (!categoryId) {
+      alert("Kategorija nije pronađena. Provjerite da li su kategorije učitane.");
+      return;
+    }
+
     const newContentItem: ContentItem = {
-      contentId: Date.now(),
       title,
       description: contentType === "article" ? articleText : description,
-      type: contentType as "video" | "article",
-      authorId: "author1",
-      category,
-      duration: contentType === "video" ? duration : "",
-      videoLink: contentType === "video" ? videoLink : undefined,
-      posterLink: thumbnailLink || undefined,
+      contentType: contentType as "video" | "article",
+      categoryId: categoryId,
+      audioLanguageId: languageId || undefined,
+      duration: contentType === "video" ? duration : "0",
+      contentLink: contentType === "video" ? videoLink : undefined,
+      thumbnailLink: thumbnailLink || undefined,
     };
-
-    setMyContent([...myContent, newContentItem]);
-    const storedContent = JSON.parse(localStorage.getItem("contentItems") || "[]");
-    localStorage.setItem("contentItems", JSON.stringify([...storedContent, newContentItem]));
+    
+    await addContentItemToDatabase(newContentItem);
 
     setShowForm(false);
     setTitle("");
@@ -99,10 +188,10 @@ function AddContent() {
     setArticleText("");
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     setIsOpen(false);
     setContent(null);
-    loadContent();
+    await fetchUserAndContent();
   };
 
   return (
@@ -131,7 +220,7 @@ function AddContent() {
                 <div className="addContentList">
                     {myContent.map((content: ContentItem) => (
                       <ContentCard
-                          key={content.contentId}
+                          key={content.id}
                           content={content}
                           onClick={() => {
                             setContent(content);
@@ -219,20 +308,21 @@ function AddContent() {
                           type="url"
                           placeholder="https://www.youtube.com/watch?v=..."
                           value={videoLink}
-                          onChange={(e) => {setVideoLink(e.target.value); setThumbnailLink(`https://img.youtube.com/vi/${e.target.value.split("v=")[1]}/maxresdefault.jpg`);}}
+                          onChange={(e) => {
+                            setVideoLink(e.target.value);
+                            try {
+                              const url = new URL(e.target.value);
+                              const videoId = url.searchParams.get("v");
+                              if (videoId) {
+                                setThumbnailLink(`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`);
+                              }
+                            } catch (error) {
+                              setThumbnailLink("");
+                            }
+                          }}
                           required
                         />
                     </div>
-
-                    {/* <div className="formGroup">
-                      <label>Thumbnail link (opcionalno):</label>
-                      <input 
-                        type="url" 
-                        placeholder="https://..."
-                        value={thumbnailLink}
-                        onChange={(e) => setThumbnailLink(e.target.value)}
-                      />
-                    </div> */}
                   </>
                 )}
 

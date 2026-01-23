@@ -1,12 +1,9 @@
 import "./App.css";
 import "./home.css";
-// glavni
-// npx vite u cmd u folder
 
 import { Link } from "react-router-dom";
 
 function Home() {
-  //   const [count, setCount] = useState(0)
 
   return (
     <>

@@ -16,36 +16,56 @@ function CalendarComponent() {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [selectInfo, setSelectInfo] = useState<any>(null);
 
-  // kad se bude moglo sa drugih stranica dodat da se moze ucitat samo ce svi localStorage ic na bazu
   useEffect(() => {
-    const eventsData = localStorage.getItem("events");
-    if (eventsData) {
-      try {
-        const newEvents = JSON.parse(eventsData);
-        setEvents(newEvents);
-      } catch (e) {
-        console.error("Greška pri parsiranju novih događaja:", e);
-      }
-    }
+    getEvents();
   }, []);
+
+  const getEvents = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/event`,
+        {
+          method: "GET",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      const eventsData = await response.json();
+
+      const formattedEvents = eventsData.map((event: any) => ({
+        id: event.id,
+        title: event.title,
+        start: event.startTime,
+        end: event.endTime,
+        allDay: event.allDay,
+        description: event.description,
+        userId: event.userId,
+        contentId: event.contentId,
+      }));
+
+      setEvents(formattedEvents);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
 
   const handleSelect = (selectInfo: any) => {
     setSelectInfo(selectInfo);
     setIsOpenAdd(true);
   };
 
-  const handleAddEvent = () => {
-    const eventsData = localStorage.getItem("events");
-    if (eventsData) {
-      try {
-        const allEvents = JSON.parse(eventsData);
-        setEvents(allEvents);
-      } catch (e) {
-        console.error("Greška pri parsiranju događaja:", e);
-      }
-    }
+  const handleAddEvent = async () => {
     setSelectInfo(null);
     setIsOpenAdd(false);
+    await getEvents(); 
   };
 
   const handleEventClick = (clickInfo: any) => {
@@ -53,25 +73,47 @@ function CalendarComponent() {
     setIsOpenView(true);
   };
 
-  const handleDeleteEvent = () => {
+  const handleDeleteEventDatabase = async (eventId: string) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/event/${eventId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
+  };
+
+  const handleDeleteEvent = async () => {
+
     if (
       selectedEvent &&
       window.confirm("Jeste li sigurni da želite izbrisati ovaj događaj?")
     ) {
-      const updatedEvents = events.filter(
-        (event) => event.id !== selectedEvent.id
-      );
-      setEvents(updatedEvents);
-      localStorage.setItem("events", JSON.stringify(updatedEvents));
+      
+      await handleDeleteEventDatabase(selectedEvent.id);
       setIsOpenView(false);
       setSelectedEvent(null);
+      await getEvents(); 
     }
   };
 
   return (
     <>
       <div className="calendarContent">
-        <button className="myButton addEventButton nonDesktop" onClick={handleSelect}>+ Dodaj događaj</button>
+        <button className="myButton addEventButton nonDesktopAddEventButton" onClick={handleSelect}>+ Dodaj događaj</button>
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView={"dayGridMonth"}
@@ -100,7 +142,7 @@ function CalendarComponent() {
         />
 
         <div className="rightSideCalendar">
-          <button className="myButton addEventButton desktopOnly" onClick={handleSelect}>+ Dodaj događaj</button>
+          <button className="myButton addEventButton desktopOnlyAddEventButton" onClick={handleSelect}>+ Dodaj događaj</button>
           <FullCalendar
             plugins={[listPlugin, interactionPlugin]}
             initialView={"listWeek"}

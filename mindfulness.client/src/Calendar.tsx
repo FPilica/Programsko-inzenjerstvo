@@ -10,7 +10,6 @@ function Calendar() {
       <div className="background">
         <div className="calendarContainer">
           <Header userRole={userRole || ""}/>
-          {/* <h1>Kalendar</h1> */}
           <div className="calendarContent">
             <CalendarComponent />
           </div>

@@ -6,7 +6,7 @@ interface Event {
     allDay: boolean;
     description: string;
     userId: string;
-    contentId?: number;
+    contentId?: string;
 }
 
 export type { Event };

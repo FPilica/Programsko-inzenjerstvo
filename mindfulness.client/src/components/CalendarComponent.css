@@ -4,7 +4,7 @@
     gap: 20px;
 }
 
-.nonDesktop {
+.nonDesktopAddEventButton {
     display: none;
 }
 
@@ -62,8 +62,12 @@
         align-items: center;
     }
 
-    .nonDesktop {
+    .nonDesktopAddEventButton {
         display: block;
+    }
+
+    .desktopOnlyAddEventButton {
+        display: none;
     }
 
     .rightSideCalendar {

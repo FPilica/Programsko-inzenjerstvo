@@ -1,21 +1,8 @@
 import Header from "./components/Header";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import type { ContentItem } from "./types/ContentItem";
 import "./AddContent.css";
-
-interface ContentItem {
-  contentId: number;
-  title: string;
-  description: string;
-  videoLink?: string;
-  articleLink?: string;
-  text?: string;
-  posterLink?: string;
-  type: "video" | "article";
-  authorId: string;
-  category: string;
-  duration: string;
-}
 
 function EditContent() {
   const { id } = useParams();
@@ -31,72 +18,126 @@ function EditContent() {
   const [articleText, setArticleText] = useState("");
 
   useEffect(() => {
-    // Učitaj sadržaj za uređivanje
-    const storedContent = JSON.parse(
-      localStorage.getItem("contentItems") || "[]"
-    );
-    const contentToEdit = storedContent.find(
-      (item: ContentItem) => item.contentId === Number(id)
-    );
-
-    if (contentToEdit) {
-      setContentType(contentToEdit.type);
-      setTitle(contentToEdit.title);
-      setDescription(contentToEdit.description);
-      setCategory(contentToEdit.category);
-      setDuration(contentToEdit.duration?.toString() || "0");
-      setVideoLink(contentToEdit.videoLink || "");
-      setThumbnailLink(contentToEdit.posterLink || "");
-      setArticleText(contentToEdit.description || "");
-    }
+    getContentItems();
   }, [id]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const getContentItems = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/content`,
+        {
+          method: "GET",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      const contentItemsData = await response.json();
+      console.log("Fetched content items:", contentItemsData);
+
+      const contentToEdit = contentItemsData.find(
+        (item: ContentItem) => item.id === id,
+      );
+
+      const category = JSON.parse(sessionStorage.getItem("categories") || "[]").find((cat: any) => cat.id === contentToEdit.categoryId);
+
+      if (contentToEdit) {
+        setContentType(contentToEdit.contentType);
+        setTitle(contentToEdit.title);
+        setDescription(contentToEdit.description);
+        setCategory(category ? category.name : "");
+        setDuration(contentToEdit.duration?.split(':')[0].split('.')[0] || "0");
+        setVideoLink(contentToEdit.contentLink || "");
+        setThumbnailLink(contentToEdit.thumbnailLink || "");
+        setArticleText(contentToEdit.description || "");
+      }
+
+      console.log("Content to edit:", contentToEdit);
+    } catch (error) {
+      console.error("Error fetching content items:", error);
+    }
+  };
+
+  const editContent = async (updatedContent: ContentItem) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7070/api/content/${id}`, 
+        {
+          method: "PUT",
+          headers: {
+            "Accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+          body: JSON.stringify(updatedContent),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      console.log("Content updated successfully");
+    } catch (error) {
+      console.error("Error updating content:", error);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const categoryId = JSON.parse(sessionStorage.getItem("categories") || "[]").find((cat: any) => cat.name === category)?.id || "";
+
     const updatedContent: ContentItem = {
-      contentId: Number(id),
       title,
       description: contentType === "article" ? articleText : description,
-      type: contentType as "video" | "article",
-      authorId: "author1",
-      category,
-      duration: contentType === "video" ? duration : "",
-      videoLink: contentType === "video" ? videoLink : undefined,
-      posterLink: thumbnailLink || undefined,
+      contentType: contentType as "video" | "article",
+      categoryId: categoryId,
+      duration: contentType === "video" ? duration : "0",
+      contentLink: contentType === "video" ? videoLink : undefined,
+      thumbnailLink: thumbnailLink || undefined,
     };
 
-    // Ažuriraj u localStorage
-    const storedContent = JSON.parse(
-      localStorage.getItem("contentItems") || "[]"
-    );
-    const updatedList = storedContent.map((item: ContentItem) =>
-      item.contentId === Number(id) ? updatedContent : item
-    );
-    localStorage.setItem("contentItems", JSON.stringify(updatedList));
-
-    // Vrati se nazad
+    await editContent(updatedContent);
     navigate(-1);
   };
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
       
     // potvrdi brisanje
     if (!window.confirm("Jeste li sigurni da želite izbrisati ovaj sadržaj?")) {
       return;
     }
-        
-    // Izbriši iz localStorage
-    const storedContent = JSON.parse(
-      localStorage.getItem("contentItems") || "[]"
-    );
-    const updatedList = storedContent.filter(
-      (item: ContentItem) => item.contentId !== Number(id)
-    );
+      
+      try {
+        const response = await fetch(
+          `https://localhost:7070/api/content/${id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Accept": "text/plain",
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+            },
+          },
+        );
 
-    localStorage.setItem("contentItems", JSON.stringify(updatedList));
+        if (!response.ok) {
+          throw new Error("Something went wrong!");
+        }
 
-    // Vrati se nazad
+        console.log("Content deleted successfully");
+      } catch (error) {
+        console.error("Error deleting content:", error);
+      }
+
     navigate(-1);
   };
 

@@ -38,7 +38,6 @@ function SetProfile() {
 
       const user = await response.json();
       setUser(user);
-      console.log(user);
       if (user.dateOfBirth) {
         user.dateOfBirth = user.dateOfBirth.split("T")[0]; // "2000-01-01"
         setBirthDate(user.dateOfBirth);
@@ -66,16 +65,6 @@ function SetProfile() {
     else if (gender === "O") genderValue = 2;
 
     try {
-      console.log(
-        "Promjena s imenom",
-        name,
-        ", prezimenom",
-        surname,
-        ", datumom rođenja",
-        birthDate,
-        "i spolom",
-        gender
-      );
 
       // ovdje treba biti funkcija za promjenit ig
       const response = await fetch(
@@ -98,7 +87,6 @@ function SetProfile() {
 
       console.log("Response status:", response.status);
       const responseData = await response.text();
-      console.log("Response body:", responseData);
 
       if (!response.ok) {
         throw new Error(
