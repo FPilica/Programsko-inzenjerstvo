@@ -46,6 +46,7 @@ public sealed class AuthController : ControllerBase
         var user = _mapper.Map<User>(userRegisterDto);
         user.Id = Guid.NewGuid();
         user.UserName = user.Email;
+        user.FirstName = userRegisterDto.FirstName.Replace(userRegisterDto.LastName, string.Empty);
 
         var result = await _userManager.CreateAsync(user, userRegisterDto.Password);
 

@@ -19,32 +19,6 @@ public class DataSeeder
     
     public async Task SeedDataAsync()
     {
-        _dbContext.StartQuestionnaires.Add(new StartQuestionnaire()
-        {
-            Id = Guid.NewGuid(),
-            PAnxiety = 0,
-            PBreathing = 0,
-            PFocus = 0,
-            PGratefulness = 0,
-            PSleep = 0,
-            PStress = 0,
-            UserId = _dbContext.Users.First(u => u.Email == "admin@admin.com").Id
-        });
-        
-        _dbContext.StartQuestionnaires.Add(new StartQuestionnaire()
-        {
-            Id = Guid.NewGuid(),
-            PAnxiety = 0,
-            PBreathing = 0,
-            PFocus = 0,
-            PGratefulness = 0,
-            PSleep = 0,
-            PStress = 0,
-            UserId = _dbContext.Users.First(u => u.Email == "coach@coach.com").Id
-        });
-
-        await _dbContext.SaveChangesAsync();
-        
         if (_roleManager.Roles.Any())
         {
             return;
@@ -127,6 +101,30 @@ public class DataSeeder
         {
             Id = Guid.NewGuid(),
             Name = "eng"
+        });
+        
+        _dbContext.StartQuestionnaires.Add(new StartQuestionnaire
+        {
+            Id = Guid.NewGuid(),
+            PAnxiety = 0,
+            PBreathing = 0,
+            PFocus = 0,
+            PGratefulness = 0,
+            PSleep = 0,
+            PStress = 0,
+            UserId = _dbContext.Users.First(u => u.Email == "admin@admin.com").Id
+        });
+        
+        _dbContext.StartQuestionnaires.Add(new StartQuestionnaire
+        {
+            Id = Guid.NewGuid(),
+            PAnxiety = 0,
+            PBreathing = 0,
+            PFocus = 0,
+            PGratefulness = 0,
+            PSleep = 0,
+            PStress = 0,
+            UserId = _dbContext.Users.First(u => u.Email == "coach@coach.com").Id
         });
 
         await _dbContext.SaveChangesAsync();
