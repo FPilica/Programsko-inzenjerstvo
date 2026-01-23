@@ -30,7 +30,7 @@ public class EmailSender : IEmailSender
 
         var msg = new SendGridMessage
         {
-            From = new EmailAddress("support@mindfulness.com", "Support"),
+            From = new EmailAddress("support@progimindfulness.app", "Support"),
             Subject = subject,
             PlainTextContent = message,
             HtmlContent = message
@@ -39,6 +39,11 @@ public class EmailSender : IEmailSender
         
         msg.SetClickTracking(false, false);
         
-        _ = await client.SendEmailAsync(msg);
+        var response = await client.SendEmailAsync(msg);
+
+        if (!response.IsSuccessStatusCode)
+        {
+           throw new Exception(response.StatusCode.ToString());
+        }
     }
 }
