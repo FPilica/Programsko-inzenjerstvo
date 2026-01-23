@@ -8,6 +8,7 @@ import {
 } from "@vidstack/react/player/layouts/plyr";
 import { Poster } from "@vidstack/react";
 import "./VideoPlayer.css";
+import { useState } from "react";
 
 function VideoPlayer({
   videoLink,
@@ -24,32 +25,70 @@ function VideoPlayer({
   thumbnailsLink?: string;
   posterLink?: string;
 }) {
+  const [posterError, setPosterError] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+
+  // Validate links
+  const isValidUrl = (url: string) => {
+    if (!url || url.trim() === "") return false;
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const validVideoLink = isValidUrl(videoLink) ? videoLink : "";
+  const validPosterLink = isValidUrl(posterLink) && !posterError ? posterLink : "";
+  const validSubtitlesLink = isValidUrl(subtitlesLink) ? subtitlesLink : "";
+  const validThumbnailsLink = isValidUrl(thumbnailsLink) ? thumbnailsLink : undefined;
+
+  if (!validVideoLink) {
+    return (
+      <div className="video-player-error">
+        <p>Video link nije dostupan</p>
+      </div>
+    );
+  }
+
   return (
     <MediaPlayer
       playsInline
       className="video-player-custom"
       title={videoName}
-      src={videoLink}
+      src={validVideoLink}
       hideControlsOnMouseLeave
+      onError={() => setVideoError(true)}
     >
       <MediaProvider>
-        {posterLink.length !== 0 && (
-          <Poster className="media-poster" src={posterLink} alt="Thumbnail" />
+        {validPosterLink && (
+          <Poster 
+            className="media-poster" 
+            src={validPosterLink} 
+            alt="Thumbnail"
+            onError={() => setPosterError(true)}
+          />
         )}
 
-        {subtitlesLink.length != 0 && (
+        {validSubtitlesLink && (
           <Track
             kind="captions"
-            src={subtitlesLink}
+            src={validSubtitlesLink}
             label={subtitlesLanguage}
             default
           />
         )}
       </MediaProvider>
       <PlyrLayout
-        thumbnails={thumbnailsLink.length !== 0 ? thumbnailsLink : undefined}
+        thumbnails={validThumbnailsLink}
         icons={plyrLayoutIcons}
       />
+      {videoError && (
+        <div className="video-player-error-overlay">
+          <p>Greška pri učitavanju videa</p>
+        </div>
+      )}
     </MediaPlayer>
   );
 }

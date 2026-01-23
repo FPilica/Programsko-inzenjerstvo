@@ -57,9 +57,9 @@ function AdminDash() {
   const deleteUser = async (userId: string) => {
     try {
       const response = await fetch(
-        `https://localhost:7070/api/UserProfile/deleteprofile${userId}`,
+        `https://localhost:7070/api/UserProfile/deleteprofile/${userId}`,
         {
-          method: "GET",
+          method: "DELETE",
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
