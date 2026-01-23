@@ -52,13 +52,12 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddTransient<IEmailSender, EmailSenderService>();
-builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("SendGrid"));
 
 builder.Services.AddAutoMapper(_ => { }, AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<MindfulnessDbContext>(options =>
 {
-    options.UseInMemoryDatabase("MindfulnessDb");
+    options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
 });
 
 builder.Services
@@ -72,8 +71,9 @@ builder.Services
     .AddEntityFrameworkStores<MindfulnessDbContext>()
     .AddDefaultTokenProviders();
 
+var key = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY") ??
+                                 throw new ArgumentNullException("JWT_KEY"));
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new ArgumentNullException("Jwt:Key"));
 
 builder.Services
     .AddAuthentication(options =>
@@ -98,14 +98,14 @@ builder.Services
     {
         options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ??
                            throw new ArgumentNullException("Authentication:Google:ClientId");
-        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ??
+        options.ClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET") ??
                                throw new ArgumentNullException("Authentication:Google:ClientSecret");
     })
     .AddMicrosoftAccount("Microsoft", options =>
     {
         options.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"] ??
                            throw new ArgumentNullException("Authentication:Microsoft:ClientId");
-        options.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"] ??
+        options.ClientSecret = Environment.GetEnvironmentVariable("MICROSOFT_CLIENT_SECRET") ??
                                throw new ArgumentNullException("Authentication:Microsoft:ClientSecret");
     });
 

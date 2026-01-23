@@ -9,9 +9,12 @@ public class EmailSenderService : IEmailSender
 {
     private AuthMessageSenderOptions Options { get; }
     
-    public EmailSenderService(IOptions<AuthMessageSenderOptions> options)
+    public EmailSenderService()
     {
-        Options = options.Value;
+        Options = new AuthMessageSenderOptions
+        {
+            Key = Environment.GetEnvironmentVariable("SEND_GRID_KEY")
+        };
     }
     
     public async Task SendEmailAsync(string toEmail, string subject, string message)

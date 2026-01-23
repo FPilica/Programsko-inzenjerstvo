@@ -18,6 +18,11 @@ public class DataSeeder
     }
     
     public async Task SeedDataAsync() {
+        if (_roleManager.Roles.Any())
+        {
+            return;
+        }
+        
         await _roleManager.CreateAsync(new IdentityRole<Guid>("User"));
         await _roleManager.CreateAsync(new IdentityRole<Guid>("Coach"));
         await _roleManager.CreateAsync(new IdentityRole<Guid>("Admin"));
