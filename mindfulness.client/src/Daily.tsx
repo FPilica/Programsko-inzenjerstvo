@@ -53,7 +53,7 @@ const DailyCheckIn = () => {
 
       if (!response.ok) {
         throw new Error(
-          `Neupsjela promjena: ${response.status} ${responseData}`
+          `Neuspjela promjena: ${response.status} ${responseData}`
         );
       }
 
@@ -61,8 +61,8 @@ const DailyCheckIn = () => {
       console.log("Promjena uspjesna");
       navigate("/dashboard");
     } catch (error) {
-      console.error("Neupsjela promjena:", error);
-      alert("Neupsjela promjena: " + (error as Error).message);
+      console.error("Neuspjela promjena:", error);
+      alert("Neuspjela promjena: " + (error as Error).message);
     }
   };
 
@@ -132,30 +132,68 @@ const DailyCheckIn = () => {
           }
           // za streak
           const today = new Date();
-          const userDay = new Date(user.lastCheckin);
-          const userCreate = new Date(user.createdAt);
-          console.log(user);
-          console.log(today);
-          console.log(today.toISOString().split('T')[0]);
-          console.log(userDay.toISOString().split('T')[0]);
-          streak = user.streak;
-          if (today.toISOString().split('T')[0] === userCreate.toISOString().split('T')[0]){
-            streak = 1;
-          }
-          else if(userDay.toISOString().split('T')[0] !== today.toISOString().split('T')[0]){
-            const td = today.toISOString().split('T')[0];
-            const ud = userDay.toISOString().split('T')[0]
-            const tdarr = td.split('-');
-            const udarr = ud.split('-');
-            if(tdarr[2] === (udarr[2] + 1)){   
-              streak = user.streak + 1;
-            }
-          }else{
-            streak = 1;
-          }
+          // const userDay = new Date(user.lastCheckin);
+          // const userCreate = new Date(user.createdAt);
+          // console.log(user);
+          // console.log(today);
+          // console.log(today.toISOString().split('T')[0]);
+          // console.log(userDay.toISOString().split('T')[0]);
+          // streak = user.streak;
+          // if (today.toISOString().split('T')[0] === userCreate.toISOString().split('T')[0]){
+          //   streak = 1;
+          // }
+          // else if(userDay.toISOString().split('T')[0] !== today.toISOString().split('T')[0]){
+          //   const td = today.toISOString().split('T')[0];
+          //   const ud = userDay.toISOString().split('T')[0]
+          //   const tdarr = td.split('-');
+          //   const udarr = ud.split('-');
+          //   if(Number(tdarr[2]) === (Number(udarr[2]) + 1)){   
+          //     streak = user.streak + 1;
+          //   }
+          // }else{
+          //   streak = 1;
+          // }
 
-          setStreak(streak);
-          streakUp(streak);
+          // setStreak(streak);
+          // streakUp(streak);
+
+          // novo
+           const getValidDate = (value: any): Date | null => {
+            if (!value) return null;
+            const d = new Date(value);
+            return isNaN(d.getTime()) ? null : d;
+          };
+          const userDay = getValidDate(user.lastCheckin);
+          const userCreate = getValidDate(user.createdAt);
+          const hasUserStreak = typeof user.streak === "number" && !isNaN(user.streak);
+          let computedStreak = 0;
+          if (userDay && userCreate && hasUserStreak) {
+            console.log(user);
+            console.log(today);
+            const todayStr = today.toISOString().split('T')[0];
+            const userDayStr = userDay.toISOString().split('T')[0];
+            const userCreateStr = userCreate.toISOString().split('T')[0];
+            console.log(todayStr);
+            console.log(userDayStr);
+            computedStreak = user.streak;
+            if (todayStr === userCreateStr) {
+              computedStreak = 1;
+            } else if (userDayStr !== todayStr) {
+              const [tYear, tMonth, tDay] = todayStr.split('-').map(Number);
+              const [uYear, uMonth, uDay] = userDayStr.split('-').map(Number);
+              // Check if today is exactly one day after the last check-in (same month/year)
+              if (tYear === uYear && tMonth === uMonth && tDay === (uDay + 1)) {
+                computedStreak = user.streak + 1;
+              } else {
+                // Break in streak
+                computedStreak = 1;
+              }
+            } else {
+              computedStreak = 1;
+            }
+          }
+          setStreak(computedStreak);
+          streakUp(computedStreak);
         } catch (error) {
         console.error("Error fetching user data:", error);
         }
@@ -169,8 +207,8 @@ const DailyCheckIn = () => {
   
   return (
     <>
-      <div className="containerHomeAndAuth">
-        <div className="onboardingContainer">
+      <div className="containerDailyFull">
+        <div className="containerDaily">
           <Link className="logoLink" to="/">
             <img src={logoPurple} alt="logo_purple" width="177" height="41" />
           </Link>
@@ -180,10 +218,10 @@ const DailyCheckIn = () => {
           <div className="streak">
             <p>Dobrodošli!</p>
             <p>Broj Daily Check-In:</p>
-            <p>{userD.streak}</p>
+            <p>{streak}</p>
           </div>
           <div>
-            <form className="formContainer" onSubmit={handleSubmit}>
+            <form className="formDailyContainer" onSubmit={handleSubmit}>
               <div className="questionContainer">
                 <label htmlFor="mood">
                   Kako se danas osjećate na skali od 1 (jako loše) do 10 (jako dobro)? 
