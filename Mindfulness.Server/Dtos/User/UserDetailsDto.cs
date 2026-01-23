@@ -19,4 +19,10 @@ public class UserDetailsDto
     public DateTimeOffset DateOfBirth { get; set; }
     
     public DateTimeOffset CreatedAt { get; set; }
+    
+    public DateTimeOffset LastCheckin { get; set; }
+
+    public DateTimeOffset LastFocus { get; set; }
+
+    public int Streak { get; set; }
 }

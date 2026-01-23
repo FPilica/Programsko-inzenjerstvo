@@ -8,6 +8,7 @@ using Mindfulness.Server.Models;
 using System.Security.Claims;
 
 namespace Mindfulness.Server.Controllers;
+
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
@@ -21,75 +22,89 @@ public class DailyTasksController : ControllerBase
         _context = context;
         _mapper = mapper;
     }
-    [HttpPost("inputDailyData")]
+    
+    [HttpPost]
     public async Task<IActionResult> CreateCheckin([FromBody] DailyCheckInCreateDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
         if (userId is null)
         {
             return BadRequest("User not found");
         }
 
         var userGuid = Guid.Parse(userId);
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGuid);
+        
+        var user = await _context.Users.FindAsync(userGuid);
+        
         if (user is null)
         {
-            return NotFound("User does not exist");
+            return BadRequest("User does not exist");
         }
+        
         var dailyCheckin = _mapper.Map<DailyCheckIn>(dto);
+        dailyCheckin.Id = Guid.NewGuid();
         dailyCheckin.UserId = userGuid;
 
         _context.DailyCheckIns.Add(dailyCheckin);
+
+        var first = DateTimeOffset.UtcNow;
+        var second = user.LastFocus.ToUniversalTime();
+        var difference = (int)Math.Abs((first - second).TotalDays);
+
+        switch (difference)
+        {
+            case 0:
+                user.Streak = user.Streak;
+                break;
+            case 1:
+                user.Streak += 1;
+                break;
+            default:
+                user.Streak = 1;
+                break;
+        }
+        
+        user.LastCheckin = DateTimeOffset.Now;
+        user.LastFocus = DateTimeOffset.Now;
+        
+        _context.Users.Update(user);
+        
         await _context.SaveChangesAsync();
 
-        return Ok(_mapper.Map<DailyCheckInCreateDto>(dailyCheckin);
+        return Ok(_mapper.Map<DailyCheckInDetailsDto>(dailyCheckin));
     }
 
-    [HttpPost("endFocus")]
-    public async Task<IActionResult> FinishFocus(UserUpdateDto dto)
+    [HttpGet]
+    public async Task<ActionResult<List<DailyCheckInDetailsDto>>> GetDailyCheckIns()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
         if (userId is null)
         {
             return BadRequest("User not found");
         }
 
         var userGuid = Guid.Parse(userId);
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userGuid);
-        if (user is null)     
+        
+        var user = await _context.Users.FindAsync(userGuid);
+        
+        if (user is null)
         {
-            return NotFound("User does not exist");
+            return BadRequest("User does not exist");
         }
-
-        user = _mapper.Map<User>(dto);
-
-        DateTimeOffset first = DateTimeOffset.Now;
-        DateTimeOffset second = user.LastFocus;
-        TimeSpan difference = first - second;
-        if (difference.TotalDays < 1){ // 
-            user.Streak += 1;
-            user.LastFocus = DateTimeOffset.Now;
-            return Ok("User's streak is continued");
-        }
-        else
-        {
-            user.Streak = 1;
-            user.LastFocus = DateTimeOffset.Now;
-            return Ok("User's streak is reset to 1");
-        }
+        
+        var dailyCheckIns = _context.DailyCheckIns.Where(x => x.UserId == user.Id).ToList();
+        
+        return Ok(_mapper.Map<List<DailyCheckInDetailsDto>>(dailyCheckIns));
     }
+    
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<DailyCheckInDetailsDto>> GetCheckinById(Guid id)
     {
-        if (id == Guid.Empty)
-        {
-            return BadRequest("No checkin with this id.");
-        }
+        var checkIn = await _context.DailyCheckIns.FindAsync(id);
 
-
-        var checkIn = await _context.DailyCheckIns.FirstOrDefaultAsync(p => p.Id == id);
-
-        if (checkIn == null)
+        if (checkIn is null)
         {
             return NotFound("Not found checkin with this id");
         }

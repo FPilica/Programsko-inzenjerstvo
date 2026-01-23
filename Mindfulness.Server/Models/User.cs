@@ -36,5 +36,5 @@ public class User : IdentityUser<Guid>
 
     public DateTimeOffset LastFocus { get; set; } = DateTimeOffset.Now;
 
-    public int Streak { get; set; } = 1;
+    public int Streak { get; set; } = 0;
 }
