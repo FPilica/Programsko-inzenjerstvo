@@ -7,7 +7,7 @@ public class Content
 {
     public Guid Id { get; set; }
     
-    [MaxLength(30)]
+    [MaxLength(200)]
     public required string Title { get; set; }
     
     [MaxLength(30000)]
