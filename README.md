@@ -43,4 +43,3 @@ Baza podataka: PostgreSQL
 | Kojić Elizej | https://github.com/elikojic | frontend |
 | Lukić Ivan | https://github.com/IvanL26 | frontend |
 | Smoljo Ana | https://github.com/anasmoljo  | backend, dokumentacija  |
-# Kontribucije
